@@ -1,0 +1,47 @@
+{
+  "skill_name": "prompt-fixer",
+  "evals": [
+    {
+      "id": 1,
+      "name": "vague-extraction-task",
+      "prompt": "make this prompt better: 'go through my emails and pull out the ones that actually need a reply from me'",
+      "expected_output": "A fixed prompt that adds a persona (e.g. executive assistant), sharpens the task into an explicit classify/extract instruction with an output format, includes 2-3 short examples of reply-needed vs not, and adds grounding + length constraints. Ends with a 4-line 'What changed' block.",
+      "assertions": [
+        "Response contains a '**Fixed prompt**' section followed by a '**What changed**' section",
+        "The 'What changed' block has exactly one line each for Persona, Task, Examples, Constraints",
+        "The fixed prompt assigns a persona/role",
+        "The fixed prompt specifies an explicit output format or structure",
+        "The fixed prompt includes at least one input/output example (examples sharpen a classification task)",
+        "The fixed prompt is self-contained and pasteable (does not rely on the original wording to be understood)"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "fintech-domain-grounding",
+      "prompt": "can you tighten this: 'analyze this stock and tell me if its a buy'",
+      "expected_output": "A fixed prompt with a finance domain-expert persona (e.g. equity analyst), a sharpened task that names the deliverable (rating + rationale + key risks), and explicit grounding/correctness constraints (base claims on provided data, do not fabricate figures, note it is not personalized investment advice). Examples optional/skipped for an open-ended analytic task.",
+      "assertions": [
+        "Response contains '**Fixed prompt**' and '**What changed**' sections in that order",
+        "The persona is a finance/markets domain expert (e.g. equity or fixed-income analyst)",
+        "The fixed prompt adds at least one grounding or anti-hallucination constraint (e.g. base claims on provided data, do not fabricate numbers)",
+        "The task is sharpened from 'analyze and tell me if its a buy' into a concrete deliverable with structure",
+        "Examples are either skipped with a one-line justification or kept minimal (not forced onto an open-ended task)"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "already-good-restraint",
+      "prompt": "improve this prompt if it needs it: 'You are a senior technical recruiter. Classify each candidate below as Strong / Maybe / No against the JD. For each, output: name, verdict, and one sentence of evidence quoting the resume. Do not invent experience not in the resume. Keep each rationale under 25 words. Candidates: <list>'",
+      "expected_output": "Recognizes the prompt is already well-specified across all four dimensions and returns it mostly unchanged, saying so in one line rather than manufacturing edits. The 'What changed' block should read mostly 'already set / already clear / already specified'.",
+      "assertions": [
+        "Response does NOT substantially rewrite or pad the already-good prompt",
+        "At least two of the four 'What changed' lines say the dimension was already set/clear/specified",
+        "The response explicitly notes the prompt was already strong rather than inventing changes to justify itself",
+        "Still follows the required output structure (Fixed prompt + What changed)"
+      ],
+      "files": []
+    }
+  ]
+}

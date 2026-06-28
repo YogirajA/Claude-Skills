@@ -1,6 +1,6 @@
 ---
 name: prompt-optimizer
-description: Transform a raw user ask into an optimized Claude prompt using XML-tag structure (Claude's strongest input format), then validate with the user before executing. Use when the user explicitly invokes /prompt-optimizer, says things like "optimize this prompt", "rewrite as a Claude prompt", "make this prompt better", "wrap this in XML tags", or hands over a complex, multi-step ask that would clearly benefit from structured framing (role + context + examples + output format + constraints). Also use when the user pastes a long, ambiguous, multi-requirement request and asks you to "just do it" — pause and run it through this skill first so the resulting work is grounded in a well-structured prompt. Do NOT use for: simple one-liners, greetings, trivial code edits, direct file reads, follow-ups inside an already-clear conversation, or anything where structuring would add more ceremony than value.
+description: Transform a raw or messy ask into an XML-structured Claude prompt (role / context / task / examples / output format / constraints), validate it with the user, then execute it to produce the actual deliverable. The XML output is built to be used as-is and run for you, not hand-edited. Use when the user explicitly invokes /prompt-optimizer, says "optimize this prompt", "wrap this in XML tags", "rewrite this as a Claude prompt", or "structure this and run it", or pastes a long, ambiguous, multi-requirement, multi-step ask that clearly benefits from structured framing before execution. Do NOT use when the user just wants a cleaned-up, plain-English prompt handed back to read, paste, and tweak themselves, that is the prompt-fixer skill (English hygiene, no XML, no execution). Also skip simple one-liners, greetings, trivial code edits, direct file reads, or clear conversational follow-ups.
 ---
 
 # Prompt Optimizer
@@ -19,6 +19,7 @@ Claude models perform best when instructions arrive as **XML-tagged** structured
 - Conversational follow-ups where context is already established.
 - Mechanical edits: rename, format, add a log line.
 - Anything where the structuring overhead > the clarity gain.
+- The user wants a plain-English prompt handed back to edit by hand, not XML you'll execute. That's the **prompt-fixer** skill. This skill owns the XML lane; prompt-fixer owns plain-English hygiene.
 
 When in doubt on a borderline case, ask: *"This looks complex — want me to run it through prompt-optimizer first, or just go?"* One sentence, then proceed based on the answer.
 

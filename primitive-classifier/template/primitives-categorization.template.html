@@ -1,0 +1,2787 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Acme Primitives Audit, what belongs where</title>
+<style>
+  :root {
+    --bg: #0d0d12;
+    --bg-card: #16161e;
+    --bg-card-hover: #1c1c26;
+    --bg-row: #1a1a24;
+    --text: #e8e8f0;
+    --text-dim: #9a9ab0;
+    --text-faint: #6a6a80;
+    --border: #2a2a3a;
+    --border-strong: #3a3a52;
+
+    --color-claudemd: #b76dff;
+    --color-subagents: #6b3df0;
+    --color-skills: #ff3d8a;
+    --color-hooks: #00b8a9;
+    --color-settings: #3dd97a;
+    --color-mcp: #ff8a3d;
+
+    --status-correct: #3dd97a;
+    --status-borderline: #ffc857;
+    --status-misplaced: #ff5577;
+    --status-missing: #b76dff;
+    --status-stub: #3ddef0;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15.5px;
+    line-height: 1.6;
+    padding: 0;
+  }
+
+  /* Header */
+  header.hero {
+    padding: 48px 32px 0;
+    background: linear-gradient(135deg, #1a0f2e 0%, #0d0d12 65%);
+    border-bottom: 1px solid var(--border);
+  }
+  header.hero .meta {
+    margin-bottom: 24px;
+  }
+
+  /* Tab nav */
+  nav.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+    margin: 0 -32px;
+    padding: 0 32px;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav.tabs button {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    padding: 12px 16px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: 120ms;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  nav.tabs button:hover { color: var(--text); }
+  nav.tabs button.active {
+    color: var(--text);
+    border-bottom-color: var(--color-skills);
+  }
+  nav.tabs button .badge {
+    background: var(--bg-card);
+    color: var(--text-faint);
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  nav.tabs button.active .badge {
+    background: var(--color-skills);
+    color: #fff;
+  }
+
+  /* Tab pane */
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+  header.hero h1 {
+    margin: 0 0 6px 0;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+  }
+  header.hero .lede {
+    color: var(--text-dim);
+    font-size: 16px;
+    max-width: 920px;
+    margin: 0 0 12px 0;
+  }
+  header.hero .meta {
+    color: var(--text-faint);
+    font-size: 12.5px;
+    margin-top: 6px;
+  }
+
+  /* Container */
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 28px 32px 96px;
+  }
+
+  /* Section */
+  section { margin: 36px 0; }
+  section h2 {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.2px;
+  }
+  section .subhead {
+    color: var(--text-dim);
+    font-size: 13.5px;
+    margin: 0 0 18px 0;
+  }
+
+  /* Verdict callouts */
+  .verdict-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .verdict {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--status-misplaced);
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .verdict.warn { border-left-color: var(--status-borderline); }
+  .verdict.good { border-left-color: var(--status-correct); }
+  .verdict.miss { border-left-color: var(--status-missing); }
+  .verdict h3 {
+    margin: 0 0 6px 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .verdict p {
+    margin: 0;
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  .verdict strong { color: var(--text); }
+
+  /* Toolbar */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    padding: 14px 0 10px;
+    z-index: 50;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .toolbar input[type=search] {
+    flex: 1 1 220px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 8px 12px;
+    font-size: 13.5px;
+    font-family: inherit;
+  }
+  .toolbar input[type=search]:focus {
+    outline: none;
+    border-color: var(--color-skills);
+  }
+  .toolbar .filter-pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    cursor: pointer;
+    user-select: none;
+    transition: 120ms;
+  }
+  .toolbar .filter-pill:hover { background: var(--bg-card-hover); color: var(--text); }
+  .toolbar .filter-pill.active {
+    background: var(--color-skills);
+    border-color: var(--color-skills);
+    color: #fff;
+  }
+  .toolbar .filter-pill.active.misplaced { background: var(--status-misplaced); border-color: var(--status-misplaced); }
+  .toolbar .filter-pill.active.borderline { background: var(--status-borderline); border-color: var(--status-borderline); color: #1a1a24; }
+  .toolbar .filter-pill.active.correct { background: var(--status-correct); border-color: var(--status-correct); color: #1a1a24; }
+  .toolbar .filter-pill.active.stub { background: var(--status-stub); border-color: var(--status-stub); color: #1a1a24; }
+
+  /* Primitive grid */
+  .bucket-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 16px;
+  }
+
+  /* Bucket card */
+  .bucket {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .bucket-header {
+    padding: 14px 16px 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .bucket-header:hover { background: var(--bg-card-hover); }
+  .bucket-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .bucket-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .bucket-counts {
+    font-size: 11.5px;
+    color: var(--text-faint);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .bucket-counts .pill {
+    background: var(--bg-row);
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .bucket-isnot {
+    margin-top: 8px;
+    color: var(--text-dim);
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+  .bucket-isnot em { color: var(--text-faint); font-style: italic; }
+  .bucket-body { display: none; padding: 0 0 8px; }
+  .bucket.open .bucket-body { display: block; }
+  .bucket-section-label {
+    padding: 14px 16px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  /* Item row */
+  .item {
+    border-top: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+  .item-header {
+    padding: 10px 16px;
+    cursor: pointer;
+    user-select: none;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 10px;
+    align-items: center;
+  }
+  .item-header:hover { background: var(--bg-card-hover); }
+  .chev {
+    color: var(--text-faint);
+    font-size: 11px;
+    transition: transform 150ms;
+    width: 12px;
+  }
+  .item.open .chev { transform: rotate(90deg); }
+  .item-name {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .item-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .tag.correct { background: rgba(61, 217, 122, 0.15); color: var(--status-correct); }
+  .tag.borderline { background: rgba(255, 200, 87, 0.15); color: var(--status-borderline); }
+  .tag.misplaced { background: rgba(255, 85, 119, 0.15); color: var(--status-misplaced); }
+  .tag.missing { background: rgba(183, 109, 255, 0.15); color: var(--status-missing); }
+  .tag.stub { background: rgba(61, 222, 240, 0.15); color: var(--status-stub); }
+
+  .item-body {
+    display: none;
+    padding: 4px 16px 16px 38px;
+    background: var(--bg-row);
+    border-top: 1px dashed var(--border);
+  }
+  .item.open .item-body { display: block; }
+  .item-body dl { margin: 8px 0 0; display: grid; grid-template-columns: 130px 1fr; gap: 8px 14px; }
+  .item-body dt { color: var(--text-faint); font-size: 12px; font-weight: 600; }
+  .item-body dd { margin: 0; color: var(--text-dim); font-size: 13px; line-height: 1.55; }
+  .item-body dd code { background: var(--bg-card); padding: 1px 5px; border-radius: 3px; color: #ffd9a8; font-size: 12px; }
+  .item-body .reasoning {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: var(--bg-card);
+    border-left: 2px solid var(--accent);
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .item-body .reasoning strong { color: var(--text); }
+  .item-body .currentvsrec {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    align-items: center;
+    margin-top: 8px;
+    padding: 8px 10px;
+    background: var(--bg-card);
+    border-radius: 4px;
+    font-size: 12.5px;
+  }
+  .item-body .currentvsrec .arrow { color: var(--text-faint); }
+  .item-body .currentvsrec .from { color: var(--text-dim); }
+  .item-body .currentvsrec .to { color: var(--accent); font-weight: 600; }
+
+  /* Bucket accent classes */
+  .bucket.b-claudemd  { --accent: var(--color-claudemd); }
+  .bucket.b-subagents { --accent: var(--color-subagents); }
+  .bucket.b-skills    { --accent: var(--color-skills); }
+  .bucket.b-hooks     { --accent: var(--color-hooks); }
+  .bucket.b-settings  { --accent: var(--color-settings); }
+  .bucket.b-mcp       { --accent: var(--color-mcp); }
+
+  /* Footer narrative */
+  .narrative {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 22px;
+    color: var(--text-dim);
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+  .narrative h3 { margin: 0 0 10px 0; color: var(--text); font-size: 15px; }
+  .narrative ol, .narrative ul { margin: 8px 0; padding-left: 22px; }
+  .narrative li { margin: 6px 0; }
+  .narrative strong { color: var(--text); }
+
+  /* Big stat row */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin: 18px 0 4px;
+  }
+  .stat {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .stat .num { font-size: 26px; font-weight: 700; color: var(--text); }
+  .stat .label { font-size: 11.5px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+  /* KPI hero (Today vs After) */
+  .kpi-hero {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin: 20px 0;
+  }
+  .kpi-side {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .kpi-side h3 {
+    grid-column: 1 / -1;
+    margin: 0 0 4px 0;
+    font-size: 13px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+  }
+  .kpi-num {
+    text-align: center;
+    padding: 14px 8px;
+    border-radius: 6px;
+    background: var(--bg-row);
+  }
+  .kpi-num .n { font-size: 36px; font-weight: 700; line-height: 1; }
+  .kpi-num .t { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 4px; line-height: 1.3; }
+  .kpi-num.misplaced .n { color: var(--status-misplaced); }
+  .kpi-num.stub .n { color: var(--status-stub); }
+  .kpi-num.missing .n { color: var(--status-missing); }
+  .kpi-num.created .n { color: var(--status-correct); }
+  .kpi-num.moved .n { color: var(--status-correct); }
+  .kpi-num.reshaped .n { color: var(--status-correct); }
+  .kpi-arrow {
+    font-size: 32px;
+    color: var(--color-skills);
+    font-weight: 700;
+  }
+
+  @media (max-width: 920px) {
+    .kpi-hero { grid-template-columns: 1fr; }
+    .kpi-arrow { transform: rotate(90deg); justify-self: center; }
+  }
+
+  /* Movement table */
+  .movement {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 16px 0;
+  }
+  .movement table { width: 100%; border-collapse: collapse; }
+  .movement th, .movement td {
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .movement th {
+    color: var(--text-faint);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    background: var(--bg-row);
+  }
+  .movement td:nth-child(2),
+  .movement td:nth-child(3),
+  .movement td:nth-child(4) {
+    text-align: right;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .movement th:nth-child(2),
+  .movement th:nth-child(3),
+  .movement th:nth-child(4) { text-align: right; }
+  .movement tr:last-child td { border-bottom: none; }
+  .movement td:first-child { color: var(--accent); font-weight: 600; }
+  .movement tr.r-claudemd td:first-child  { color: var(--color-claudemd); }
+  .movement tr.r-subagents td:first-child { color: var(--color-subagents); }
+  .movement tr.r-skills td:first-child    { color: var(--color-skills); }
+  .movement tr.r-hooks td:first-child     { color: var(--color-hooks); }
+  .movement tr.r-settings td:first-child  { color: var(--color-settings); }
+  .movement tr.r-mcp td:first-child       { color: var(--color-mcp); }
+  .delta-pos { color: var(--status-correct); font-weight: 600; }
+  .delta-neg { color: var(--status-misplaced); font-weight: 600; }
+  .delta-zero { color: var(--text-faint); }
+
+  /* Migration row, twist-down with full reasoning + provenance */
+  .migration-row {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .migration-arrow-row {
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .migration-arrow-row:hover { background: var(--bg-card-hover); }
+  .migration-arrow-row .chev {
+    color: var(--text-faint);
+    font-size: 12px;
+    transition: transform 150ms;
+    width: 12px;
+    flex: 0 0 auto;
+  }
+  .migration-row.open .chev { transform: rotate(90deg); }
+  .migration-name {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 14px;
+    color: var(--text);
+    flex: 1 1 240px;
+  }
+  .migration-from, .migration-to {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .migration-from {
+    background: rgba(255, 85, 119, 0.12);
+    color: var(--status-misplaced);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+  .migration-from.stub-from {
+    background: rgba(61, 222, 240, 0.12);
+    color: var(--status-stub);
+    text-decoration: none;
+  }
+  .migration-to {
+    background: rgba(61, 217, 122, 0.12);
+    color: var(--status-correct);
+  }
+  .migration-mid-arrow { color: var(--text-faint); }
+  .migration-status-tag {
+    margin-left: auto;
+    font-size: 11.5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .migration-body {
+    display: none;
+    padding: 0 16px 16px 38px;
+    background: var(--bg-row);
+    border-top: 1px dashed var(--border);
+  }
+  .migration-row.open .migration-body { display: block; }
+  .migration-body .reasoning {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--bg-card);
+    border-left: 2px solid var(--accent, var(--color-skills));
+    border-radius: 4px;
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .migration-body .item-provenance {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+  }
+  .migration-body .prov-links { margin-top: 6px; }
+
+  /* Sources panel */
+  .sources {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 12px;
+  }
+  .source {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .source-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+  .source-title {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 13.5px;
+  }
+  .source-group {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-faint);
+    background: var(--bg-row);
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .source-url {
+    display: block;
+    color: var(--color-claudemd);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    word-break: break-all;
+    text-decoration: none;
+    margin-bottom: 8px;
+  }
+  .source-url:hover { text-decoration: underline; }
+  .source-quote {
+    border-left: 2px solid var(--color-claudemd);
+    padding: 6px 10px;
+    margin-top: 6px;
+    background: var(--bg-row);
+    color: var(--text-dim);
+    font-size: 12.5px;
+    border-radius: 0 4px 4px 0;
+    font-style: italic;
+  }
+  .source-quote::before { content: '"'; }
+  .source-quote::after { content: '"'; }
+
+  /* Decision flow */
+  .dflow { list-style: none; padding: 0; margin: 0; counter-reset: q; }
+  .dflow li {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px 14px 56px;
+    margin-bottom: 10px;
+    position: relative;
+    counter-increment: q;
+  }
+  .dflow li::before {
+    content: counter(q);
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-row);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-strong);
+  }
+  .dflow .dq {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .dflow .dyes, .dflow .dno {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .dflow .dyes strong, .dflow .dno strong { color: var(--text); }
+  .dflow .dyes::before { content: 'YES → '; color: var(--status-correct); font-weight: 700; }
+  .dflow .dno::before { content: 'NO → '; color: var(--text-faint); font-weight: 700; }
+  .dflow .dcite {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-top: 8px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .dflow .dcite a { color: var(--color-claudemd); text-decoration: none; }
+  .dflow .dcite a:hover { text-decoration: underline; }
+  .dflow .bucket-pill {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 4px;
+  }
+  .bp-claudemd { background: rgba(183,109,255,.18); color: var(--color-claudemd); }
+  .bp-subagents { background: rgba(107,61,240,.22); color: #a690ff; }
+  .bp-skills { background: rgba(255,61,138,.18); color: var(--color-skills); }
+  .bp-hooks { background: rgba(0,184,169,.18); color: var(--color-hooks); }
+  .bp-settings { background: rgba(61,217,122,.18); color: var(--color-settings); }
+  .bp-mcp { background: rgba(255,138,61,.18); color: var(--color-mcp); }
+
+  /* Disclaimers */
+  .disclaimers { display: grid; gap: 10px; }
+  .disclaimer {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .disclaimer.documented { --accent: var(--status-correct); }
+  .disclaimer.inferred { --accent: var(--status-borderline); }
+  .disclaimer.org { --accent: var(--color-skills); }
+  .disclaimer.ambiguous { --accent: var(--status-misplaced); }
+  .disclaimer-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .disclaimer-tag {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--bg-row);
+    color: var(--accent);
+  }
+  .disclaimer-title { font-weight: 600; font-size: 13.5px; color: var(--text); }
+  .disclaimer-body { color: var(--text-dim); font-size: 13px; }
+  .disclaimer-body code { background: var(--bg-row); padding: 1px 5px; border-radius: 3px; color: #ffd9a8; font-size: 12px; }
+
+  /* Provenance badge on items */
+  .item-provenance {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 11.5px;
+  }
+  .prov-tag {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-size: 10px;
+  }
+  .prov-tag.documented { background: rgba(61,217,122,.15); color: var(--status-correct); }
+  .prov-tag.inferred { background: rgba(255,200,87,.15); color: var(--status-borderline); }
+  .prov-tag.org { background: rgba(255,61,138,.15); color: var(--color-skills); }
+  .prov-tag.ambiguous { background: rgba(255,85,119,.15); color: var(--status-misplaced); }
+  .prov-note { color: var(--text-faint); font-style: italic; }
+  .prov-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .prov-links a {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 10.5px;
+    color: var(--color-claudemd);
+    text-decoration: none;
+    background: var(--bg-card);
+    padding: 1px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+  }
+  .prov-links a:hover { text-decoration: underline; }
+
+  /* Hidden state */
+  .hidden { display: none !important; }
+  .empty-state { padding: 24px; color: var(--text-faint); text-align: center; font-size: 13px; }
+
+  /* Footer */
+  footer {
+    padding: 24px 32px;
+    color: var(--text-faint);
+    font-size: 12px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>Acme primitives audit, what belongs where</h1>
+  <p class="lede">
+    Anthropic ships six primitives. Each has one job. The Acme stack today routes most static "how do I do X"
+    content through the platform-guidelines MCP server. That worked when MCP was the only tool in the box. It is no
+    longer. This page categorizes every Acme skill and every MCP tool into the primitive that actually fits, with
+    the reasoning behind each call.
+  </p>
+  <p class="meta">
+    Sources: <code>platform-skills/acme/skills/</code> (19 skills), <code>platform-guidelines-mcp-server/</code>
+    (75 guideline files, 93 BCCs, 85 OpenAPI specs), governance architecture deck and companion.
+  </p>
+  <nav class="tabs" id="tabs">
+    <button data-tab="overview" class="active">Overview</button>
+    <button data-tab="today">Today's layout <span class="badge" id="cnt-today">0</span></button>
+    <button data-tab="target">Target layout <span class="badge" id="cnt-target">0</span></button>
+    <button data-tab="migrations">Migrations <span class="badge" id="cnt-migrations">0</span></button>
+    <button data-tab="framework">Decision framework</button>
+    <button data-tab="sources">Sources &amp; disclaimers</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============ OVERVIEW TAB ============ -->
+  <div class="tab-pane active" data-tab-pane="overview">
+
+  <!-- KPI hero -->
+  <section>
+    <h2>By the numbers</h2>
+    <p class="subhead">What's wrong today, what changes after migration. Counts derive from the audit data below; numbers update automatically when the data does.</p>
+    <div class="kpi-hero" id="kpiHero"></div>
+    <div class="movement" id="movement"></div>
+  </section>
+
+  <!-- Verdict summary -->
+  <section>
+    <h2>The headline</h2>
+    <p class="subhead">Four things to walk away with.</p>
+    <div class="verdict-grid">
+      <div class="verdict">
+        <h3>Static content is delivered through MCP, the tool stays but its scope shrinks</h3>
+        <p>About <strong>62 of 75 guidelines</strong> in the MCP server are pure procedural knowledge ("how do I write
+        a hexagonal adapter," "what's our git commit format," "how do we name things"). These are the <strong>canonical
+        skill shape</strong>: files in git, loaded on demand. The MCP tool that serves them (<code>get-guideline</code>)
+        is fine as a primitive, but its scope shrinks: 62 of 75 type values disappear because the underlying files
+        move into the skill marketplace. We call this kind of issue a <strong>reshape in place</strong> (right primitive, wrong scope).</p>
+      </div>
+      <div class="verdict warn">
+        <h3>A few guidelines do belong in MCP, the live ones</h3>
+        <p><strong>Team contacts, infrastructure permissions, release calendar, test customer DBs, dashboard URLs, OpenAPI specs, BCCs</strong>
+        all change on a business cadence. These are <strong>connectivity</strong>, the textbook MCP use case. Keep
+        them. Sharpen the server's scope to just these.</p>
+      </div>
+      <div class="verdict miss">
+        <h3>Hooks and settings.json are absent, the enforcement floor is missing</h3>
+        <p>Acme uses <code>settings.json</code> minimally and uses <strong>no PreToolUse / PostToolUse hooks</strong>.
+        Iron laws like "no <code>@Transactional</code> in <code>application/</code>" are advisory text in skills today.
+        These should be deterministic, blocked at the tool boundary, not advisory in markdown.</p>
+      </div>
+      <div class="verdict good">
+        <h3>This audit is grounded in Anthropic docs, where we extrapolate is flagged</h3>
+        <p>Each item below carries a <strong>provenance badge</strong>: <code>doc'd</code> (verbatim Anthropic
+        guidance), <code>inferred</code> (a defensible reading the docs do not say literally), or
+        <code>org</code> (org context, not Anthropic's call). The decision framework and source list make every
+        claim traceable to a URL.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Migration narrative -->
+  <section>
+    <h2>The migration shape</h2>
+    <p class="subhead">Reading the audit as a sequence: what to do, in what order.</p>
+    <div class="narrative">
+      <h3>Phase 1, prove the model on one skill (this quarter)</h3>
+      <ol>
+        <li>Migrate <strong>ddd-patterns</strong> (66 lines, lowest-rated, called out by name on slide 13). Pull the body of
+        <code>domain-service-guidelines.md</code> and <code>architecture-guidelines.md</code> from MCP into the skill body.
+        Target ~150 lines, half of <code>backend-story</code>'s size.</li>
+        <li>Add an <strong>ArchUnit verification step</strong> as a hook on PostToolUse for any Edit / Write under
+        <code>**/model/**</code>. The skill's iron law ("no framework annotations in domain") becomes deterministic.</li>
+        <li>Measure: regression eval pass rate at CI, time-to-update for a guideline, onboarding time for a new dev
+        reading the skill cold.</li>
+      </ol>
+
+      <h3>Phase 2, sharpen what stays in MCP</h3>
+      <ul>
+        <li>Keep: <code>get-openapi-spec</code>, <code>search-openapi-specs</code>, <code>list-openapi-services</code>,
+        all BCC tools, <code>get-guideline type=team</code>, <code>type=infrastructure</code>, <code>type=release-planning-2026</code>,
+        <code>type=billing-test-customer-search</code>, dashboard / dynatrace / kibana lookups.</li>
+        <li>Remove from MCP (move into git as skills or skill bodies): the ~62 procedural guidelines.
+        That is the bulk of slide 12's audit.</li>
+        <li>Any skill that previously called <code>get-guideline type=X</code> for a now-skill-bodied guideline gets
+        the content inlined. The skill body becomes the source of truth.</li>
+      </ul>
+
+      <h3>Phase 3, add the missing primitives</h3>
+      <ul>
+        <li><strong>Hooks:</strong> ArchUnit on domain edits, SonarQube blockers on commit, PII regex on analytics
+        edits, "no Slack" lint on docs (Acme uses Teams, currently a markdown comment in two skills, should be a
+        deterministic check).</li>
+        <li><strong>settings.json:</strong> <code>permissions.deny</code> for dangerous bash patterns,
+        <code>permissions.allow</code> for the trusted MCP tools, environment variable bindings.</li>
+        <li><strong>Subagents:</strong> the compliance agents already mentioned in <code>backend-story</code>
+        (<code>test-quality-guardian</code>, <code>java-client-service-guardian</code>, <code>security-scanner</code>)
+        get formal subagent files in <code>.claude/agents/</code>, with deterministic tool allowlists.</li>
+      </ul>
+    </div>
+  </section>
+
+  </div><!-- /overview tab -->
+
+  <!-- ============ TODAY'S LAYOUT TAB ============ -->
+  <div class="tab-pane" data-tab-pane="today">
+    <section>
+      <h2>Today's layout, where things actually live now</h2>
+      <p class="subhead">
+        Six buckets, populated by <strong>current</strong> location. The status badge on each item tells you whether
+        it belongs here. Click any item to see where it should go and why.
+      </p>
+      <div class="toolbar" id="toolbar-today">
+        <input type="search" data-search-scope="today" placeholder="Filter by name (e.g. ddd-patterns, openapi, git)" autocomplete="off">
+        <span class="filter-pill" data-filter-scope="today" data-filter="all">All</span>
+        <span class="filter-pill misplaced" data-filter-scope="today" data-filter="misplaced">Misplaced</span>
+        <span class="filter-pill stub" data-filter-scope="today" data-filter="stub">Reshape in place</span>
+        <span class="filter-pill borderline" data-filter-scope="today" data-filter="borderline">Borderline</span>
+        <span class="filter-pill correct" data-filter-scope="today" data-filter="correct">Correct</span>
+      </div>
+      <div class="bucket-grid" id="bucketgrid-today"></div>
+    </section>
+  </div>
+
+  <!-- ============ TARGET LAYOUT TAB ============ -->
+  <div class="tab-pane" data-tab-pane="target">
+    <section>
+      <h2>Target layout, where things should be after migration</h2>
+      <p class="subhead">Same six buckets, populated by <strong>recommended</strong> location. This is the post-migration picture.</p>
+      <div class="toolbar" id="toolbar-target">
+        <input type="search" data-search-scope="target" placeholder="Filter by name" autocomplete="off">
+        <span class="filter-pill" data-filter-scope="target" data-filter="all">All</span>
+        <span class="filter-pill misplaced" data-filter-scope="target" data-filter="misplaced">Misplaced</span>
+        <span class="filter-pill stub" data-filter-scope="target" data-filter="stub">Reshape in place</span>
+        <span class="filter-pill borderline" data-filter-scope="target" data-filter="borderline">Borderline</span>
+        <span class="filter-pill correct" data-filter-scope="target" data-filter="correct">Correct</span>
+        <span class="filter-pill" data-filter-scope="target" data-filter="missing">Missing primitive</span>
+      </div>
+      <div class="bucket-grid" id="bucketgrid"></div>
+    </section>
+  </div>
+
+  <!-- ============ MIGRATIONS TAB ============ -->
+  <div class="tab-pane" data-tab-pane="migrations">
+    <section>
+      <h2>Migrations, the explicit moves</h2>
+      <p class="subhead">
+        Just the items that need action: ones in the wrong primitive (<span class="tag misplaced">misplaced</span>),
+        ones in the right primitive but wrong scope (<span class="tag stub">reshape in place</span>), and primitives that
+        should exist but don't yet (<span class="tag missing">missing</span>). Each row shows from → to with reasoning.
+      </p>
+      <div class="toolbar" id="toolbar-mig">
+        <input type="search" data-search-scope="mig" placeholder="Filter by name" autocomplete="off">
+        <span class="filter-pill" data-filter-scope="mig" data-filter="all">All</span>
+        <span class="filter-pill misplaced" data-filter-scope="mig" data-filter="misplaced">Misplaced only</span>
+        <span class="filter-pill stub" data-filter-scope="mig" data-filter="stub">Reshape only</span>
+        <span class="filter-pill" data-filter-scope="mig" data-filter="missing">Missing only</span>
+      </div>
+      <div id="migrationsList"></div>
+    </section>
+  </div>
+
+  <!-- ============ FRAMEWORK TAB ============ -->
+  <div class="tab-pane" data-tab-pane="framework">
+    <section>
+      <h2>Decision framework, where does this piece of context belong</h2>
+      <p class="subhead">
+        Walk top-to-bottom, take the first <strong>YES</strong>. Seven questions collapse into one of the six primitives.
+        Each question cites the Anthropic doc that grounds it.
+      </p>
+      <ol class="dflow" id="dflow"></ol>
+    </section>
+  </div>
+
+  <!-- ============ SOURCES & DISCLAIMERS TAB ============ -->
+  <div class="tab-pane" data-tab-pane="sources">
+    <section>
+      <h2>Cross-checked against Anthropic</h2>
+      <p class="subhead">
+        Every primitive's definition was checked against the canonical doc. URLs go to the Mintlify
+        <code>.md</code> endpoints used in Acme's <code>scripts/check-platform-docs.js</code>, the same source the deck
+        build verifies.
+      </p>
+      <div class="sources" id="sources"></div>
+    </section>
+
+    <section>
+      <h2>Disclaimers, where this audit extrapolates beyond Anthropic</h2>
+      <p class="subhead">
+        Honest accounting of which claims are documented verbatim vs. which are defensible interpretations. Read this
+        before quoting any specific number or migration phase as Anthropic-blessed.
+      </p>
+      <div class="disclaimers" id="disclaimers"></div>
+    </section>
+  </div>
+
+</main>
+
+<footer>
+  Generated for Acme governance audit. Each entry is a judgment call with reasoning, not a rule. Push back where the
+  reasoning is wrong, that is the point of the doc.
+</footer>
+
+<script>
+// =====================================================================
+// Data: every skill, every MCP tool, every guideline, with verdict
+// =====================================================================
+
+const STATUS = {
+  CORRECT: 'correct',
+  BORDERLINE: 'borderline',
+  MISPLACED: 'misplaced',  // wrong primitive, should move to a different bucket
+  STUB: 'stub',            // right primitive, wrong scope/shape (e.g., MCP tool over-scoped, skill that delegates its body to MCP)
+  MISSING: 'missing',
+};
+
+const PROV = {
+  DOCUMENTED: 'documented',  // verbatim or near-verbatim Anthropic doc language
+  INFERRED: 'inferred',      // defensible interpretation, not stated literally
+  ORG: 'org',        // organisation-specific, beyond Anthropic's scope
+  AMBIGUOUS: 'ambiguous',    // docs do not address, judgment call
+};
+
+// Canonical Anthropic docs we cross-checked against. URLs use the Mintlify .md
+// endpoint, which is also what Acme's check-platform-docs.js verifies.
+const SOURCES = [
+  {
+    id: 'skills-overview',
+    group: 'Agent Skills',
+    title: 'Agent Skills overview',
+    url: 'https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview.md',
+    quote: 'Skills are reusable, filesystem-based resources that provide Claude with domain-specific expertise: workflows, context, and best practices that transform general-purpose agents into specialists. Unlike prompts (conversation-level instructions for one-off tasks), Skills load on-demand and eliminate the need to repeatedly provide the same guidance across multiple conversations.',
+  },
+  {
+    id: 'skills-best',
+    group: 'Agent Skills',
+    title: 'Skill authoring best practices',
+    url: 'https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices.md',
+    quote: 'Keep SKILL.md body under 500 lines for optimal performance. ... Keep references one level deep from SKILL.md. ... Avoid offering too many options. ... Default assumption: Claude is already very smart. Only add context Claude does not already have.',
+  },
+  {
+    id: 'skills-cc',
+    group: 'Claude Code',
+    title: 'Claude Code skills',
+    url: 'https://code.claude.com/docs/en/skills.md',
+    quote: 'Create a skill when you keep pasting the same playbook, checklist, or multi-step procedure into chat, or when a section of CLAUDE.md has grown into a procedure rather than a fact. Unlike CLAUDE.md content, a skill body loads only when it is used, so long reference material costs almost nothing until you need it.',
+  },
+  {
+    id: 'memory',
+    group: 'Claude Code',
+    title: 'CLAUDE.md and memory',
+    url: 'https://code.claude.com/docs/en/memory.md',
+    quote: 'Keep it to facts Claude should hold in every session: build commands, conventions, project layout, "always do X" rules. If an entry is a multi-step procedure or only matters for one part of the codebase, move it to a skill or a path-scoped rule instead. ... Settings rules are enforced by the client regardless of what Claude decides to do. CLAUDE.md instructions shape Claude\'s behavior but are not a hard enforcement layer.',
+  },
+  {
+    id: 'subagents',
+    group: 'Claude Code',
+    title: 'Subagents',
+    url: 'https://code.claude.com/docs/en/sub-agents.md',
+    quote: 'Each subagent runs in its own context window with a custom system prompt, specific tool access, and independent permissions. When Claude encounters a task that matches a subagent\'s description, it delegates to that subagent, which works independently and returns results.',
+  },
+  {
+    id: 'hooks',
+    group: 'Claude Code',
+    title: 'Hooks',
+    url: 'https://code.claude.com/docs/en/hooks.md',
+    quote: 'Hooks are user-defined shell commands, HTTP endpoints, or LLM prompts that execute automatically at specific points in Claude Code\'s lifecycle. ... For instructions that never change, prefer CLAUDE.md. It loads without running a script and is the standard place for static project conventions.',
+  },
+  {
+    id: 'settings',
+    group: 'Claude Code',
+    title: 'Settings configuration',
+    url: 'https://code.claude.com/docs/en/settings.md',
+    quote: 'Memory files (CLAUDE.md): Contain instructions and context that Claude loads at startup. Settings files (JSON): Configure permissions, environment variables, and tool behavior. Skills: Custom prompts that can be invoked with /skill-name or loaded by Claude automatically. MCP servers: Extend Claude Code with additional tools and integrations.',
+  },
+  {
+    id: 'mcp-connector',
+    group: 'MCP',
+    title: 'MCP connector',
+    url: 'https://platform.claude.com/docs/en/agents-and-tools/mcp-connector.md',
+    quote: 'Claude\'s Model Context Protocol (MCP) connector feature enables you to connect to remote MCP servers directly from the Messages API without a separate MCP client.',
+  },
+  {
+    id: 'engineering-blog',
+    group: 'Anthropic Engineering',
+    title: 'Extending Claude\'s Capabilities with Skills and MCP Servers',
+    url: 'https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills',
+    quote: 'MCP handles connectivity. Skills handle expertise. (Quoted second-hand via Acme companion deck slide 3, sourced from the Anthropic skills + MCP blog post Dec 2025; the literal phrasing is the deck author\'s; Anthropic\'s own line is the more nuanced "Skills package instructions, metadata, and optional resources." We use the deck\'s framing because it captures the architectural distinction in one sentence.)',
+  },
+];
+
+// Decision framework, top-down. First YES wins. Each step cites the doc.
+const DECISIONS = [
+  {
+    q: 'Does this rule need to BLOCK a specific tool call deterministically (e.g., "no rm -rf", "no @Transactional in /application/", "no PII in analytics edits")?',
+    yes: { bucket: 'hooks', label: 'Hook (PreToolUse / PostToolUse)', detail: 'Use a hook. Anthropic publishes the rm-rf example almost verbatim, plus the lint-on-PostToolUse pattern. CLAUDE.md cannot enforce; hooks can.' },
+    no: 'Continue to question 2.',
+    cite: { source: 'hooks', anchor: '#what-hooks-are' },
+  },
+  {
+    q: 'Is the rule a binary tool-permission allow/deny (e.g., "always allow npm test", "never let curl run", "block writes to ./secrets/**")?',
+    yes: { bucket: 'settings', label: 'settings.json (permissions.allow / deny)', detail: 'Use settings.json. The doc is explicit: settings rules are enforced by the client regardless of what Claude decides to do.' },
+    no: 'Continue to question 3.',
+    cite: { source: 'settings', anchor: '#permissions-configuration' },
+  },
+  {
+    q: 'Is the content a hard floor that must NOT be overridable by individual users (compliance, regulatory, security policy)?',
+    yes: { bucket: 'claudemd', label: 'Managed-policy CLAUDE.md or managed settings', detail: 'Deploy via MDM / Group Policy. Anthropic explicitly distinguishes managed-policy CLAUDE.md from project-tier. Without MDM, project-tier in git is the floor that matters this quarter.' },
+    no: 'Continue to question 4.',
+    cite: { source: 'memory', anchor: '#deploy-organization-wide-claude-md' },
+  },
+  {
+    q: 'Is this a fact / convention Claude needs in EVERY session, regardless of task (build commands, code style, "always do X")?',
+    yes: { bucket: 'claudemd', label: 'CLAUDE.md (project tier, ≤200 lines)', detail: 'Use CLAUDE.md. The doc explicitly says this is for "facts Claude should hold in every session." Path-scoped rules in .claude/rules/ are the right tool when content grows past 200 lines.' },
+    no: 'Continue to question 5.',
+    cite: { source: 'memory', anchor: '#when-to-add-to-claude-md' },
+  },
+  {
+    q: 'Is this a multi-step procedure that only applies in certain situations (a "playbook" you keep pasting in chat, or a section of CLAUDE.md that has grown into a procedure)?',
+    yes: { bucket: 'skills', label: 'Skill (.claude/skills/<name>/SKILL.md)', detail: 'Use a skill. Anthropic\'s exact words: "Create a skill when you keep pasting the same playbook ... or when a section of CLAUDE.md has grown into a procedure rather than a fact." Body ≤500 lines, references one level deep.' },
+    no: 'Continue to question 6.',
+    cite: { source: 'skills-cc', anchor: '#extend-claude-with-skills' },
+  },
+  {
+    q: 'Does this need its OWN context window, its own tool allowlist, and to be auto-delegated when a task matches its description (e.g., a security reviewer that cannot write, a research agent that only reads)?',
+    yes: { bucket: 'subagents', label: 'Subagent (.claude/agents/<name>.md)', detail: 'Use a subagent. The doc says: "Each subagent runs in its own context window with a custom system prompt, specific tool access, and independent permissions." This is the only primitive that gives hard tool boundaries by role.' },
+    no: 'Continue to question 7.',
+    cite: { source: 'subagents', anchor: '#create-custom-subagents' },
+  },
+  {
+    q: 'Is this DATA that lives outside the codebase and changes on a business cadence (live OpenAPI specs, ticket state, dashboard URLs, team contacts, tenant config, sprint calendar)?',
+    yes: { bucket: 'mcp', label: 'MCP server tool', detail: 'Use MCP. The connector is "for connecting to remote MCP servers" with live tool calls. The Dec 2025 blog crystallizes it: connectivity goes here, expertise goes in skills. If you find yourself putting static "how to" content in MCP, the answer is q5, not this question.' },
+    no: { bucket: 'skills', label: 'Default to a skill, then re-evaluate', detail: 'If none of the above fit, the content is most likely procedural (skill) or a fact (CLAUDE.md). MCP and hooks are not catchalls; they earn their place by passing q1, q2, or q7.' },
+    cite: { source: 'mcp-connector', anchor: '#mcp-connector' },
+  },
+];
+
+// Disclaimers, where this audit goes beyond explicit Anthropic guidance.
+const DISCLAIMERS = [
+  {
+    level: 'documented',
+    title: 'The six-primitive framing itself',
+    body: 'Each primitive\'s definition (Skills, CLAUDE.md, Subagents, Hooks, settings.json, MCP) is taken directly from Anthropic docs. The "is for / is not for" lines on each bucket card are paraphrases of doc language, with the source linked.',
+  },
+  {
+    level: 'documented',
+    title: 'The "MCP for connectivity, skills for expertise" rule',
+    body: 'This is the canonical framing in the Anthropic Dec 2025 blog post (cited verbatim on slide 3 of the Acme governance deck). Anthropic\'s reference docs do not state it as one sentence, but the architectural design (skills are filesystem-loaded; MCP is a network protocol for remote tools) makes the claim load-bearing.',
+  },
+  {
+    level: 'documented',
+    title: 'CLAUDE.md is advisory, hooks and settings are enforced',
+    body: 'Anthropic\'s own words from the memory doc: "Settings rules are enforced by the client regardless of what Claude decides to do. CLAUDE.md instructions shape Claude\'s behavior but are not a hard enforcement layer." This grounds the entire "missing primitives" call.',
+  },
+  {
+    level: 'inferred',
+    title: 'Targeting ~150 lines per skill body',
+    body: 'Anthropic\'s explicit cap is <strong>500 lines</strong>, not 150. The 150-line target is from Acme\'s own SKILL-ENHANCEMENT-RECOMMENDATIONS doc, which cites Anthropic\'s "context window is a public good" principle. Reading the 150-line target as Anthropic guidance is wrong; reading it as a Acme stretch goal grounded in Anthropic\'s direction is fair.',
+  },
+  {
+    level: 'inferred',
+    title: '"~62 of 75 guidelines should be skills"',
+    body: 'A judgment call, file-by-file. The category split (procedural vs. mutable) is grounded in the doc framing, but the exact count is ours, and reasonable people could draw the line a few items either way. Borderline cases are flagged in the bucket grid below.',
+  },
+  {
+    level: 'documented',
+    title: '"Reshape in place" status, the third diagnostic shape',
+    body: 'Some items live in the right primitive but with the wrong scope or content split: the MCP tool <code>get-guideline</code> exposes 75 type keys when ~13 are mutable; the skills <code>ddd-patterns</code> and <code>bcc-generation</code> have empty bodies that delegate to MCP. We call these <strong>reshape in place</strong> because the architectural shape is wrong even though the primitive choice is right. This taxonomy is ours; Anthropic does not name it. The fix in each case (shrink the enum, inline the body) is doc-grounded.',
+  },
+  {
+    level: 'inferred',
+    title: '"ddd-patterns at 66 lines is a stub" / "should be ~148 lines"',
+    body: 'Anthropic does not publish a minimum skill size. The "stub" label here means "the rules live elsewhere (in MCP), not in the skill body" — that part is doc-grounded. The specific 148-line target comes from Acme governance deck slide 13. Treat the size as Acme\'s call, not Anthropic\'s.',
+  },
+];
+
+const BUCKETS = [
+  {
+    id: 'claudemd',
+    title: 'CLAUDE.md',
+    isFor: 'Memory and project conventions, the few invariants every session needs.',
+    isNot: 'A place for procedures, workflows, or content delivery.',
+  },
+  {
+    id: 'subagents',
+    title: 'Subagents',
+    isFor: 'Role isolation: own context window, own tool allowlist, auto-delegated by task match.',
+    isNot: 'Persona avatars for the org chart. Not a substitute for one CLAUDE.md.',
+  },
+  {
+    id: 'skills',
+    title: 'Skills',
+    isFor: 'Procedural knowledge: how to do something, multi-step, testable. Files in git, loaded on demand.',
+    isNot: 'Where you put project memory or live data. Not a wrapper around an MCP call.',
+  },
+  {
+    id: 'hooks',
+    title: 'Hooks',
+    isFor: 'Event-driven enforcement: PreToolUse, PostToolUse, UserPromptSubmit. Deterministic, fires on lifecycle.',
+    isNot: 'General scripting. Not a place for advisory rules.',
+  },
+  {
+    id: 'settings',
+    title: 'settings.json',
+    isFor: 'Deterministic floor: permissions.allow, permissions.deny, env bindings, MCP server registration.',
+    isNot: 'Where guidance lives. Binary, not advisory.',
+  },
+  {
+    id: 'mcp',
+    title: 'MCP',
+    isFor: 'Connectivity to anything that changes on a business cadence: live specs, tenant config, BCCs, dashboards.',
+    isNot: 'A governance mechanism for static reasoning. Not a content delivery system for files that could live in git.',
+  },
+];
+
+// Items: each one knows its current location and where it should be.
+// status: CORRECT (current = recommended), BORDERLINE (could be sharper), MISPLACED (should move), MISSING (should exist but doesn't)
+// recommendedBucket: where it goes after the audit
+// currentLocation: where it is today
+
+const ITEMS = [
+  // ============ SKILLS, the 19 Acme skills ============
+  {
+    name: 'acme:aem-e2e',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (~400 lines, content inline)',
+    status: STATUS.CORRECT,
+    reasoning: 'Procedural multi-step verification of an MFE on a real AEM page. Content is inline. Calls Playwright MCP for live browser actions, which is exactly what MCP is for. Target shape, leave alone.',
+  },
+  {
+    name: 'acme:api-integration',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (82 lines, content inline)',
+    status: STATUS.CORRECT,
+    reasoning: 'The "iron law" version of OpenAPI-first integration. Procedural, testable, content inline. Calls get-openapi-spec via MCP for the live spec, which is the textbook MCP use. Keep as is.',
+  },
+  {
+    name: 'acme:backend-story',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (329 lines, content inline)',
+    status: STATUS.CORRECT,
+    reasoning: 'Slide 12 of the deck calls this out as the team\'s best skill. 329 lines is what the target shape looks like. It calls MCP only for live BCC/OpenAPI lookups (correct) and consults guideline content via MCP (currently correct, will be skill-inlined once those guidelines migrate to git). After Phase 2, the get-guideline calls drop and the inline content is consulted directly.',
+  },
+  {
+    name: 'acme:bcc-generation',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (67 lines, body delegates to MCP guideline bcc-generation-guidelines.md)',
+    status: STATUS.STUB,
+    reasoning: 'Right primitive (skill), wrong shape. The 67-line skill is a stub that says "go ask MCP for the rules." The rules are 600+ lines of static procedural knowledge sitting in the MCP server. The skill stays in the skills bucket; what changes is that bcc-generation-guidelines.md gets pulled out of MCP and inlined into the skill body (or a one-level-deep reference file in the skill folder). The MCP guideline disappears.',
+  },
+  {
+    name: 'acme:bug-triage',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (153 lines, content inline)',
+    status: STATUS.CORRECT,
+    reasoning: 'Procedural categorization workflow. Content inline. Uses Atlassian MCP for live Jira data, which is correct (Jira state is mutable). Cross-references epic-analysis files (also git-backed). Target shape.',
+  },
+  {
+    name: 'acme:cdi-testing',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (87 lines, content inline)',
+    status: STATUS.CORRECT,
+    reasoning: 'MockProducer pattern with code examples inline. Iron law ("don\'t delete tests, create MockProducer") + quick-reference table + code template. The MCP "related guidelines" footer is a soft reference, not a delegation. The skill stands on its own.',
+  },
+  {
+    name: 'acme:ddd-patterns',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (66 lines, body delegates to MCP guidelines domain-service + architecture)',
+    status: STATUS.STUB,
+    reasoning: 'Right primitive (skill), wrong shape. Same stub pattern as bcc-generation. The deck names this skill on slide 13: lowest-rated of the 19, highest impact on onboarding, smallest. The migration keeps it in the skills bucket but inlines its body. Pull domain-service-guidelines + architecture-guidelines bodies in, target ~148 lines (Acme deck slide 13 number; Anthropic publishes 500 as the cap). Eight concrete blocks: rich domain method examples, value object snippets, Lombok rules, ArchUnit test snippet, cross-skill links to backend-story / cdi-testing / transactions. Pair with a hook on PostToolUse for **/model/** edits to enforce no-framework-annotations deterministically.',
+  },
+  {
+    name: 'acme:deploy-status',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (153 lines, uses curl + filesystem against GitOps repos)',
+    status: STATUS.BORDERLINE,
+    reasoning: 'Procedural; reads live deploy versions across environments. The data is mutable but is fetched by the skill via curl, not via MCP. Acceptable as a skill. Could be sharpened by wrapping the version-lookup logic in a small MCP tool (so a deploy-status MCP returns the structured table). Not urgent.',
+  },
+  {
+    name: 'acme:epic-analysis',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (~280 lines, content inline)',
+    status: STATUS.CORRECT,
+    reasoning: 'Multi-phase Confluence-driven analysis. Calls Atlassian MCP for live Confluence content (correct), platform-guidelines MCP for live BCCs/OpenAPI (correct). The estimation methodology, EBP sizing, and 11-file output structure are inline procedural content. Target shape.',
+  },
+  {
+    name: 'acme:frontend-story',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (877 lines, content inline)',
+    status: STATUS.BORDERLINE,
+    reasoning: '877 lines exceeds the Layer-2 budget called out in the enhancement doc (~150 lines body, with reference files for depth). The content is right; the packing is wrong. Recommend: split into one short skill body (~200 lines covering iron laws, the Page State Matrix concept, the Plan Validation gate) plus reference files for Wink mapping, AEM dialog patterns, mock scenario strategy, the Verification Loop. Keep all content in git, just stop loading 877 lines into context every time.',
+  },
+  {
+    name: 'acme:generate-presentation',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (311 lines + 11 docs in skill folder)',
+    status: STATUS.CORRECT,
+    reasoning: 'Self-contained. Two-phase workflow with schema-enforced validation. Already does what the rest of the skills should do: short SKILL.md as table of contents, depth in bundled reference files (docs/, template/). Reference shape, point to it.',
+  },
+  {
+    name: 'acme:git-sync',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (90 lines, content inline)',
+    status: STATUS.CORRECT,
+    reasoning: 'Bulk repo sync procedural. Pure git operations. Iron laws inline (never set -e, detect default branch, --ff-only pulls, track stashes). The MCP "related" footer for git-guidelines is a soft reference. Target shape.',
+  },
+  {
+    name: 'acme:mcp-adapter',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (351 lines, content inline)',
+    status: STATUS.CORRECT,
+    reasoning: 'How to add an MCP adapter to a CS or DS. Procedural, content inline, full code templates, scope-mapping rules, test fixtures. Self-contained. Target shape.',
+  },
+  {
+    name: 'acme:mfe-e2e',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (435 lines, content inline)',
+    status: STATUS.CORRECT,
+    reasoning: 'E2E proxy setup procedural. Contains full code for the proxy server, the Vite config, the mock-scenario pattern. Self-contained. Could be slightly trimmed via a reference file for the long code blocks, but not urgent.',
+  },
+  {
+    name: 'acme:presentation-dev-handover',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (~392 lines), delegates to acme:generate-presentation',
+    status: STATUS.CORRECT,
+    reasoning: 'Workflow that gathers handover-specific info and delegates to generate-presentation for rendering. Calls get-guideline type=team for live team contacts (legitimate MCP use, team membership IS mutable). The verification rules ("never guess URLs," "never mention Slack") are the iron laws. Target shape.',
+  },
+  {
+    name: 'acme:presentation-ops-handover',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (~295 lines), delegates to acme:generate-presentation',
+    status: STATUS.CORRECT,
+    reasoning: 'Same shape as dev handover. Calls type=infrastructure (legitimate, SiD permissions and namespace names are mutable) and type=team (legitimate). The Visual Overflow Check via Playwright MCP is appropriate use of MCP. Target shape.',
+  },
+  {
+    name: 'acme:test-mfe-aem',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (~674 lines, content inline)',
+    status: STATUS.BORDERLINE,
+    reasoning: 'Same observation as frontend-story. Content is right, packing is heavy. The hardcoded port table, OSGi config curls, and stub-format pitfalls could move to reference files. Skill body becomes the table of contents + iron rules. Not urgent because the audience is narrow (anyone debugging local AEM).',
+  },
+  {
+    name: 'acme:transactions',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (84 lines), MCP "related" footer references domain-service / architecture',
+    status: STATUS.CORRECT,
+    reasoning: 'Iron-law skill for @Transactional placement. Content inline, code templates, wrong/right table, common excuses debunked. The MCP footer is a soft reference. After domain-service / architecture migrate to git, drop the footer entirely. Effectively in the target shape today.',
+  },
+  {
+    name: 'acme:upload-usage-test-data',
+    kind: 'skill',
+    recommendedBucket: 'skills',
+    currentLocation: 'Skill (265 lines, content inline)',
+    status: STATUS.BORDERLINE,
+    reasoning: 'Procedural with live SSH operations against BSS servers. The data manipulation is real-world side-effecting. Skill is fine, but the operation should also have a settings.json permissions.allow entry constraining the SSH targets, and ideally a hook validating that uploads only happen against expected hosts. Otherwise the "send a file to a production-adjacent server" flow has no enforcement.',
+  },
+
+  // ============ MCP TOOLS, what the platform-guidelines MCP server exposes ============
+  {
+    name: 'mcp: get-guideline (consolidated)',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP tool (correct primitive), but type enum exposes 75 guideline keys, ~62 of which are static content',
+    status: STATUS.STUB,
+    reasoning: 'Right primitive (MCP), wrong scope. The tool itself stays in MCP because dynamic-lookup-by-key is exactly what MCP is for. What needs to change is the SET of values the type enum exposes. ~62 of the 75 guideline files behind this tool are static procedural knowledge that should be skills in git, not MCP-served content. Recommendation: shrink the type enum to the ~13 mutable guideline categories (team, infrastructure, release-planning-2026, billing-test-customer-search, dynatrace-dashboard, kibana-logs, operational-dashboards, leanix-api, full-stack-release-tracking, acme-ai-agents, etc.). The other ~62 type values disappear because the underlying files migrate into the skill marketplace. The TOOL stays; its SCOPE shrinks.',
+  },
+  {
+    name: 'mcp: list-available-guidelines',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP utility',
+    status: STATUS.CORRECT,
+    reasoning: 'Catalog/discovery tool. Stays. After Phase 2 it lists the ~13 live categories rather than 75.',
+  },
+  {
+    name: 'mcp: list-bounded-contexts',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP DDD',
+    status: STATUS.CORRECT,
+    reasoning: 'BCCs are validated/updated by squads continuously. The list is mutable. Textbook MCP. Keep.',
+  },
+  {
+    name: 'mcp: get-bounded-context',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP DDD',
+    status: STATUS.CORRECT,
+    reasoning: 'Returns the BCC for a specific service. Service-level state, mutable, cross-team. Textbook MCP.',
+  },
+  {
+    name: 'mcp: search-bounded-contexts',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP DDD',
+    status: STATUS.CORRECT,
+    reasoning: 'Searches across the live BCC set. Live data, dynamic search. Textbook MCP.',
+  },
+  {
+    name: 'mcp: search-bcc-by-validation-status',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP DDD',
+    status: STATUS.CORRECT,
+    reasoning: 'Workflow tracker (pending-validation / validated / stale, optionally by squad). Live workflow state. Textbook MCP.',
+  },
+  {
+    name: 'mcp: search-bcc-ai-suggestions',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP DDD',
+    status: STATUS.CORRECT,
+    reasoning: 'Finds BCCs with [ai-suggestion] markers awaiting human validation. Live workflow state.',
+  },
+  {
+    name: 'mcp: get-bounded-context-map',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP DDD',
+    status: STATUS.CORRECT,
+    reasoning: 'Auto-generated Mermaid BCM diagram, regenerated on every mvn verify. The diagram is a live snapshot of the system. Textbook MCP.',
+  },
+  {
+    name: 'mcp: list-openapi-services',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP OpenAPI',
+    status: STATUS.CORRECT,
+    reasoning: 'Live registry of services with synced specs. Mutable, central source of truth. Textbook MCP.',
+  },
+  {
+    name: 'mcp: get-openapi-spec',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP OpenAPI',
+    status: STATUS.CORRECT,
+    reasoning: 'The single most valuable tool on the server. OpenAPI specs change on every service deploy; teams must integrate against the current contract. The skill acme:api-integration depends on this. Gold use case for MCP.',
+  },
+  {
+    name: 'mcp: search-openapi-specs',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP OpenAPI',
+    status: STATUS.CORRECT,
+    reasoning: 'Live search across the spec set. Textbook MCP.',
+  },
+  {
+    name: 'mcp: list-recent-guidelines',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP metadata',
+    status: STATUS.BORDERLINE,
+    reasoning: 'Useful drift detector today (which guidelines updated in the last N days). After Phase 2, when ~62 guidelines move to git, this tool only meaningfully covers the ~13 live ones. Keep but expect a smaller scope.',
+  },
+  {
+    name: 'mcp: list-guidelines-with-metadata',
+    kind: 'mcp-tool',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP metadata',
+    status: STATUS.BORDERLINE,
+    reasoning: 'Same as above. Catalog tool with last_updated, author, tags. Useful for the ~13 live ones. After migration the bulk of its output moves to git history.',
+  },
+
+  // ============ THE 75 GUIDELINES, split ============
+  // The ones that should be SKILLS (procedural knowledge, currently misplaced as MCP content)
+  {
+    name: 'guideline: git-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline (delivered via get-guideline type=git)',
+    status: STATUS.MISPLACED,
+    reasoning: 'The canonical "how do I create a branch" example. Pure procedural: commit message format, JIRA prefix, branching strategy, Maven version sprint alignment. Static rules that change at the cadence of code, not business. Move into a skill (or a one-page CLAUDE.md inclusion) checked into the repo it governs.',
+  },
+  {
+    name: 'guideline: architecture-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Hexagonal architecture rules. Pure pattern. Today consumed by ddd-patterns, transactions, cdi-testing, backend-story via MCP fetch. After migration, lives in the ddd-patterns skill body (or a shared reference file).',
+  },
+  {
+    name: 'guideline: domain-service-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'DDD patterns and rich domain model rules. The body of the ddd-patterns skill. Migration target #1.',
+  },
+  {
+    name: 'guideline: client-service-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'CS patterns, OCAPI scopes. Today consumed by backend-story. Inline into backend-story (or a CS reference file) post-migration.',
+  },
+  {
+    name: 'guideline: errorhandling-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'RFC 9457 ProblemDetail patterns. Pure rules. Inline into backend-story post-migration.',
+  },
+  {
+    name: 'guideline: java-testing-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'JaCoCo coverage targets, ArchUnit, test diamond ratios. Pure procedural. Inline into backend-story or split into a dedicated java-testing skill.',
+  },
+  {
+    name: 'guideline: testing-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Cross-cutting testing rules. Skill body or shared reference.',
+  },
+  {
+    name: 'guideline: mfe-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'General MFE patterns. Body of frontend-story (which currently fetches it via MCP).',
+  },
+  {
+    name: 'guideline: mfe-architecture-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Nx structure, state management. Body of frontend-story.',
+  },
+  {
+    name: 'guideline: mfe-testing-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Playwright, route mocking, testing standards. Body of frontend-story or a dedicated mfe-testing skill.',
+  },
+  {
+    name: 'guideline: mfe-i18n-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Lokalise workflow, key conventions. Body of frontend-story.',
+  },
+  {
+    name: 'guideline: mfe-multibrand-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Acme + Nova multibrand rules. Body of frontend-story.',
+  },
+  {
+    name: 'guideline: mfe-component-development-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Wink-first CSS hierarchy and similar. Body of frontend-story or a Wink reference.',
+  },
+  {
+    name: 'guideline: mfe-storybook-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Storybook story patterns. Body of frontend-story.',
+  },
+  {
+    name: 'guideline: mfe-state-management-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'NgRx Signals patterns. Body of frontend-story.',
+  },
+  {
+    name: 'guideline: mfe-styling-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Wink hierarchy, telwink utilities, atomic-CSS forbiddens. Body of frontend-story.',
+  },
+  {
+    name: 'guideline: mfe-aem-e2e-testing-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'E2E patterns inside AEM. Already overlaps with acme:test-mfe-aem skill. Inline.',
+  },
+  {
+    name: 'guideline: mfe-local-development-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Overlaps with acme:mfe-e2e. Inline.',
+  },
+  {
+    name: 'guideline: mfe-mobile-integration-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Procedural. Move to skill, or fold into frontend-story.',
+  },
+  {
+    name: 'guideline: mfe-module-federation-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Federation config patterns. Body of frontend-story.',
+  },
+  {
+    name: 'guideline: aem-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'AEM component patterns. Body of frontend-story or test-mfe-aem.',
+  },
+  {
+    name: 'guideline: accessibility-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'WCAG 2.2 AA rules. Static. Body of frontend-story or a dedicated accessibility skill.',
+  },
+  {
+    name: 'guideline: accessibility-testing-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'How to run accessibility checks. Procedural. Inline.',
+  },
+  {
+    name: 'guideline: bcc-generation-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline (consumed by acme:bcc-generation skill stub)',
+    status: STATUS.MISPLACED,
+    reasoning: 'The body that the bcc-generation skill stub fetches at runtime. Inline into the skill.',
+  },
+  {
+    name: 'guideline: bcm-visualization-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'How the BCM Mermaid is rendered. Procedural. Skill or inline.',
+  },
+  {
+    name: 'guideline: cicd-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Pipeline patterns. Skill or per-repo CLAUDE.md.',
+  },
+  {
+    name: 'guideline: ci-portal-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'CI portal usage. Static.',
+  },
+  {
+    name: 'guideline: claude-setup-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'How to set up Claude Code in the org. Procedural onboarding. Skill or root CLAUDE.md.',
+  },
+  {
+    name: 'guideline: confluence-documentation-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Doc structure and naming. Static. Skill.',
+  },
+  {
+    name: 'guideline: conventional-commits-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Commit format. Should be either a hook (PreToolUse on git commit) or in CLAUDE.md alongside git-guidelines.',
+  },
+  {
+    name: 'guideline: developer-setup-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Onboarding. Static. Skill or per-repo README.',
+  },
+  {
+    name: 'guideline: gitops-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'GitOps patterns. Static. Skill.',
+  },
+  {
+    name: 'guideline: gloo-service-mesh-patterns-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Service mesh routing patterns. Static. Skill.',
+  },
+  {
+    name: 'guideline: gslb-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Global load balancing patterns. Static. Skill.',
+  },
+  {
+    name: 'guideline: iac-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Infrastructure-as-code patterns. Static. Skill.',
+  },
+  {
+    name: 'guideline: jira-project-codes-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline',
+    status: STATUS.BORDERLINE,
+    reasoning: 'A static-ish reference list of JIRA project keys. New projects spin up over time. Borderline. Defaulting to MCP because the cadence of "new project added" is business-driven, not code-driven.',
+  },
+  {
+    name: 'guideline: mobile-development-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Mobile-app patterns. Static. Skill.',
+  },
+  {
+    name: 'guideline: monitoring-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'How to instrument monitoring. Static guidance. Skill. (Specific dashboard URLs ARE mutable, those go to operational-dashboards.)',
+  },
+  {
+    name: 'guideline: mysql-proxysql-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'DB proxy config patterns. Static. Skill.',
+  },
+  {
+    name: 'guideline: naming-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Naming conventions. Static. Skill or CLAUDE.md.',
+  },
+  {
+    name: 'guideline: nx-versioning-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Nx version management. Static. Skill.',
+  },
+  {
+    name: 'guideline: ocp-to-oke-migration-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Migration runbook. Static. Skill or per-team runbook in git.',
+  },
+  {
+    name: 'guideline: oke-external-connectivity-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'OKE network patterns. Static. Skill.',
+  },
+  {
+    name: 'guideline: oke-operator-migration-patterns-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Operator migration. Static. Skill.',
+  },
+  {
+    name: 'guideline: pr-review-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Review checklist. Static. Skill or hook (PreToolUse on git push).',
+  },
+  {
+    name: 'guideline: release-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Release procedure. Static. Skill.',
+  },
+  {
+    name: 'guideline: serverless-testing-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Serverless test patterns. Static. Skill.',
+  },
+  {
+    name: 'guideline: sonarqube-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'SonarQube rule reference. Static. Skill, with the BLOCKER/CRITICAL gating ALSO enforced via a pre-commit hook.',
+  },
+  {
+    name: 'guideline: tbapi-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'TB-API integration patterns. Static. Skill. (The OpenAPI specs are live in MCP, that part stays.)',
+  },
+  {
+    name: 'guideline: technology-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Approved tech stack. Static. Skill or CLAUDE.md.',
+  },
+  {
+    name: 'guideline: acme-agile-workflow-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Sprint and agile patterns. Static. Skill.',
+  },
+  {
+    name: 'guideline: vault-ocp-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Vault on OCP usage. Static. Skill.',
+  },
+  {
+    name: 'guideline: vault-oke-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Vault on OKE usage. Static. Skill.',
+  },
+  {
+    name: 'guideline: aws-lambda-typescript-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Lambda TS patterns. Static. Skill.',
+  },
+  {
+    name: 'guideline: aws-security-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'AWS security patterns. Static. Skill, with permissions.deny for the dangerous IAM actions in settings.json.',
+  },
+  {
+    name: 'guideline: aws-step-functions-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Step Functions patterns. Static. Skill.',
+  },
+  {
+    name: 'guideline: terraform-aws-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Terraform patterns. Static. Skill.',
+  },
+  {
+    name: 'guideline: apprunner-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'AppRunner usage. Static. Skill.',
+  },
+  {
+    name: 'guideline: customer-web-aem-modules-aws-eks-terraform-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Specific Terraform layout. Static. Skill or per-repo doc.',
+  },
+  {
+    name: 'guideline: customer-web-monorepo-cicd-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Monorepo CI patterns. Static. Skill or per-repo CLAUDE.md.',
+  },
+  {
+    name: 'guideline: mfe-aws-eks-gitops-application-setup-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Setup runbook. Static. Skill.',
+  },
+  {
+    name: 'guideline: test-administration-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'skills',
+    currentLocation: 'MCP guideline',
+    status: STATUS.MISPLACED,
+    reasoning: 'Test ops procedures. Static. Skill.',
+  },
+  {
+    name: 'guideline: sonarqube-api-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline',
+    status: STATUS.BORDERLINE,
+    reasoning: 'How to query the SonarQube API. The patterns are static, but the SonarQube project keys and tokens are mutable. Borderline. The query patterns belong in a skill; the live project key list could come from MCP. Defaulting to MCP because the value is in dynamic project lookups, not in the curl shape.',
+  },
+
+  // The ones that legitimately STAY in MCP (mutable, business cadence)
+  {
+    name: 'guideline: team-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline (consumed by both presentation skills via type=team)',
+    status: STATUS.CORRECT,
+    reasoning: 'Team membership and contact info. Owned by HR / management. Changes weekly. Live data. Textbook MCP. Consumed correctly today.',
+  },
+  {
+    name: 'guideline: infrastructure-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline (consumed by presentation-ops-handover via type=infrastructure)',
+    status: STATUS.CORRECT,
+    reasoning: 'SiD permission group names, OKE namespaces, EKS cluster names. Mutable, cross-tenant config. Textbook MCP.',
+  },
+  {
+    name: 'guideline: release-planning-2026-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline',
+    status: STATUS.CORRECT,
+    reasoning: 'Sprint dates, release windows, deployment freeze calendar. Live calendar data. Textbook MCP.',
+  },
+  {
+    name: 'guideline: billing-test-customer-search-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline',
+    status: STATUS.CORRECT,
+    reasoning: 'Test customer database conventions. The customer set itself is mutable. Live data. MCP appropriate.',
+  },
+  {
+    name: 'guideline: test-data-management-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline',
+    status: STATUS.BORDERLINE,
+    reasoning: 'How to manage test data is procedural (skill-like) but the data inventory is mutable. Split: procedure into skill, inventory pointers stay in MCP. Defaulting to MCP since the value is in pointing to live test data.',
+  },
+  {
+    name: 'guideline: dynatrace-dashboard-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline',
+    status: STATUS.CORRECT,
+    reasoning: 'Dashboard URLs and IDs. Mutable. Live data. MCP.',
+  },
+  {
+    name: 'guideline: kibana-logs-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline',
+    status: STATUS.CORRECT,
+    reasoning: 'Index patterns, container-name conventions. Mutable. MCP.',
+  },
+  {
+    name: 'guideline: operational-dashboards-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline',
+    status: STATUS.CORRECT,
+    reasoning: 'Dashboard inventory. Mutable. MCP.',
+  },
+  {
+    name: 'guideline: leanix-api-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline',
+    status: STATUS.CORRECT,
+    reasoning: 'Live LeanIX API access. The procedural part (how to query) could be skill, the live endpoints/auth stay MCP. Borderline-correct.',
+  },
+  {
+    name: 'guideline: full-stack-release-tracking-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline',
+    status: STATUS.CORRECT,
+    reasoning: 'Live release-tracking dashboard / state. Mutable. MCP.',
+  },
+  {
+    name: 'guideline: acme-ai-agents-guidelines.md',
+    kind: 'guideline',
+    recommendedBucket: 'mcp',
+    currentLocation: 'MCP guideline',
+    status: STATUS.BORDERLINE,
+    reasoning: 'Catalog of available AI agents inside Acme. New agents added over time. Borderline. Could be skill if cadence is low; defaulting to MCP because the catalog is the value, not the procedure.',
+  },
+
+  // ============ MISSING PRIMITIVES (should exist, currently absent) ============
+  {
+    name: 'hook: no-framework-annotations-in-domain (PostToolUse on **/model/**)',
+    kind: 'hook',
+    recommendedBucket: 'hooks',
+    currentLocation: 'Does not exist. Today this is advisory text in ddd-patterns and as an ArchUnit test that runs in CI.',
+    status: STATUS.MISSING,
+    reasoning: 'The deck\'s slide 10 spine: CLAUDE.md is advisory, hooks are deterministic. Today the iron law lives in ~5 places (ddd-patterns SKILL.md, transactions SKILL.md, the architecture-guidelines body, ArchUnit test, plus tribal knowledge). Add a PostToolUse hook on Edit / Write under **/model/** that runs a quick AST check for forbidden imports (jakarta.persistence, com.fasterxml.jackson, etc.). Block at the editor, not at CI. Fail loud.',
+  },
+  {
+    name: 'hook: sonarqube-blocker-pre-commit',
+    kind: 'hook',
+    recommendedBucket: 'hooks',
+    currentLocation: 'Does not exist. SonarQube currently runs in CI only.',
+    status: STATUS.MISSING,
+    reasoning: 'PreToolUse on git commit / push. Run a quick SonarQube delta scan against the changed files. Block on BLOCKER and CRITICAL severities. Today these are caught in CI, with rework cost; a hook catches them at commit time.',
+  },
+  {
+    name: 'hook: no-pii-in-analytics (PreToolUse on analytics files)',
+    kind: 'hook',
+    recommendedBucket: 'hooks',
+    currentLocation: 'Does not exist. PII rule lives as advisory text in frontend-story.',
+    status: STATUS.MISSING,
+    reasoning: 'PreToolUse on Edit / Write to *analytics*.ts and similar paths. Regex check for PII fields (email, phone, address, names) being passed to dataLayer. The Compliance Checklist in frontend-story flags this manually; a hook makes it deterministic.',
+  },
+  {
+    name: 'hook: no-slack-in-docs (PreToolUse on .md and .pptx)',
+    kind: 'hook',
+    recommendedBucket: 'hooks',
+    currentLocation: 'Does not exist. "Never mention Slack, we use Teams" lives as a comment in two presentation skills.',
+    status: STATUS.MISSING,
+    reasoning: 'Trivial hook: grep -i "slack" on doc edits, warn the user. Catches the rule that\'s currently scattered in two skill files (presentation-dev-handover and presentation-ops-handover) and turns it into deterministic enforcement.',
+  },
+  {
+    name: 'hook: jira-prefix-on-commits',
+    kind: 'hook',
+    recommendedBucket: 'hooks',
+    currentLocation: 'Does not exist. Lives as advisory in git-guidelines.',
+    status: STATUS.MISSING,
+    reasoning: 'PreToolUse on git commit. Block commits whose message does not start with [A-Z]+-\\d+:. Trivial. Currently advisory only.',
+  },
+  {
+    name: 'settings.json: permissions.allow for trusted MCP tools',
+    kind: 'setting',
+    recommendedBucket: 'settings',
+    currentLocation: 'Partial. Each developer configures their own.',
+    status: STATUS.MISSING,
+    reasoning: 'Project-tier settings.json should explicitly allow the MCP tools the project trusts (mcp__platform-guidelines__*, mcp__acme-atlassian-mcp__*, mcp__plugin_playwright_*) so developers do not get prompted on every call. Today this happens ad-hoc.',
+  },
+  {
+    name: 'settings.json: permissions.deny for dangerous bash patterns',
+    kind: 'setting',
+    recommendedBucket: 'settings',
+    currentLocation: 'Does not exist at the project tier.',
+    status: STATUS.MISSING,
+    reasoning: 'Hard floor: deny rm -rf /, deny git push --force to main, deny destructive AWS CLI patterns, deny npx commands the team does not approve. Currently advisory in random places. Make it binary.',
+  },
+  {
+    name: 'subagent: test-quality-guardian',
+    kind: 'subagent',
+    recommendedBucket: 'subagents',
+    currentLocation: 'Referenced in backend-story compliance step but no formal subagent file in .claude/agents/.',
+    status: STATUS.MISSING,
+    reasoning: 'backend-story tells you to "Run compliance agents" with three subagent_type values. Those subagents need to actually exist as .claude/agents/*.md files with sharp descriptions and tool allowlists (the test-quality-guardian should not have git push). Today they are aspirational.',
+  },
+  {
+    name: 'subagent: java-client-service-guardian / java-domain-service-guardian',
+    kind: 'subagent',
+    recommendedBucket: 'subagents',
+    currentLocation: 'Referenced, not implemented.',
+    status: STATUS.MISSING,
+    reasoning: 'Same as test-quality-guardian. Would auto-delegate when a CS or DS file is being reviewed; runs the iron-law checks (RolesAllowed, RFC9457 ProblemDetail, etc.) in its own context window without polluting the main agent.',
+  },
+  {
+    name: 'subagent: security-scanner',
+    kind: 'subagent',
+    recommendedBucket: 'subagents',
+    currentLocation: 'Referenced, not implemented.',
+    status: STATUS.MISSING,
+    reasoning: 'A subagent with no write tools, only Read / Grep / Bash(grep|rg|jq). Auto-delegates on tasks matching "review for security." The deck\'s slide 8 walk-through is exactly this shape.',
+  },
+  {
+    name: 'CLAUDE.md: per-repo project memory (platform-skills)',
+    kind: 'claude-md',
+    recommendedBucket: 'claudemd',
+    currentLocation: 'Exists in platform-guidelines-mcp-server. Partial in platform-skills root. Missing the "no Slack, we use Teams" type rule at the top tier.',
+    status: STATUS.BORDERLINE,
+    reasoning: 'CLAUDE.md should hold the small set of invariants every session needs: tech stack, commit format, "no Slack," "Acme uses Microsoft Teams," default sensitivity is Internal. Today these are smeared across skills. Pull the truly cross-cutting ones up into a tight, ~150-line CLAUDE.md per repo.',
+  },
+  {
+    name: 'CLAUDE.md: managed-policy tier (MDM-deployed, immutable)',
+    kind: 'claude-md',
+    recommendedBucket: 'claudemd',
+    currentLocation: 'Does not exist. Acme does not have MDM-deployed CLAUDE.md today.',
+    status: STATUS.MISSING,
+    reasoning: 'Slide 9 of the deck. The compliance / regulatory invariants that MUST NOT be edited by an end developer go into the managed-policy tier (deployed via MDM if Acme adopts it, or via a locked-down repo + CI gate as a fallback). Until MDM is in scope, the project tier in git is the floor that matters this quarter, but the gap should be acknowledged.',
+  },
+];
+
+// =====================================================================
+// Render
+// =====================================================================
+
+function statusLabel(s) {
+  switch (s) {
+    case STATUS.CORRECT: return 'Correct';
+    case STATUS.BORDERLINE: return 'Borderline';
+    case STATUS.MISPLACED: return 'Misplaced';
+    case STATUS.STUB: return 'Reshape in place';
+    case STATUS.MISSING: return 'Missing';
+  }
+  return s;
+}
+function statusOrder(s) {
+  switch (s) {
+    case STATUS.MISPLACED: return 0;
+    case STATUS.STUB: return 1;
+    case STATUS.MISSING: return 2;
+    case STATUS.BORDERLINE: return 3;
+    case STATUS.CORRECT: return 4;
+  }
+  return 5;
+}
+
+function bucketTitle(id) {
+  return BUCKETS.find(b => b.id === id).title;
+}
+
+// Derive where an item lives TODAY (for the "today's layout" tab).
+// kind alone is usually enough; for missing primitives there is no current bucket.
+function currentBucket(item) {
+  if (item.currentBucket) return item.currentBucket;
+  if (item.status === STATUS.MISSING) return null;
+  switch (item.kind) {
+    case 'guideline': return 'mcp';
+    case 'mcp-tool': return 'mcp';
+    case 'skill': return 'skills';
+    case 'subagent': return 'subagents';
+    case 'hook': return 'hooks';
+    case 'setting': return 'settings';
+    case 'claude-md': return 'claudemd';
+    default: return item.recommendedBucket;
+  }
+}
+
+function render(opts) {
+  opts = opts || {};
+  const groupBy = opts.groupBy === 'today' ? currentBucket : (it) => it.recommendedBucket;
+  const gridId = opts.gridId || 'bucketgrid';
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  for (const b of BUCKETS) {
+    const items = ITEMS.filter(it => groupBy(it) === b.id);
+    items.sort((x, y) => statusOrder(x.status) - statusOrder(y.status) || x.name.localeCompare(y.name));
+
+    const counts = {
+      total: items.length,
+      misplaced: items.filter(i => i.status === STATUS.MISPLACED).length,
+      stub: items.filter(i => i.status === STATUS.STUB).length,
+      missing: items.filter(i => i.status === STATUS.MISSING).length,
+      borderline: items.filter(i => i.status === STATUS.BORDERLINE).length,
+      correct: items.filter(i => i.status === STATUS.CORRECT).length,
+    };
+
+    const bucketEl = document.createElement('div');
+    bucketEl.className = `bucket b-${b.id}`;
+    bucketEl.dataset.bucket = b.id;
+
+    bucketEl.innerHTML = `
+      <div class="bucket-header" data-toggle="bucket">
+        <div class="bucket-title-row">
+          <div class="bucket-title">${b.title}</div>
+          <div class="bucket-counts">
+            <span class="pill">${counts.total}</span>
+            ${counts.misplaced ? `<span class="pill" style="color:var(--status-misplaced)">${counts.misplaced} misplaced</span>` : ''}
+            ${counts.stub ? `<span class="pill" style="color:var(--status-stub)">${counts.stub} reshape</span>` : ''}
+            ${counts.missing ? `<span class="pill" style="color:var(--status-missing)">${counts.missing} missing</span>` : ''}
+          </div>
+        </div>
+        <div class="bucket-isnot">
+          <strong>Is for:</strong> ${b.isFor}<br>
+          <em>Is not:</em> ${b.isNot}
+        </div>
+      </div>
+      <div class="bucket-body">
+        ${items.length === 0 ? '<div class="empty-state">No items.</div>' : items.map(it => itemHtml(it)).join('')}
+      </div>
+    `;
+    grid.appendChild(bucketEl);
+  }
+
+  attachListeners();
+}
+
+function itemHtml(it) {
+  const recBucket = bucketTitle(it.recommendedBucket);
+  const prov = it.provenance || { level: PROV.INFERRED, sources: [], note: '' };
+  const provLinks = (prov.sources || [])
+    .map(id => SOURCES.find(s => s.id === id))
+    .filter(Boolean)
+    .map(s => `<a href="${s.url}" target="_blank" rel="noopener" title="${escapeHtml(s.title)}">${escapeHtml(s.group)}</a>`)
+    .join('');
+  return `
+    <div class="item" data-name="${it.name.toLowerCase()}" data-status="${it.status}">
+      <div class="item-header" data-toggle="item">
+        <span class="chev">&#9656;</span>
+        <span class="item-name">${escapeHtml(it.name)}</span>
+        <span class="item-tags">
+          <span class="tag ${it.status}">${statusLabel(it.status)}</span>
+          <span class="tag" style="background:rgba(255,255,255,0.04); color:var(--text-faint);">${it.kind}</span>
+        </span>
+      </div>
+      <div class="item-body">
+        <div class="currentvsrec">
+          <span class="from">Today: ${escapeHtml(it.currentLocation)}</span>
+          <span class="arrow">&#10142;</span>
+          <span class="to">Recommended: ${recBucket}</span>
+        </div>
+        <div class="reasoning">${escapeHtml(it.reasoning)}</div>
+        <div class="item-provenance">
+          <span class="prov-tag ${prov.level}">${escapeHtml(prov.level)}</span>
+          ${prov.note ? `<span class="prov-note">${escapeHtml(prov.note)}</span>` : ''}
+        </div>
+        ${provLinks ? `<div class="prov-links">${provLinks}</div>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(s) {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderSources() {
+  const el = document.getElementById('sources');
+  if (!el) return;
+  el.innerHTML = SOURCES.map(s => `
+    <div class="source">
+      <div class="source-head">
+        <div class="source-title">${escapeHtml(s.title)}</div>
+        <span class="source-group">${escapeHtml(s.group)}</span>
+      </div>
+      <a class="source-url" href="${s.url}" target="_blank" rel="noopener">${escapeHtml(s.url)}</a>
+      <div class="source-quote">${escapeHtml(s.quote)}</div>
+    </div>
+  `).join('');
+}
+
+function renderDecisionFlow() {
+  const el = document.getElementById('dflow');
+  if (!el) return;
+  el.innerHTML = DECISIONS.map(d => {
+    const sourceObj = SOURCES.find(s => s.id === d.cite.source);
+    const yesBucket = d.yes && d.yes.bucket ? `<span class="bucket-pill bp-${d.yes.bucket}">${escapeHtml(d.yes.label)}</span>` : '';
+    const noStr = (typeof d.no === 'string')
+      ? escapeHtml(d.no)
+      : (d.no && d.no.bucket ? `<strong>${escapeHtml(d.no.label)}</strong>: ${escapeHtml(d.no.detail)}` : '');
+    const yesDetail = d.yes && d.yes.detail ? `<br><span style="color:var(--text-faint)">${escapeHtml(d.yes.detail)}</span>` : '';
+    const citeUrl = sourceObj ? sourceObj.url : '#';
+    const citeLabel = sourceObj ? `${sourceObj.group}: ${sourceObj.title}` : 'Anthropic doc';
+    return `
+      <li>
+        <div class="dq">${escapeHtml(d.q)}</div>
+        <div class="dyes">${yesBucket}${yesDetail}</div>
+        <div class="dno">${noStr}</div>
+        <div class="dcite">cite: <a href="${citeUrl}" target="_blank" rel="noopener">${escapeHtml(citeLabel)}</a></div>
+      </li>
+    `;
+  }).join('');
+}
+
+function renderDisclaimers() {
+  const el = document.getElementById('disclaimers');
+  if (!el) return;
+  el.innerHTML = DISCLAIMERS.map(d => `
+    <div class="disclaimer ${d.level}">
+      <div class="disclaimer-head">
+        <span class="disclaimer-tag">${escapeHtml(d.level)}</span>
+        <span class="disclaimer-title">${escapeHtml(d.title)}</span>
+      </div>
+      <div class="disclaimer-body">${d.body}</div>
+    </div>
+  `).join('');
+}
+
+function attachListeners() {
+  document.querySelectorAll('[data-toggle="bucket"]').forEach(el => {
+    el.addEventListener('click', () => el.parentElement.classList.toggle('open'));
+  });
+  document.querySelectorAll('[data-toggle="item"]').forEach(el => {
+    el.addEventListener('click', () => el.parentElement.classList.toggle('open'));
+  });
+}
+
+// =====================================================================
+// Filter / search, scoped per tab
+// =====================================================================
+
+const filterState = { today: 'all', target: 'all', mig: 'all' };
+const queryState = { today: '', target: '', mig: '' };
+
+const SCOPE_TARGETS = {
+  today: () => document.querySelectorAll('[data-tab-pane="today"] .bucket'),
+  target: () => document.querySelectorAll('[data-tab-pane="target"] .bucket'),
+  mig: () => document.querySelectorAll('[data-tab-pane="migrations"] .migration-row'),
+};
+
+function applyScopedFilter(scope) {
+  const q = (queryState[scope] || '').trim().toLowerCase();
+  const f = filterState[scope];
+  const targets = SCOPE_TARGETS[scope]();
+  if (scope === 'mig') {
+    // Migrations is a flat list, not bucket-grouped
+    targets.forEach(row => {
+      const name = (row.dataset.name || '').toLowerCase();
+      const status = row.dataset.status;
+      const matchesQuery = !q || name.includes(q);
+      const matchesFilter = f === 'all' || status === f;
+      row.classList.toggle('hidden', !(matchesQuery && matchesFilter));
+    });
+    return;
+  }
+  // Bucket-grouped scopes
+  targets.forEach(b => {
+    let visibleInBucket = 0;
+    b.querySelectorAll('.item').forEach(it => {
+      const name = it.dataset.name;
+      const status = it.dataset.status;
+      const matchesQuery = !q || name.includes(q);
+      const matchesFilter = f === 'all' || status === f;
+      if (matchesQuery && matchesFilter) {
+        it.classList.remove('hidden');
+        visibleInBucket++;
+      } else {
+        it.classList.add('hidden');
+      }
+    });
+    if (visibleInBucket === 0 && (q || f !== 'all')) {
+      b.classList.add('hidden');
+    } else {
+      b.classList.remove('hidden');
+      if (q || f !== 'all') b.classList.add('open');
+    }
+  });
+}
+
+document.querySelectorAll('input[data-search-scope]').forEach(input => {
+  input.addEventListener('input', () => {
+    const scope = input.dataset.searchScope;
+    queryState[scope] = input.value;
+    applyScopedFilter(scope);
+  });
+});
+document.querySelectorAll('.filter-pill[data-filter-scope]').forEach(p => {
+  p.addEventListener('click', () => {
+    const scope = p.dataset.filterScope;
+    document.querySelectorAll(`.filter-pill[data-filter-scope="${scope}"]`).forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    filterState[scope] = p.dataset.filter;
+    applyScopedFilter(scope);
+  });
+});
+// Default-active pills per scope
+['today', 'target', 'mig'].forEach(scope => {
+  const allPill = document.querySelector(`.filter-pill[data-filter-scope="${scope}"][data-filter="all"]`);
+  if (allPill) allPill.classList.add('active');
+});
+
+// =====================================================================
+// Tab switching
+// =====================================================================
+
+function activateTab(name) {
+  document.querySelectorAll('nav.tabs button').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === name);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p => {
+    p.classList.toggle('active', p.dataset.tabPane === name);
+  });
+  // Persist in URL hash for shareability
+  history.replaceState(null, '', '#' + name);
+}
+document.querySelectorAll('nav.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+});
+// Restore from hash
+const initialTab = (location.hash || '').replace(/^#/, '');
+if (initialTab && document.querySelector(`nav.tabs button[data-tab="${initialTab}"]`)) {
+  activateTab(initialTab);
+}
+
+// Provenance defaults — applied if an item does not already declare one.
+// Heuristic: skill-bucket items sourced from Anthropic guidance get DOCUMENTED
+// (they map onto explicit doc language). MCP-bucket items get DOCUMENTED for
+// connectivity uses, INFERRED when we judged the cadence. Hooks/Subagents/
+// settings entries that "should exist" get INFERRED (Anthropic publishes the
+// pattern, the specific Acme rule is ours). The "no Slack" hook and
+// per-Acme items default to ORG.
+function defaultProvenance(it) {
+  if (it.provenance) return it.provenance;
+  if (it.kind === 'guideline' && it.recommendedBucket === 'skills') {
+    return {
+      level: PROV.INFERRED,
+      sources: ['skills-cc', 'skills-overview'],
+      note: 'Doc-grounded as a class ("procedural content belongs in a skill"). The exact migration target for this specific guideline is our judgment.',
+    };
+  }
+  if (it.kind === 'guideline' && it.recommendedBucket === 'mcp') {
+    return {
+      level: PROV.INFERRED,
+      sources: ['mcp-connector', 'engineering-blog'],
+      note: 'Belongs in MCP because the content is mutable / business-cadence. The category boundary is judgment, not a verbatim Anthropic line.',
+    };
+  }
+  if (it.kind === 'mcp-tool') {
+    return {
+      level: PROV.DOCUMENTED,
+      sources: ['mcp-connector'],
+      note: 'MCP tool surface; Anthropic\'s connector doc explicitly covers this primitive.',
+    };
+  }
+  if (it.kind === 'skill') {
+    return {
+      level: PROV.DOCUMENTED,
+      sources: ['skills-cc', 'skills-best'],
+      note: 'Skill placement aligns with Anthropic\'s explicit "procedural, multi-step, on-demand" framing. Per-skill judgments (line counts, body shape) are ours.',
+    };
+  }
+  if (it.kind === 'hook') {
+    return {
+      level: PROV.ORG,
+      sources: ['hooks'],
+      note: 'Hook pattern is documented by Anthropic; the specific Acme rule (target paths, what to block) is org context.',
+    };
+  }
+  if (it.kind === 'subagent') {
+    return {
+      level: PROV.ORG,
+      sources: ['subagents'],
+      note: 'Subagent pattern is documented; these specific subagents are referenced in Acme skills but not yet implemented as files. Recommendation is ours.',
+    };
+  }
+  if (it.kind === 'setting') {
+    return {
+      level: PROV.INFERRED,
+      sources: ['settings', 'memory'],
+      note: 'Settings primitive is documented; the specific allow/deny lists for Acme are ours.',
+    };
+  }
+  if (it.kind === 'claude-md') {
+    return {
+      level: PROV.INFERRED,
+      sources: ['memory'],
+      note: 'CLAUDE.md tier is documented; whether Acme has populated each tier is org observation.',
+    };
+  }
+  return { level: PROV.INFERRED, sources: [], note: '' };
+}
+
+// Apply defaults
+ITEMS.forEach(it => { it.provenance = defaultProvenance(it); });
+
+// A few specific overrides where the audit goes a step beyond the doc
+const SPECIFIC_PROVENANCE = {
+  'guideline: git-guidelines.md': {
+    level: PROV.DOCUMENTED,
+    sources: ['skills-cc', 'memory'],
+    note: 'Anthropic\'s memory doc names "git workflow" / "build commands" as CLAUDE.md material; their skills doc names "Git Commit Helper" as a canonical skill example. Either placement is doc-grounded; we recommend skill because the content here is multi-step procedural.',
+  },
+  'acme:ddd-patterns': {
+    level: PROV.INFERRED,
+    sources: ['skills-best', 'skills-cc'],
+    note: '"Stub delegating to MCP" is doc-grounded as an anti-pattern (skill body should hold the procedure). The specific 148-line target and the eight blocks come from Acme governance deck slide 13, not Anthropic.',
+  },
+  'acme:bcc-generation': {
+    level: PROV.INFERRED,
+    sources: ['skills-best', 'skills-cc'],
+    note: '"Stub delegating to MCP" is doc-grounded. The recommendation to inline the body is the architectural inverse of the misplacement.',
+  },
+  'acme:frontend-story': {
+    level: PROV.INFERRED,
+    sources: ['skills-best'],
+    note: 'The 877-line size exceeds Anthropic\'s 500-line guidance; the recommendation to split via reference files matches Anthropic\'s Pattern 1 / 2 / 3 progressive disclosure examples.',
+  },
+  'mcp: get-guideline (consolidated)': {
+    level: PROV.INFERRED,
+    sources: ['mcp-connector', 'engineering-blog', 'skills-cc'],
+    note: 'The misplacement call combines: Anthropic\'s skill doc telling you to put procedures in skills, the MCP connector doc framing MCP as connectivity, and the Dec 2025 blog\'s one-liner. No single Anthropic page says "stop using MCP for static content," but the architecture clearly points there.',
+  },
+  'guideline: team-guidelines.md': {
+    level: PROV.DOCUMENTED,
+    sources: ['mcp-connector', 'engineering-blog'],
+    note: 'Live data (team membership) is the textbook MCP use case. Anthropic\'s connector doc covers this primitive directly.',
+  },
+  'guideline: infrastructure-guidelines.md': {
+    level: PROV.DOCUMENTED,
+    sources: ['mcp-connector', 'engineering-blog'],
+    note: 'SiD permissions and namespace names change with infra. Live data; MCP is appropriate.',
+  },
+  'mcp: get-openapi-spec': {
+    level: PROV.DOCUMENTED,
+    sources: ['mcp-connector', 'engineering-blog'],
+    note: 'Most defensible MCP use in the entire server. OpenAPI specs change on every deploy; cross-team source of truth.',
+  },
+  'CLAUDE.md: managed-policy tier (MDM-deployed, immutable)': {
+    level: PROV.DOCUMENTED,
+    sources: ['memory'],
+    note: 'Anthropic explicitly distinguishes managed-policy CLAUDE.md from project tier and provides exact paths. The fact that Acme does not currently have it is org observation.',
+  },
+};
+ITEMS.forEach(it => { if (SPECIFIC_PROVENANCE[it.name]) it.provenance = SPECIFIC_PROVENANCE[it.name]; });
+
+// =====================================================================
+// KPI hero + Movement table + Migrations list
+// =====================================================================
+
+function computeKPIs() {
+  // Misplaced TODAY = items currently in the wrong primitive (will move).
+  // currentBucket() returns the bucket today; if it differs from recommendedBucket
+  // and status is MISPLACED, the item must move.
+  let misplacedToday = 0;
+  let stubsToday = 0;
+  let missingToday = 0;
+  let movingItems = 0;     // count of items that change buckets
+  let reshapedItems = 0;   // stubs (right primitive, wrong scope)
+  let createdItems = 0;    // missing primitives that will be created
+
+  const movement = {};
+  for (const b of BUCKETS) movement[b.id] = { today: 0, target: 0 };
+
+  for (const it of ITEMS) {
+    const cur = currentBucket(it);
+    const rec = it.recommendedBucket;
+
+    if (it.status === STATUS.MISSING) {
+      missingToday++;
+      createdItems++;
+      movement[rec].target++;
+    } else {
+      if (cur) movement[cur].today++;
+      movement[rec].target++;
+      if (it.status === STATUS.MISPLACED) {
+        misplacedToday++;
+        if (cur !== rec) movingItems++;
+      }
+      if (it.status === STATUS.STUB) {
+        stubsToday++;
+        reshapedItems++;
+      }
+    }
+  }
+  return { misplacedToday, stubsToday, missingToday, movingItems, reshapedItems, createdItems, movement };
+}
+
+function renderKPIHero() {
+  const el = document.getElementById('kpiHero');
+  if (!el) return;
+  const k = computeKPIs();
+  el.innerHTML = `
+    <div class="kpi-side">
+      <h3>Today, what's wrong</h3>
+      <div class="kpi-num misplaced">
+        <div class="n">${k.misplacedToday}</div>
+        <div class="t">Misplaced<br>(in wrong primitive)</div>
+      </div>
+      <div class="kpi-num stub">
+        <div class="n">${k.stubsToday}</div>
+        <div class="t">Reshape in place<br>(right primitive, wrong scope)</div>
+      </div>
+      <div class="kpi-num missing">
+        <div class="n">${k.missingToday}</div>
+        <div class="t">Missing<br>(should exist, do not)</div>
+      </div>
+    </div>
+    <div class="kpi-arrow">→</div>
+    <div class="kpi-side">
+      <h3>After migration</h3>
+      <div class="kpi-num moved">
+        <div class="n">${k.movingItems}</div>
+        <div class="t">Items move<br>to a different primitive</div>
+      </div>
+      <div class="kpi-num reshaped">
+        <div class="n">${k.reshapedItems}</div>
+        <div class="t">Items reshaped<br>in place</div>
+      </div>
+      <div class="kpi-num created">
+        <div class="n">${k.createdItems}</div>
+        <div class="t">Primitives created<br>(hooks / subagents / settings)</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderMovement() {
+  const el = document.getElementById('movement');
+  if (!el) return;
+  const k = computeKPIs();
+  const rows = BUCKETS.map(b => {
+    const t = k.movement[b.id].today;
+    const r = k.movement[b.id].target;
+    const d = r - t;
+    const dStr = d > 0 ? `+${d}` : (d < 0 ? `${d}` : '0');
+    const dClass = d > 0 ? 'delta-pos' : (d < 0 ? 'delta-neg' : 'delta-zero');
+    return `<tr class="r-${b.id}"><td>${b.title}</td><td>${t}</td><td>${r}</td><td class="${dClass}">${dStr}</td></tr>`;
+  }).join('');
+  el.innerHTML = `
+    <table>
+      <thead>
+        <tr><th>Primitive</th><th>Today</th><th>After</th><th>Δ</th></tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
+function renderMigrations() {
+  const el = document.getElementById('migrationsList');
+  if (!el) return;
+  // Items that need action: misplaced (will move), stub (will reshape), missing (will be created)
+  const actionable = ITEMS.filter(it =>
+    it.status === STATUS.MISPLACED ||
+    it.status === STATUS.STUB ||
+    it.status === STATUS.MISSING
+  );
+  // Sort: misplaced first, then stub, then missing; within each, alphabetical
+  actionable.sort((a, b) => statusOrder(a.status) - statusOrder(b.status) || a.name.localeCompare(b.name));
+  el.innerHTML = actionable.map(it => {
+    const cur = currentBucket(it);
+    const fromText = cur ? bucketTitle(cur) : '(does not exist)';
+    const fromCls = it.status === STATUS.STUB ? 'migration-from stub-from' : 'migration-from';
+    const toText = bucketTitle(it.recommendedBucket);
+    const tagHtml = `<span class="migration-status-tag tag ${it.status}">${statusLabel(it.status)}</span>`;
+
+    // Rich body, same shape as bucket items: reasoning + provenance + source links
+    const prov = it.provenance || { level: PROV.INFERRED, sources: [], note: '' };
+    const provLinks = (prov.sources || [])
+      .map(id => SOURCES.find(s => s.id === id))
+      .filter(Boolean)
+      .map(s => `<a href="${s.url}" target="_blank" rel="noopener" title="${escapeHtml(s.title)}">${escapeHtml(s.group)}</a>`)
+      .join('');
+
+    return `
+      <div class="migration-row" data-name="${it.name.toLowerCase()}" data-status="${it.status}">
+        <div class="migration-arrow-row" data-toggle="migration">
+          <span class="chev">&#9656;</span>
+          <span class="migration-name">${escapeHtml(it.name)}</span>
+          <span class="${fromCls}">${escapeHtml(fromText)}</span>
+          <span class="migration-mid-arrow">→</span>
+          <span class="migration-to">${escapeHtml(toText)}</span>
+          ${tagHtml}
+        </div>
+        <div class="migration-body">
+          <div class="reasoning">${escapeHtml(it.reasoning)}</div>
+          <div class="item-provenance">
+            <span class="prov-tag ${prov.level}">${escapeHtml(prov.level)}</span>
+            ${prov.note ? `<span class="prov-note">${escapeHtml(prov.note)}</span>` : ''}
+          </div>
+          ${provLinks ? `<div class="prov-links">${provLinks}</div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Wire up toggle for each migration row
+  document.querySelectorAll('[data-toggle="migration"]').forEach(el => {
+    el.addEventListener('click', () => el.parentElement.classList.toggle('open'));
+  });
+}
+
+function updateTabBadges() {
+  const k = computeKPIs();
+  const todayCount = ITEMS.filter(it => currentBucket(it) !== null).length;
+  const targetCount = ITEMS.length;
+  const migCount = k.misplacedToday + k.stubsToday + k.missingToday;
+  const set = (id, n) => { const e = document.getElementById(id); if (e) e.textContent = n; };
+  set('cnt-today', todayCount);
+  set('cnt-target', targetCount);
+  set('cnt-migrations', migCount);
+}
+
+renderSources();
+renderDecisionFlow();
+renderDisclaimers();
+renderKPIHero();
+renderMovement();
+renderMigrations();
+updateTabBadges();
+// Render bucket grids for both today and target views
+render({ groupBy: 'today', gridId: 'bucketgrid-today' });
+render({ groupBy: 'target', gridId: 'bucketgrid' });
+
+// Open all buckets by default in both layout tabs so the picture is immediately legible
+document.querySelectorAll('.bucket').forEach(b => b.classList.add('open'));
+</script>
+
+</body>
+</html>

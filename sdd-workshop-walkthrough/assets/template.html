@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- ===== EDIT: page title ===== -->
+<title>Workshop Title: the through-line</title>
+<style>
+  :root{
+    --ink:#14213d; --ink2:#475068; --line:#dfe4ec;
+    --bg:#eef2f8; --card:#ffffff; --navy:#16213e;
+    --accent:#2563eb; --tint:#e8f0fe;
+    /* token palette (shared across all workshops) */
+    --kw:#b45309; --bdd:#2563eb; --id:#0d9488; --ok:#16a34a; --err:#dc2626;
+    --gateT:#b45309; --gateB:#fcdebb; --gateBg:#fef3e0;
+    --okT:#166534; --okBg:#dcfce7;
+    font-size:18px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    background:
+      radial-gradient(1200px 520px at 82% -12%, #e6edfb 0%, rgba(230,237,251,0) 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---- hero ---- */
+  .hero{
+    background:linear-gradient(120deg,#16213e 0%,#22305a 100%);
+    color:#fff; padding:24px 6vw 20px;
+  }
+  .hero .eyebrow{font-size:.86rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:#8fb4ff;}
+  .hero h1{margin:.18rem 0 0; font-size:2.3rem; letter-spacing:-.02em; font-weight:800;}
+  .hero h1 b{color:#8fb4ff;}
+  .hero p{margin:.4rem 0 0; font-size:1.15rem; color:#c5d0e8; max-width:78ch;}
+
+  .wrap{max-width:1320px; margin:0 auto; padding:18px 4vw 40px;}
+
+  /* ---- workflow diagram (the takeaway, always visible) ---- */
+  .loop{display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap;
+    background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:14px 18px; margin:4px 0 16px;}
+  .loop .pre{font-size:.82rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink2); background:#eef1f7; border-radius:999px; padding:6px 13px; margin-right:6px; transition:.25s;}
+  .loop .pre.on{background:var(--accent); color:#fff;}
+  .lnode{display:flex; align-items:center; gap:10px; padding:8px 15px; border-radius:11px;
+    border:1.5px solid var(--line); background:#fff; transition:.25s; min-width:0;}
+  .lnode .num{flex:none; width:26px; height:26px; border-radius:50%; display:grid; place-items:center;
+    font-size:.86rem; font-weight:800; background:#e3e8f1; color:var(--ink2); transition:.25s;}
+  .lnode .lbl{font-size:1.06rem; font-weight:700; color:var(--ink2); white-space:nowrap; transition:.25s;}
+  .lnode.done{border-color:color-mix(in srgb,var(--accent) 35%,#fff);}
+  .lnode.done .num{background:color-mix(in srgb,var(--accent) 16%,#fff); color:var(--accent);}
+  .lnode.done .lbl{color:var(--ink);}
+  .lnode.on{border-color:var(--accent); background:color-mix(in srgb,var(--accent) 8%,#fff);
+    box-shadow:0 8px 22px color-mix(in srgb,var(--accent) 20%,transparent);}
+  .lnode.on .num{background:var(--accent); color:#fff;}
+  .lnode.on .lbl{color:var(--accent);}
+  .larr{color:#b6c0d4; font-size:1.3rem; font-weight:700; margin:0 2px;}
+  .loop .ret{color:#b6c0d4; font-size:.82rem; font-weight:700; margin-left:8px; letter-spacing:.04em;}
+
+  /* ---- progress meter ---- */
+  .meter{display:flex; align-items:center; gap:12px; margin:0 2px 16px;}
+  .meter .cl{font-size:.82rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--ink2); white-space:nowrap;}
+  .mtrack{flex:1; height:12px; background:#e3e8f1; border-radius:999px; overflow:hidden;}
+  .mfill{height:100%; width:6%; border-radius:999px;
+    background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 55%,#fff),var(--accent));
+    transition:width .6s cubic-bezier(.4,0,.2,1);}
+
+  /* ---- working-directory chip (you are here, every step) ---- */
+  .cwd{display:flex; align-items:center; gap:9px; font-size:.95rem; color:var(--ink2);
+    background:#fff; border:1.5px solid var(--line); border-radius:10px; padding:8px 14px; margin:2px 0 12px;
+    font-family:Consolas,ui-monospace,monospace; flex-wrap:wrap;}
+  .cwd b{color:var(--ink);} .cwd code{background:#eef1f7; border-radius:5px; padding:1px 7px; color:var(--ink);}
+  .cwd .dot{width:9px; height:9px; border-radius:50%; background:#16a34a; flex:none; box-shadow:0 0 0 3px #dcfce7;}
+
+  /* ---- action band ---- */
+  .action{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:12px; min-height:30px;}
+  .badge{font-size:.9rem; font-weight:800; letter-spacing:.04em; padding:6px 13px; border-radius:8px;
+    white-space:nowrap; border:1.5px solid var(--accent); color:var(--accent); background:color-mix(in srgb,var(--accent) 10%,#fff);}
+  .badge.gate{color:var(--gateT); border-color:var(--gateB); background:var(--gateBg);}
+  .badge.ok{color:var(--okT); border-color:#bbf7d0; background:var(--okBg);}
+  .badge.idea{color:var(--ink2); border-color:var(--line); background:#f1f4f9;}
+  .badge.cmd{color:#fff; background:var(--accent); border-color:var(--accent);}
+  .badge.check{color:#3730a3; border-color:#c7d2fe; background:#e0e7ff;}
+  .actor{font-family:"Cascadia Code",Consolas,"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:1.1rem; font-weight:600; color:var(--ink); word-break:break-word;}
+  .say{margin:0; flex-basis:100%; font-size:1.16rem; color:var(--ink2); padding-top:2px;}
+
+  /* ---- trainer note ---- */
+  .note{margin:2px 2px 14px; padding:11px 16px 11px 15px; border-left:5px solid #f3b04b;
+    background:#fff8ec; border-radius:0 10px 10px 0; font-size:1.02rem; color:#7a5212; display:none;}
+  .note.show{display:block;}
+  .note b{color:#92400e;}
+  .note .tag{font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#b4791b; display:block; margin-bottom:3px;}
+
+  /* ---- expected outcome (always visible, one per step) ---- */
+  .outcome{display:flex; align-items:flex-start; gap:11px; margin:0 2px 14px; padding:11px 16px;
+    background:var(--okBg); border:1.5px solid #bbf7d0; border-radius:10px; color:#14532d; font-size:1.06rem; line-height:1.4;}
+  .outcome .oi{flex:none; font-weight:800; color:var(--ok); font-size:1.12rem; line-height:1.3;}
+  .outcome .lab{flex:none; font-size:.72rem; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+    color:#15803d; background:#bbf7d0; border-radius:6px; padding:3px 8px; margin-top:1px;}
+  .outcome .otx{flex:1;}
+  .outcome .otx b{color:#14532d;}
+
+  /* ---- journey ---- */
+  .journey{display:grid; grid-template-columns:288px 1fr; gap:18px; align-items:stretch;}
+  .rail{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:5px;}
+  .ri{display:flex; align-items:center; gap:11px; padding:8px 11px; border-radius:10px; cursor:pointer;
+    border:1.5px solid transparent; color:var(--ink2); transition:.15s; font-size:1.0rem;}
+  .ri:hover{background:#fff;}
+  .rn{flex:none; width:27px; height:27px; border-radius:50%; display:grid; place-items:center;
+    font-size:.88rem; font-weight:800; background:#e3e8f1; color:var(--ink2);}
+  .ri .rl{line-height:1.2;}
+  .ri .rph{margin-left:auto; font-size:.68rem; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+    color:#aab4c8; padding-left:6px;}
+  .ri.done{color:var(--ink);}
+  .ri.done .rn{background:color-mix(in srgb,var(--accent) 16%,#fff); color:var(--accent);}
+  .ri.active{background:#fff; border-color:var(--accent); color:var(--ink); font-weight:700;
+    box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 18%,transparent);}
+  .ri.active .rn{background:var(--accent); color:#fff;}
+  .ri.active .rph{color:var(--accent);}
+
+  .artifact{background:var(--card); border:1.5px solid var(--line); border-radius:14px;
+    overflow:hidden; display:flex; flex-direction:column; min-height:468px;}
+  .filebar{display:flex; align-items:center; gap:11px; padding:11px 16px; background:#f7f9fc; border-bottom:1.5px solid var(--line);}
+  .dots{display:flex; gap:6px;}
+  .dots i{width:12px; height:12px; border-radius:50%; background:#d6dde8; display:block;}
+  .dots i:nth-child(1){background:#f0b6b1;} .dots i:nth-child(2){background:#f3d9a6;} .dots i:nth-child(3){background:#bfe3c0;}
+  .fname{font-family:"Cascadia Code",Consolas,ui-monospace,monospace; font-size:1.02rem; font-weight:600; color:var(--ink2);}
+  .code{margin:0; padding:16px 18px; overflow:auto; flex:1;
+    font-family:"Cascadia Code",Consolas,"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:1.04rem; line-height:1.62;}
+
+  .ln{white-space:pre-wrap; word-break:break-word; padding:1px 8px; border-left:4px solid transparent;
+    border-radius:4px; opacity:0; transform:translateY(6px); animation:rise .42s ease forwards;
+    animation-delay:calc(var(--i) * 42ms);}
+  .ln.hl{background:color-mix(in srgb,var(--accent) 11%,#fff); border-left-color:var(--accent);}
+  @keyframes rise{to{opacity:1; transform:none;}}
+
+  .h{font-weight:800; color:var(--ink);}
+  .h1{font-size:1.16em;} .h2{color:var(--accent);} .h3,.h4{color:#334155;}
+  .fm{color:#7c3aed; font-weight:700;}            /* frontmatter key */
+  .fmd{color:#94a3b8;}                              /* frontmatter delimiter */
+  .kw{color:var(--kw); font-weight:700;}            /* MUST / SHALL / SHOULD / MAY */
+  .bdd{color:var(--bdd); font-weight:700;}          /* GIVEN / WHEN / THEN; > lines */
+  .id{color:var(--id); font-weight:700;}            /* [Test N] [Cap N] [Scenario N] */
+  .ok{color:var(--ok); font-weight:700;}
+  .err{color:var(--err); font-weight:700;}
+  .pend{background:#fef3c7; color:#92400e; padding:0 6px; border-radius:4px; font-weight:700;}  /* pending / TODO */
+  .pass{color:var(--okT); font-weight:800; background:var(--okBg); padding:0 6px; border-radius:4px;}
+  .gap{background:#fde68a; color:#92400e; padding:0 6px; border-radius:4px; font-weight:700;}
+  .prompt{color:#94a3b8;} .key{color:#0369a1; font-weight:600;} .arrow{color:#94a3b8;}
+  .mut{color:#9aa6bd;}
+  /* CLI / log tokens (script-driven workshops) */
+  .tg{font-weight:700;} .ok-tg{color:#0d9488;}
+  .warn-tg{color:#b45309; background:#fef3e0; border-radius:4px; padding:0 4px;}
+  .flag{color:#7c3aed; font-weight:700;}            /* --flag style CLI flags */
+
+  /* ---- scenes (non-code stages) ---- */
+  .code.scene{justify-content:flex-start; gap:14px; padding:20px 24px;
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;}
+  .code.scene>*{opacity:0; transform:translateY(6px); animation:rise .5s ease forwards;}
+  .code.scene>*:nth-child(2){animation-delay:.08s;}
+  .code.scene>*:nth-child(3){animation-delay:.16s;}
+  .code.scene>*:nth-child(4){animation-delay:.24s;}
+  .code.scene>*:nth-child(5){animation-delay:.32s;}
+  .sc-cap{margin:0; font-size:1.08rem; color:var(--ink2); line-height:1.45;}
+  .sc-cap b{color:var(--ink);}
+  .sc-row{display:flex; gap:14px; align-items:stretch; flex-wrap:wrap;}
+  .sc-spec{flex:1; min-width:240px; border:1.5px solid var(--line); border-radius:12px; padding:13px 16px; background:#f7f9fc;}
+  .sc-spec.feat{border-left:5px solid var(--accent); background:color-mix(in srgb,var(--accent) 8%,#fff);}
+  .sc-eyebrow{font-size:.74rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:5px;}
+  .sc-spec h4{margin:0 0 6px; font-size:1.18rem; color:var(--ink); font-family:Consolas,ui-monospace,monospace;}
+  .sc-spec p{margin:0; font-size:1.0rem; color:var(--ink2); line-height:1.4;}
+  .sc-tag{font-size:.78rem; padding:2px 9px; border-radius:999px; background:#e3e8f1; color:var(--ink2); font-weight:700; white-space:nowrap;}
+  .sc-tag.live{background:#dcfce7; color:#166534;}
+  .sc-tag.none{background:#fee2e2; color:#991b1b;}
+  .sc-stack{display:flex; align-items:center; gap:10px; font-family:Consolas,ui-monospace,monospace; font-size:1.0rem; color:var(--ink2);}
+  .sc-overlay{border:1.5px dashed var(--line); border-radius:12px; padding:12px 16px; background:#fbfcfe;}
+  .sc-overlay .row{display:flex; gap:14px; flex-wrap:wrap; margin-top:7px; font-family:Consolas,ui-monospace,monospace; color:#64748b; font-size:.96rem;}
+  .sc-plus{flex:none; width:34px; height:34px; border-radius:50%; background:var(--accent); color:#fff; display:grid; place-items:center; font-size:1.5rem; font-weight:800; line-height:1;}
+
+  /* reference table scene */
+  table.ref{width:100%; border-collapse:collapse; font-size:.98rem;}
+  table.ref th{text-align:left; font-size:.72rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+    color:var(--ink2); padding:6px 10px; border-bottom:2px solid var(--line);}
+  table.ref td{padding:8px 10px; border-bottom:1px solid var(--line); color:var(--ink2); vertical-align:top; line-height:1.35;}
+  table.ref td code{background:#eef1f7; border-radius:5px; padding:1px 7px; color:var(--ink);
+    font-family:Consolas,ui-monospace,monospace; font-weight:600;}
+  table.ref tr.hot td{background:color-mix(in srgb,var(--accent) 6%,#fff);}
+  table.ref tr.hot code{background:color-mix(in srgb,var(--accent) 14%,#fff); color:var(--accent);}
+
+  /* recap scene */
+  .rc-loop{display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; padding:4px 0 2px;}
+  .rc-node{display:flex; flex-direction:column; align-items:center; gap:5px; padding:14px 18px; border-radius:14px;
+    border:1.5px solid color-mix(in srgb,var(--accent) 30%,#fff); background:color-mix(in srgb,var(--accent) 7%,#fff); min-width:120px;}
+  .rc-node .n{width:30px; height:30px; border-radius:50%; background:var(--accent); color:#fff; display:grid; place-items:center; font-weight:800;}
+  .rc-node .t{font-weight:800; color:var(--accent); font-size:1.04rem;}
+  .rc-node .s{font-size:.86rem; color:var(--ink2); text-align:center; line-height:1.3;}
+  .rc-arr{color:var(--accent); font-size:1.5rem; font-weight:800;}
+  .rc-pit{margin:6px 0 0; padding:12px 16px; border-radius:11px; background:#fff8ec; border:1.5px solid #f3d9a6;}
+  .rc-pit b{color:#92400e;} .rc-pit ul{margin:6px 0 0; padding-left:20px; color:#7a5212; font-size:1.0rem; line-height:1.5;}
+  .rc-win{display:flex; gap:10px; align-items:center; background:var(--okBg); border:1.5px solid #bbf7d0; border-radius:11px; padding:12px 16px; color:var(--okT); font-size:1.04rem;}
+
+  /* ---- controls ---- */
+  .controls{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:18px;}
+  .controls button{font-family:inherit; font-size:1.02rem; font-weight:700; cursor:pointer;
+    border:1.5px solid var(--line); background:#fff; color:var(--ink); border-radius:10px; padding:9px 15px; transition:.15s;}
+  .controls button:hover{border-color:var(--accent); color:var(--accent);}
+  #play{background:var(--accent); color:#fff; border-color:var(--accent); min-width:120px;}
+  #play:hover{filter:brightness(1.06); color:#fff;}
+  #notes.on{background:#fff8ec; border-color:#f3b04b; color:#92400e;}
+  .counter{font-weight:800; color:var(--ink); margin-left:4px; font-variant-numeric:tabular-nums;}
+  .progress{flex:1; min-width:120px; height:6px; background:#e3e8f1; border-radius:999px; overflow:hidden;}
+  #pfill{height:100%; width:0; background:var(--accent);}
+  .hint{font-size:.84rem; color:var(--ink2); white-space:nowrap;}
+  kbd{font-family:inherit; background:#eef1f7; border:1px solid var(--line); border-bottom-width:2px;
+    border-radius:5px; padding:0 6px; font-size:.82rem; font-weight:700;}
+
+  .foot{margin-top:24px; text-align:center; color:var(--ink2); font-size:1.02rem;
+    border-top:1.5px solid var(--line); padding-top:15px;}
+  .foot b{color:var(--ink);}
+
+  @media (max-width:900px){
+    .journey{grid-template-columns:1fr;}
+    .hero h1{font-size:1.85rem;}
+    .larr{display:none;}
+  }
+  @media (min-width:1500px){ :root{font-size:19px;} }
+</style>
+</head>
+<body>
+  <!-- ===== EDIT: hero (eyebrow / title / one-sentence through-line) ===== -->
+  <header class="hero">
+    <div class="eyebrow">Program &middot; Session &middot; Workshop type</div>
+    <h1>Workshop <b>Title</b> Here</h1>
+    <p>One or two sentences that state the through-line: what the learner does, with what, and why it matters. Wrap the load-bearing words in &lt;b&gt; so they read as the point.</p>
+  </header>
+
+  <main class="wrap" id="wrap">
+
+    <!-- ===== EDIT: cwd chip (where the learner is, every step) ===== -->
+    <div class="cwd"><span class="dot"></span>You <code>cd somewhere</code> once; every command below runs from here. State any one-time setup or naming convention so it never has to be re-explained.</div>
+
+    <!-- ===== EDIT: workflow diagram. 2-5 .lnode; data-p must match the ph values used in STAGES (1..N). ph 0 = pre-flight (lights .pre), ph N+1 = recap (lights all done, computed automatically). ===== -->
+    <div class="loop" id="loop">
+      <span class="pre" id="pre">Pre-flight</span>
+      <span class="larr">&rarr;</span>
+      <div class="lnode" data-p="1"><span class="num">1</span><span class="lbl">Step one</span></div>
+      <span class="larr">&rarr;</span>
+      <div class="lnode" data-p="2"><span class="num">2</span><span class="lbl">Step two</span></div>
+      <span class="larr">&rarr;</span>
+      <div class="lnode" data-p="3"><span class="num">3</span><span class="lbl">Step three</span></div>
+      <span class="ret">&#8635; one line that ties the steps together</span>
+    </div>
+
+    <!-- ===== EDIT: meter end labels (the before -> after the workshop moves the learner along) ===== -->
+    <div class="meter">
+      <span class="cl">before</span>
+      <div class="mtrack"><div class="mfill" id="mfill"></div></div>
+      <span class="cl">after</span>
+    </div>
+
+    <div class="action">
+      <span class="badge" id="badge"></span>
+      <span class="actor" id="actor"></span>
+      <p class="say" id="say"></p>
+    </div>
+
+    <div class="outcome" id="outcome">
+      <span class="oi">&#10003;</span>
+      <span class="lab">Expected outcome</span>
+      <span class="otx" id="otx"></span>
+    </div>
+
+    <div class="note" id="note"></div>
+
+    <div class="journey">
+      <ol class="rail" id="rail"></ol>
+      <div class="artifact">
+        <div class="filebar"><span class="dots"><i></i><i></i><i></i></span><span class="fname" id="fname"></span></div>
+        <div class="code" id="code"></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="restart" title="Restart (R)">&#10227; Restart</button>
+      <button id="prev" title="Previous (&larr;)">&#9664; Prev</button>
+      <button id="play" title="Play / Pause (space)">&#9654; Play</button>
+      <button id="next" title="Next (&rarr;)">Next &#9654;</button>
+      <button id="notes" title="Toggle trainer notes (N)">&#9788; Trainer notes</button>
+      <span class="counter" id="counter"></span>
+      <div class="progress"><div id="pfill"></div></div>
+      <span class="hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> step &middot; <kbd>space</kbd> play &middot; <kbd>n</kbd> notes</span>
+    </div>
+
+    <!-- ===== EDIT: footer (the one-line crystallization of the lesson) ===== -->
+    <footer class="foot">The single sentence you want every learner to walk away repeating. Bold the <b>load-bearing</b> words.</footer>
+  </main>
+
+<script>
+/* ============================================================================
+   STAGES is the whole workshop. One object per beat, played in order.
+
+   Per-stage fields:
+     rail     short label for the left-hand nav (3-5 words)
+     ph       phase: 0 = pre-flight (lights the .pre chip), 1..N = workflow node,
+              N+1 = recap (lights every node "done"). Drives the diagram + meter.
+     badge    [variant, TEXT]  variant: cmd | gate | ok | check | idea
+     actor    who/what acts this beat (a command, a file path, "you -> Claude")
+     file     the filename shown in the artifact's title bar
+     clarity  0..100, the progress-meter fill. Ramp it up monotonically.
+     say      one or two sentences of narration (plain text, no markup)
+     outcome  what the learner should see if it worked (the green box; plain text)
+     note     [TAG, body]  the toggleable trainer note (optional but encouraged)
+
+   Artifact body: pick ONE of:
+     kind + body   code/terminal view. kind: shell | md | tree | json.
+                   body is an array of lines. A leading "» " marks the emphasised
+                   (highlighted) payload line. Lines are escaped, then tok()'d.
+     scene         a rich HTML panel; the string names a branch in sceneHTML().
+
+   Token highlighting (see tok() below) fires automatically inside body lines:
+     shell prompt  "name $ ..."          comments "# ..."        user turns "> ..."
+     CLI flags     --flag                log tags  [doc] [skill] [warn] [skip]
+     keywords      MUST SHALL pending TODO PASS    callouts [Test 1] [Cap 2]
+     BDD           GIVEN WHEN THEN        status   404 409 500   marks  ✓  ✗
+   Keep content FAITHFUL: run the real commands, paste real output, real paths.
+   No em dashes anywhere; use commas, colons, or "and".
+============================================================================ */
+const STAGES = [
+
+  /* ph 0 ---- pre-flight scene: set the stage ---- */
+  { rail:"What you start with", ph:0, badge:["idea","THE STARTING POINT"],
+    actor:"context/", file:"the lay of the land", scene:"intro", clarity:6,
+    say:"Open on the situation, not the tool. Two panels that frame what the learner has in hand and what they are about to do to it.",
+    outcome:"The learner can see the two things that matter before any command runs, and why they are separate.",
+    note:["Setup", "A pre-flight stage orients before acting. Use it to kill the most common 'wait, what am I looking at' confusion up front."] },
+
+  /* ph 0 ---- pre-flight shell: a sanity check ---- */
+  { rail:"Check the basics", ph:0, badge:["cmd","SANITY CHECK"], actor:"some --version", file:"terminal", kind:"shell", clarity:14,
+    say:"Confirm the tool is present before the lesson proper. A clean version number means go.",
+    outcome:"A version prints with no error. A failure here sends them back to the prerequisites.",
+    body:[
+      "project $ some --version",
+      "» 1.x.x",
+      "",
+      "# error or not found?",
+      "# -> fix prerequisites first",
+    ],
+    note:["Why a sanity check", "Catching a broken setup in five seconds saves the whole walkthrough from derailing later."] },
+
+  /* ph 1 ---- first real step: terminal output ---- */
+  { rail:"Run the thing", ph:1, badge:["cmd","THE DEMO MOMENT"], actor:"the-command --flag value", file:"terminal", kind:"shell", clarity:40,
+    say:"The headline action. Show the exact command, then the real output it produces. This is the beat the whole page builds toward.",
+    outcome:"The command logs what it did, line by line. The learner can match each line to a thing that now exists.",
+    body:[
+      "project $ the-command --flag value \\",
+      "    --another-flag thing",
+      "",
+      "  [doc]   something.md  (created)",
+      "» [ok]    the headline result you want them to notice",
+      "  [warn]  a caveat worth flagging",
+      "» Done.",
+    ],
+    note:["Faithful output", "Paste output you actually generated. Invented logs are the fastest way to lose a room that knows the tool."] },
+
+  /* ph 2 ---- inspect the result: a tree ---- */
+  { rail:"Look at what changed", ph:2, badge:["ok","WHAT GOT CREATED"], actor:"ls -la", file:"result/", kind:"tree", clarity:58,
+    say:"Show the structure the action produced. Annotate each line with what it is for, so the tree teaches rather than just lists.",
+    outcome:"Every important file is visible with a one-line purpose beside it.",
+    body:[
+      "result/",
+      "» ├── headline.md            the thing that matters most",
+      "├── supporting.md          why it is here",
+      "├── docs/",
+      "│   └── detail/            ready for more",
+      "└── .config                wiring, mostly invisible",
+    ],
+    note:["Annotate, do not dump", "A bare tree is noise. The trailing notes are what turn it into a slide."] },
+
+  /* ph 3 ---- verify / read a doc: the md kind ---- */
+  { rail:"Verify it conforms", ph:3, badge:["check","30-SECOND SANITY CHECK"], actor:"@headline.md", file:"headline.md", kind:"md", clarity:78,
+    say:"Pull the artifact into context and check it against the spec. The md kind colors frontmatter keys, the --- delimiters, and headings.",
+    outcome:"The doc has the fields and sections it should, in the order it should. Anything missing is a gap to fix now.",
+    body:[
+      "---",
+      "id: DEMO-1",
+      "status: ready",
+      "---",
+      "# Headline",
+      "» ## What changes   (the load-bearing section)",
+      "## Tests          (each maps to a [Scenario 1])",
+    ],
+    note:["Verify in context", "Asking a fact-check question against the doc catches the most common failure: the file never actually entered context."] },
+
+  /* ph N+1 ---- recap scene (ph = max node + 1) ---- */
+  { rail:"The pattern in one frame", ph:4, badge:["ok","WHAT YOU CARRY FORWARD"], actor:"step -> step -> step", file:"the takeaway", scene:"recap", clarity:100,
+    say:"Close by collapsing the whole journey into one frame: the workflow, the pitfalls, and the win the learner takes to real work.",
+    outcome:"The learner can name the steps unaided and point to where each one happened.",
+    note:["You know it works when", "They can recite the workflow without looking and explain why each step is there."] },
+];
+
+/* ----------------------------- engine (do not edit) ----------------------------- */
+const $ = id => document.getElementById(id);
+const rail=$("rail"), code=$("code"), fname=$("fname"), badge=$("badge"), actor=$("actor"),
+      say=$("say"), mfill=$("mfill"), counter=$("counter"), pfill=$("pfill"),
+      playBtn=$("play"), notesBtn=$("notes"), noteEl=$("note"), preEl=$("pre"),
+      otxEl=$("otx"), lnodes=[...document.querySelectorAll(".lnode")];
+
+let idx=0, playing=false, timer=null, notesOn=false;
+const STEP=4600;
+const last = () => STAGES.length-1;
+/* phase that lights every node "done" = one past the highest workflow node */
+const RECAP_PH = Math.max(...lnodes.map(n=>+n.dataset.p), 0) + 1;
+
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function tok(s, kind){
+  // domain callouts first
+  s = s.replace(/\[(Test \d|Cap \d|Scenario \d|GAP)[^\]]*\]/g, m=>`<span class="id">${m}</span>`);
+  // CLI / log tags (script-driven workshops)
+  s = s.replace(/\[(doc|dir|skill|cmd|link|copy|note|ok)\]/g, '<span class="tg ok-tg">$&</span>');
+  s = s.replace(/\[(warn|skip|err)\]/g, '<span class="tg warn-tg">$&</span>');
+  // CLI flags
+  s = s.replace(/(--[a-z][\w-]*)/g, '<span class="flag">$1</span>');
+  // keywords / statuses
+  s = s.replace(/\bpending\b/g, '<span class="pend">pending</span>');
+  s = s.replace(/\bTODO\b/g, '<span class="pend">TODO</span>');
+  s = s.replace(/\b(MUST|SHALL|SHOULD|MAY)\b/g, '<span class="kw">$1</span>');
+  s = s.replace(/\b(GIVEN|WHEN|THEN|AND|OR)\b/g, '<span class="bdd">$1</span>');
+  s = s.replace(/\bPASS\b/g, '<span class="pass">PASS</span>');
+  s = s.replace(/\b(404|409|500)\b/g, '<span class="err">$1</span>');
+  s = s.replace(/([✓✔])/g, '<span class="ok">$1</span>');
+  s = s.replace(/([✗])/g, '<span class="err">$1</span>');
+  s = s.replace(/(&larr;|&rarr;|-&gt;|&lt;-|->|<-)/g, '<span class="arrow">$&</span>');
+  if(kind==="shell"){
+    s = s.replace(/^([\w.\/-]*\s*\$) /, '<span class="prompt">$1</span> ');
+    s = s.replace(/^(#.*)$/, '<span class="mut">$1</span>');
+    s = s.replace(/^(\s*&gt; .*)$/, '<span class="bdd">$1</span>');
+  }
+  if(kind==="json"){
+    s = s.replace(/("[\w_]+":)/, '<span class="key">$1</span>');
+    s = s.replace(/\b(false|true)\b/, '<span class="ok">$1</span>');
+  }
+  return s;
+}
+
+function lineHTML(line, kind, i){
+  let hl=false;
+  if(line.startsWith("» ")){ hl=true; line=line.slice(2); }
+  let inner;
+  if(kind==="md" && /^---$/.test(line)){
+    inner = `<span class="fmd">---</span>`;
+  } else if(kind==="md" && /^[a-z_]+:/.test(line)){
+    inner = line.replace(/^([a-z_]+)(:)(.*)$/, (m,k,c,rest)=>
+      `<span class="fm">${k}</span>${c}${tok(esc(rest),kind)}`);
+  } else {
+    const m = (kind==="md") && line.match(/^(#{1,4})\s+(.*)$/);
+    if(m){
+      const lvl=m[1].length;
+      inner = `<span class="h h${lvl}">${"#".repeat(lvl)} ${tok(esc(m[2]),kind)}</span>`;
+    } else {
+      inner = tok(esc(line), kind) || "&nbsp;";
+    }
+  }
+  return `<div class="ln${hl?" hl":""}" style="--i:${i}">${inner}</div>`;
+}
+
+/* ===== EDIT: scenes. One branch per `scene` name used in STAGES.
+   Scenes are raw HTML (NOT escaped), so write entities like &rarr; &middot; directly.
+   Reusable building blocks below: two-panel intro, reference table, recap. ===== */
+function sceneHTML(scene){
+  if(scene==="intro") return `
+      <p class="sc-cap"><b>Two things sit side by side</b> before anything runs:</p>
+      <div class="sc-row">
+        <div class="sc-spec">
+          <div class="sc-eyebrow">Left panel &middot; what you have</div>
+          <h4>thing-a</h4>
+          <p>A sentence on the first thing the learner is holding. <b>Bold the part that matters.</b></p>
+        </div>
+        <div class="sc-stack"><span class="sc-plus">+</span></div>
+        <div class="sc-spec feat">
+          <div class="sc-eyebrow">Right panel &middot; what you do to it</div>
+          <h4>thing-b</h4>
+          <p>A sentence on what is about to happen to it. The accent border marks this as the active half.</p>
+        </div>
+      </div>
+      <div class="sc-overlay">
+        <div class="sc-eyebrow">a dashed footnote for context that frames both panels</div>
+        <div class="row"><span>artifact-1</span><span>artifact-2</span><span>artifact-3</span><span class="sc-tag none">a status pill</span></div>
+      </div>`;
+  if(scene==="reference") return `
+      <p class="sc-cap"><b>A read-from-screen reference.</b> One row per option, the kind of table a learner comes back to later.</p>
+      <table class="ref">
+        <thead><tr><th>Option</th><th>Best for</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><code>option-a</code></td><td>when this is true</td><td>what it gives you</td></tr>
+          <tr><td><code>option-b</code></td><td>when that is true</td><td>what it gives you</td></tr>
+          <tr class="hot"><td><code>option-c</code></td><td>the standout case</td><td>highlighted row</td></tr>
+        </tbody>
+      </table>
+      <div class="rc-win">&#10003; A closing line: how to choose when none fit exactly.</div>`;
+  // recap (default)
+  return `
+      <div class="rc-loop">
+        <div class="rc-node"><span class="n">1</span><span class="t">Step one</span><span class="s">what happens<br>in a few words</span></div>
+        <span class="rc-arr">&rarr;</span>
+        <div class="rc-node"><span class="n">2</span><span class="t">Step two</span><span class="s">what happens<br>in a few words</span></div>
+        <span class="rc-arr">&rarr;</span>
+        <div class="rc-node"><span class="n">3</span><span class="t">Step three</span><span class="s">what happens<br>in a few words</span></div>
+      </div>
+      <div class="rc-pit"><b>Common pitfalls</b>
+        <ul>
+          <li>The first thing people get wrong, and the cost of getting it wrong.</li>
+          <li>The second thing, phrased as a habit to keep.</li>
+          <li>The third, the one that quietly undoes the work.</li>
+        </ul>
+      </div>
+      <div class="rc-win">&#10003; The win: the one sentence the learner carries into real work on Monday.</div>`;
+}
+
+function setStage(k){ idx=Math.max(0, Math.min(last(), k)); render(); }
+
+function render(){
+  const s = STAGES[idx];
+  badge.className = "badge " + s.badge[0];
+  badge.textContent = s.badge[1];
+  actor.textContent = s.actor;
+  say.textContent = s.say;
+  otxEl.textContent = s.outcome || "";
+  mfill.style.width = s.clarity + "%";
+  counter.textContent = idx===0 ? "Start" : ("Step " + idx + " / " + last());
+
+  // workflow diagram
+  preEl.classList.toggle("on", s.ph===0);
+  lnodes.forEach(n=>{
+    const p = +n.dataset.p;
+    const target = s.ph>=RECAP_PH ? RECAP_PH : s.ph;   // recap lights all as done
+    n.classList.toggle("on", target!==RECAP_PH && p===target);
+    n.classList.toggle("done", (target===RECAP_PH) || p<target);
+  });
+
+  // rail
+  rail.querySelectorAll(".ri").forEach((li,k)=>{
+    li.classList.toggle("active", k===idx);
+    li.classList.toggle("done", k<idx);
+    li.querySelector(".rn").textContent = k<idx ? "✓" : (k+1);
+  });
+
+  // trainer note
+  if(s.note){
+    noteEl.innerHTML = `<span class="tag">${esc(s.note[0])}</span>${s.note[1]}`;
+    noteEl.classList.toggle("show", notesOn);
+  } else {
+    noteEl.classList.remove("show");
+  }
+
+  // artifact body
+  if(s.scene){
+    code.className = "code scene";
+    fname.textContent = s.file;
+    code.innerHTML = sceneHTML(s.scene);
+  } else {
+    code.className = "code";
+    fname.textContent = s.file;
+    code.innerHTML = s.body.map((ln,i)=>lineHTML(ln, s.kind, i)).join("");
+  }
+}
+
+/* auto-play */
+function play(){
+  if(idx>=last()) setStage(0);
+  playing=true; playBtn.innerHTML="&#10073;&#10073; Pause";
+  scheduleNext();
+}
+function pause(){
+  playing=false; playBtn.innerHTML="&#9654; Play";
+  clearTimeout(timer);
+  pfill.style.transition="none"; pfill.style.width="0%";
+}
+function scheduleNext(){
+  clearTimeout(timer);
+  pfill.style.transition="none"; pfill.style.width="0%";
+  void pfill.offsetWidth;
+  pfill.style.transition=`width ${STEP}ms linear`; pfill.style.width="100%";
+  timer=setTimeout(()=>{
+    if(idx<last()){ setStage(idx+1); if(playing) scheduleNext(); }
+    else pause();
+  }, STEP);
+}
+
+/* build rail once ===== EDIT: PH labels = short phase tag per ph index (0..RECAP_PH) ===== */
+const PH = ["setup","one","two","three","recap"];
+rail.innerHTML = STAGES.map((s,k)=>
+  `<li class="ri" data-k="${k}"><span class="rn">${k+1}</span><span class="rl">${s.rail}</span><span class="rph">${PH[s.ph]||""}</span></li>`
+).join("");
+rail.querySelectorAll(".ri").forEach(li=>li.onclick=()=>{ pause(); setStage(+li.dataset.k); });
+
+/* wiring */
+$("restart").onclick = ()=>{ pause(); setStage(0); };
+$("prev").onclick    = ()=>{ pause(); setStage(idx-1); };
+$("next").onclick    = ()=>{ pause(); setStage(idx+1); };
+playBtn.onclick      = ()=>{ playing ? pause() : play(); };
+notesBtn.onclick     = ()=>{ notesOn=!notesOn; notesBtn.classList.toggle("on", notesOn); render(); };
+
+document.addEventListener("keydown", e=>{
+  if(e.key==="ArrowRight"){ pause(); setStage(idx+1); }
+  else if(e.key==="ArrowLeft"){ pause(); setStage(idx-1); }
+  else if(e.key===" "){ e.preventDefault(); playing ? pause() : play(); }
+  else if(e.key==="r"||e.key==="R"){ pause(); setStage(0); }
+  else if(e.key==="n"||e.key==="N"){ notesBtn.click(); }
+});
+
+setStage(0);
+</script>
+</body>
+</html>
