@@ -8,7 +8,7 @@ Four levels:
 |---|---|
 | `documented` | Anthropic's docs explicitly state the rule that drives the call |
 | `inferred` | A defensible reading of the docs but not stated in one verbatim line |
-| `org` (or any org slug) | Org context, not Anthropic's |
+| `org-specific` (or any org slug) | Org context, not Anthropic's |
 | `ambiguous` | Genuinely unclear; flag it loudly |
 
 ## What NOT to disclaim
@@ -81,7 +81,7 @@ Whenever the audit recommends a specific line count, flag it as inferred:
 
 ```json
 {
-  "level": "org",
+  "level": "org-specific",
   "title": "The N suggested hooks",
   "body": "Each is a direct mapping of an existing org rule (currently advisory in skills) to the hook pattern Anthropic publishes. The mapping is sound but the specific scripts are org context."
 }
@@ -89,7 +89,7 @@ Whenever the audit recommends a specific line count, flag it as inferred:
 
 ```json
 {
-  "level": "org",
+  "level": "org-specific",
   "title": "The N suggested subagents",
   "body": "These names appear in skill files as references but no <code>.claude/agents/*.md</code> files exist for them in the audited tree. Treat the recommendation as 'the org should formalize what its own skills already reference' rather than a direct Anthropic prescription."
 }
@@ -97,7 +97,7 @@ Whenever the audit recommends a specific line count, flag it as inferred:
 
 ```json
 {
-  "level": "org",
+  "level": "org-specific",
   "title": "The Phase 1 / 2 / 3 migration order",
   "body": "Anthropic does not prescribe migration order; they describe primitives. The order is a recommendation derived from the audit's own analysis."
 }
@@ -127,7 +127,7 @@ When you spot a claim in the audit that goes beyond what Anthropic says verbatim
 
 ```json
 {
-  "level": "<documented|inferred|org|ambiguous>",
+  "level": "<documented|inferred|org-specific|ambiguous>",
   "title": "<short headline that names the claim>",
   "body": "<longer explanation. What does Anthropic actually say? Where do we extrapolate? Why is the extrapolation defensible (or not)?>"
 }

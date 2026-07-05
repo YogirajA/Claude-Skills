@@ -39,7 +39,7 @@ The build script consumes one JSON file matching this schema. All fields except 
       "status": "stub",                                 // correct | borderline | misplaced | stub | missing
       "reasoning": "Right primitive (skill), wrong shape...",
       "provenance": {
-        "level": "documented",                          // documented | inferred | org | ambiguous
+        "level": "documented",                          // documented | inferred | org-specific | ambiguous
         "sources": ["skills-cc", "skills-best"],        // ids referencing entries in the sources block
         "note": "Optional one-liner explaining why this provenance level"
       }
@@ -74,7 +74,7 @@ The build script consumes one JSON file matching this schema. All fields except 
   // Extrapolation flags. Used in the Disclaimers tab.
   "disclaimers": [
     {
-      "level": "documented|inferred|org|ambiguous",
+      "level": "documented|inferred|org-specific|ambiguous",
       "title": "Short headline",
       "body": "Longer explanation. HTML allowed (use <code>, <strong>, etc.)."
     }
@@ -127,10 +127,10 @@ Set `currentBucket` explicitly only when the default is wrong, e.g. a skill that
 
 - **documented**: Anthropic's docs explicitly state the rule that drives the placement. Quote it in `provenance.note` and include the URL via `provenance.sources`.
 - **inferred**: A defensible reading of the docs but not stated in one verbatim line. Common for items where multiple Anthropic statements combine to support the placement.
-- **org** (or any org slug): Org-specific context. Anthropic does not weigh in.
+- **org-specific** (or any org slug): Org-specific context. Anthropic does not weigh in.
 - **ambiguous**: Genuinely unclear. Flag in `disclaimers` so the reader knows.
 
-The label "org" is the historical default; use any org slug (`acme`, `client`, `internal`) and update the CSS class via `--accent-org` in the template if you want a different color. The build script accepts any string for `level` but only the four listed values get distinct CSS styling out of the box.
+The label "org-specific" is the default; for a named org use any slug (`acme`, `client`, `internal`) and update the CSS class via `--accent-org-specific` in the template if you want a different color. The build script accepts any string for `level` but only the four listed values get distinct CSS styling out of the box.
 
 ### `verdicts.tone` styling
 
@@ -150,6 +150,6 @@ Before passing data to the build script, validate:
 - Every `decisions[].cite.source` exists in the `sources` block
 - Every `decisions[].yes.bucket` (and `no.bucket` if object) matches a bucket id
 - `verdicts` has 3 to 5 entries (4 is the sweet spot)
-- `disclaimers` has at least 3 entries (one each for documented / inferred / org at minimum)
+- `disclaimers` has at least 3 entries (one each for documented / inferred / org-specific at minimum)
 
 Pass through the validator in the build script (`--validate-only`) before generating output.

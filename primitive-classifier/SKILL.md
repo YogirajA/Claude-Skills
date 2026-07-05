@@ -107,7 +107,7 @@ For every item, classify the **strength of evidence** behind its placement:
 |---|---|
 | `documented` | Anthropic explicitly states the rule that drives this placement |
 | `inferred` | A defensible reading of the docs, but not stated in one verbatim line |
-| `org` (or `org-specific`) | Org context, not Anthropic's call |
+| `org-specific` | Org context, not Anthropic's call |
 | `ambiguous` | Docs do not address; this is a judgment call |
 
 Then write disclaimers (`reference/disclaimer-templates.md`) for the most important extrapolations. The goal: a future reader should never confuse a doc-grounded claim with a judgment call.
@@ -154,7 +154,7 @@ The build script consumes a single JSON file. Minimum required keys:
       "status": "stub",
       "reasoning": "...",
       "provenance": {
-        "level": "documented|inferred|org|ambiguous",
+        "level": "documented|inferred|org-specific|ambiguous",
         "sources": ["skills-cc", "skills-best"],
         "note": "..."
       }
@@ -172,7 +172,7 @@ The build script consumes a single JSON file. Minimum required keys:
     }
   ],
   "disclaimers": [
-    { "level": "documented|inferred|org|ambiguous", "title": "...", "body": "html allowed" }
+    { "level": "documented|inferred|org-specific|ambiguous", "title": "...", "body": "html allowed" }
   ]
 }
 ```
@@ -190,7 +190,7 @@ For the full schema with optional fields, see `reference/output-shape.md`.
 ## Quick start
 
 ```text
-audit primitives in C:/code/Acme-Platform/platform-skills 1/
+audit primitives in C:/code/Launchpad-AWS/digital-skills 1/
 ```
 
 Claude reads this skill, walks the five phases, and writes `primitives-categorization.html` next to the target folder.
@@ -204,12 +204,12 @@ Claude reads this skill, walks the five phases, and writes `primitives-categoriz
 - `reference/disclaimer-templates.md`: common extrapolation patterns to flag
 - `template/primitives-categorization.template.html`: the HTML scaffold; do not edit unless adding new sections
 - `scripts/build-html.js`: substitutes a JSON data file into the template
-- `examples/acme-output-summary.md`: what the Acme audit produced (for orientation)
+- `examples/acme-output-summary.md`: what an audit produced on a placeholder stack (for orientation)
 
 ## Anti-patterns
 
 - **Don't classify by file location alone.** A `.md` file under `mcp-server/resources/` is delivered as MCP content today, but if its body is a procedural playbook ("how to write a hexagonal adapter") it belongs in skills. Classify by content shape, not directory.
 - **Don't use "stub" as a user-visible label.** It is the internal status; the UI says "Reshape in place".
-- **Don't bake migration order into the framework.** Phase order is a recommendation, not Anthropic doctrine. Mark migration plans as `org` provenance unless the user explicitly asks for an org-neutral output.
+- **Don't bake migration order into the framework.** Phase order is a recommendation, not Anthropic doctrine. Mark migration plans as `org-specific` provenance unless the user explicitly asks for an org-neutral output.
 - **Don't bloat the verdicts.** Four cards max on the overview tab; if a fifth point matters, it goes in the migration narrative.
 - **Don't fetch Anthropic docs blindly each run.** Cache the source quotes in the JSON. Re-fetch only when the user asks for a fresh check or the deck check script reports drift.

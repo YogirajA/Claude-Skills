@@ -720,7 +720,7 @@
   }
   .disclaimer.documented { --accent: var(--status-correct); }
   .disclaimer.inferred { --accent: var(--status-borderline); }
-  .disclaimer.org { --accent: var(--color-skills); }
+  .disclaimer.org-specific { --accent: var(--color-skills); }
   .disclaimer.ambiguous { --accent: var(--status-misplaced); }
   .disclaimer-head {
     display: flex;
@@ -761,7 +761,7 @@
   }
   .prov-tag.documented { background: rgba(61,217,122,.15); color: var(--status-correct); }
   .prov-tag.inferred { background: rgba(255,200,87,.15); color: var(--status-borderline); }
-  .prov-tag.org { background: rgba(255,61,138,.15); color: var(--color-skills); }
+  .prov-tag.org-specific { background: rgba(255,61,138,.15); color: var(--color-skills); }
   .prov-tag.ambiguous { background: rgba(255,85,119,.15); color: var(--status-misplaced); }
   .prov-note { color: var(--text-faint); font-style: italic; }
   .prov-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
@@ -798,12 +798,12 @@
   <h1>Acme primitives audit, what belongs where</h1>
   <p class="lede">
     Anthropic ships six primitives. Each has one job. The Acme stack today routes most static "how do I do X"
-    content through the platform-guidelines MCP server. That worked when MCP was the only tool in the box. It is no
+    content through the digital-guidelines MCP server. That worked when MCP was the only tool in the box. It is no
     longer. This page categorizes every Acme skill and every MCP tool into the primitive that actually fits, with
     the reasoning behind each call.
   </p>
   <p class="meta">
-    Sources: <code>platform-skills/acme/skills/</code> (19 skills), <code>platform-guidelines-mcp-server/</code>
+    Sources: <code>digital-skills/acme/skills/</code> (19 skills), <code>digital-guidelines-mcp-server/</code>
     (75 guideline files, 93 BCCs, 85 OpenAPI specs), governance architecture deck and companion.
   </p>
   <nav class="tabs" id="tabs">
@@ -858,7 +858,7 @@
         <h3>This audit is grounded in Anthropic docs, where we extrapolate is flagged</h3>
         <p>Each item below carries a <strong>provenance badge</strong>: <code>doc'd</code> (verbatim Anthropic
         guidance), <code>inferred</code> (a defensible reading the docs do not say literally), or
-        <code>org</code> (org context, not Anthropic's call). The decision framework and source list make every
+        <code>org-specific</code> (org context, not Anthropic's call). The decision framework and source list make every
         claim traceable to a URL.</p>
       </div>
     </div>
@@ -885,7 +885,7 @@
       <ul>
         <li>Keep: <code>get-openapi-spec</code>, <code>search-openapi-specs</code>, <code>list-openapi-services</code>,
         all BCC tools, <code>get-guideline type=team</code>, <code>type=infrastructure</code>, <code>type=release-planning-2026</code>,
-        <code>type=billing-test-customer-search</code>, dashboard / dynatrace / kibana lookups.</li>
+        <code>type=netcracker-test-customer-search</code>, dashboard / dynatrace / kibana lookups.</li>
         <li>Remove from MCP (move into git as skills or skill bodies): the ~62 procedural guidelines.
         That is the bulk of slide 12's audit.</li>
         <li>Any skill that previously called <code>get-guideline type=X</code> for a now-skill-bodied guideline gets
@@ -1023,7 +1023,7 @@ const STATUS = {
 const PROV = {
   DOCUMENTED: 'documented',  // verbatim or near-verbatim Anthropic doc language
   INFERRED: 'inferred',      // defensible interpretation, not stated literally
-  ORG: 'org',        // organisation-specific, beyond Anthropic's scope
+  ORG_SPECIFIC: 'org-specific',        // organisation-specific, beyond Anthropic's scope
   AMBIGUOUS: 'ambiguous',    // docs do not address, judgment call
 };
 
@@ -1296,7 +1296,7 @@ const ITEMS = [
     recommendedBucket: 'skills',
     currentLocation: 'Skill (~280 lines, content inline)',
     status: STATUS.CORRECT,
-    reasoning: 'Multi-phase Confluence-driven analysis. Calls Atlassian MCP for live Confluence content (correct), platform-guidelines MCP for live BCCs/OpenAPI (correct). The estimation methodology, EBP sizing, and 11-file output structure are inline procedural content. Target shape.',
+    reasoning: 'Multi-phase Confluence-driven analysis. Calls Atlassian MCP for live Confluence content (correct), digital-guidelines MCP for live BCCs/OpenAPI (correct). The estimation methodology, EBP sizing, and 11-file output structure are inline procedural content. Target shape.',
   },
   {
     name: 'acme:frontend-story',
@@ -1379,14 +1379,14 @@ const ITEMS = [
     reasoning: 'Procedural with live SSH operations against BSS servers. The data manipulation is real-world side-effecting. Skill is fine, but the operation should also have a settings.json permissions.allow entry constraining the SSH targets, and ideally a hook validating that uploads only happen against expected hosts. Otherwise the "send a file to a production-adjacent server" flow has no enforcement.',
   },
 
-  // ============ MCP TOOLS, what the platform-guidelines MCP server exposes ============
+  // ============ MCP TOOLS, what the digital-guidelines MCP server exposes ============
   {
     name: 'mcp: get-guideline (consolidated)',
     kind: 'mcp-tool',
     recommendedBucket: 'mcp',
     currentLocation: 'MCP tool (correct primitive), but type enum exposes 75 guideline keys, ~62 of which are static content',
     status: STATUS.STUB,
-    reasoning: 'Right primitive (MCP), wrong scope. The tool itself stays in MCP because dynamic-lookup-by-key is exactly what MCP is for. What needs to change is the SET of values the type enum exposes. ~62 of the 75 guideline files behind this tool are static procedural knowledge that should be skills in git, not MCP-served content. Recommendation: shrink the type enum to the ~13 mutable guideline categories (team, infrastructure, release-planning-2026, billing-test-customer-search, dynatrace-dashboard, kibana-logs, operational-dashboards, leanix-api, full-stack-release-tracking, acme-ai-agents, etc.). The other ~62 type values disappear because the underlying files migrate into the skill marketplace. The TOOL stays; its SCOPE shrinks.',
+    reasoning: 'Right primitive (MCP), wrong scope. The tool itself stays in MCP because dynamic-lookup-by-key is exactly what MCP is for. What needs to change is the SET of values the type enum exposes. ~62 of the 75 guideline files behind this tool are static procedural knowledge that should be skills in git, not MCP-served content. Recommendation: shrink the type enum to the ~13 mutable guideline categories (team, infrastructure, release-planning-2026, netcracker-test-customer-search, dynatrace-dashboard, kibana-logs, operational-dashboards, leanix-api, full-stack-release-tracking, org-specific-ai-agents, etc.). The other ~62 type values disappear because the underlying files migrate into the skill marketplace. The TOOL stays; its SCOPE shrinks.',
   },
   {
     name: 'mcp: list-available-guidelines',
@@ -1581,7 +1581,7 @@ const ITEMS = [
     recommendedBucket: 'skills',
     currentLocation: 'MCP guideline',
     status: STATUS.MISPLACED,
-    reasoning: 'Acme + Nova multibrand rules. Body of frontend-story.',
+    reasoning: 'Acme + BASE multibrand rules. Body of frontend-story.',
   },
   {
     name: 'guideline: mfe-component-development-guidelines.md',
@@ -1888,7 +1888,7 @@ const ITEMS = [
     reasoning: 'Approved tech stack. Static. Skill or CLAUDE.md.',
   },
   {
-    name: 'guideline: acme-agile-workflow-guidelines.md',
+    name: 'guideline: org-specific-agile-workflow-guidelines.md',
     kind: 'guideline',
     recommendedBucket: 'skills',
     currentLocation: 'MCP guideline',
@@ -2018,7 +2018,7 @@ const ITEMS = [
     reasoning: 'Sprint dates, release windows, deployment freeze calendar. Live calendar data. Textbook MCP.',
   },
   {
-    name: 'guideline: billing-test-customer-search-guidelines.md',
+    name: 'guideline: netcracker-test-customer-search-guidelines.md',
     kind: 'guideline',
     recommendedBucket: 'mcp',
     currentLocation: 'MCP guideline',
@@ -2074,7 +2074,7 @@ const ITEMS = [
     reasoning: 'Live release-tracking dashboard / state. Mutable. MCP.',
   },
   {
-    name: 'guideline: acme-ai-agents-guidelines.md',
+    name: 'guideline: org-specific-ai-agents-guidelines.md',
     kind: 'guideline',
     recommendedBucket: 'mcp',
     currentLocation: 'MCP guideline',
@@ -2129,7 +2129,7 @@ const ITEMS = [
     recommendedBucket: 'settings',
     currentLocation: 'Partial. Each developer configures their own.',
     status: STATUS.MISSING,
-    reasoning: 'Project-tier settings.json should explicitly allow the MCP tools the project trusts (mcp__platform-guidelines__*, mcp__acme-atlassian-mcp__*, mcp__plugin_playwright_*) so developers do not get prompted on every call. Today this happens ad-hoc.',
+    reasoning: 'Project-tier settings.json should explicitly allow the MCP tools the project trusts (mcp__digital-guidelines__*, mcp__org-specific-atlassian-mcp__*, mcp__plugin_playwright_*) so developers do not get prompted on every call. Today this happens ad-hoc.',
   },
   {
     name: 'settings.json: permissions.deny for dangerous bash patterns',
@@ -2164,10 +2164,10 @@ const ITEMS = [
     reasoning: 'A subagent with no write tools, only Read / Grep / Bash(grep|rg|jq). Auto-delegates on tasks matching "review for security." The deck\'s slide 8 walk-through is exactly this shape.',
   },
   {
-    name: 'CLAUDE.md: per-repo project memory (platform-skills)',
+    name: 'CLAUDE.md: per-repo project memory (digital-skills)',
     kind: 'claude-md',
     recommendedBucket: 'claudemd',
-    currentLocation: 'Exists in platform-guidelines-mcp-server. Partial in platform-skills root. Missing the "no Slack, we use Teams" type rule at the top tier.',
+    currentLocation: 'Exists in digital-guidelines-mcp-server. Partial in digital-skills root. Missing the "no Slack, we use Teams" type rule at the top tier.',
     status: STATUS.BORDERLINE,
     reasoning: 'CLAUDE.md should hold the small set of invariants every session needs: tech stack, commit format, "no Slack," "Acme uses Microsoft Teams," default sensitivity is Internal. Today these are smeared across skills. Pull the truly cross-cutting ones up into a tight, ~150-line CLAUDE.md per repo.',
   },
@@ -2485,7 +2485,7 @@ if (initialTab && document.querySelector(`nav.tabs button[data-tab="${initialTab
 // connectivity uses, INFERRED when we judged the cadence. Hooks/Subagents/
 // settings entries that "should exist" get INFERRED (Anthropic publishes the
 // pattern, the specific Acme rule is ours). The "no Slack" hook and
-// per-Acme items default to ORG.
+// per-Acme items default to ORG_SPECIFIC.
 function defaultProvenance(it) {
   if (it.provenance) return it.provenance;
   if (it.kind === 'guideline' && it.recommendedBucket === 'skills') {
@@ -2518,14 +2518,14 @@ function defaultProvenance(it) {
   }
   if (it.kind === 'hook') {
     return {
-      level: PROV.ORG,
+      level: PROV.ORG_SPECIFIC,
       sources: ['hooks'],
       note: 'Hook pattern is documented by Anthropic; the specific Acme rule (target paths, what to block) is org context.',
     };
   }
   if (it.kind === 'subagent') {
     return {
-      level: PROV.ORG,
+      level: PROV.ORG_SPECIFIC,
       sources: ['subagents'],
       note: 'Subagent pattern is documented; these specific subagents are referenced in Acme skills but not yet implemented as files. Recommendation is ours.',
     };
