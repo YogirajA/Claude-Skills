@@ -1,17 +1,9 @@
 ---
 name: wiki
 description: >-
-  Self-maintaining personal knowledge base, the "LLM wiki" pattern (Andrej Karpathy), living in
-  C:\code\knowledgebase. Use this whenever the user wants to add or ingest a source (article, paper,
-  YouTube transcript, tweet, PDF, meeting note, journal entry) into their knowledge base or wiki; asks
-  a question their accumulated notes could answer ("what do I know about X", "have I seen this before",
-  "what connects to Y"); wants to organize, connect, or cross-reference notes; or wants to health-check
-  ("lint") the wiki. Trigger on phrases like "add this to my knowledge base / wiki", "ingest this",
-  "remember this source", "file this", "update my wiki", "connect this to my notes", "what patterns do
-  you see", "lint my knowledge base", or a bare "/wiki". The skill reads immutable raw/ sources, writes
-  interlinked markdown pages into wiki/, and keeps index.md and log.md current. Prefer this over ad-hoc
-  note-taking any time the user is accumulating knowledge over time and wants it to compound rather than
-  scatter. Plain markdown, Obsidian-compatible, no RAG/vector infrastructure.
+  Alias for write-wiki. Kept for backward compatibility: /wiki triggers the same behavior as
+  /write-wiki. Use write-wiki for adding, ingesting, or updating knowledge. Use read-wiki for
+  querying and getting context before doing work.
 ---
 
 # LLM Wiki: a knowledge base the model maintains
@@ -70,7 +62,7 @@ pasting content to save.
    touches. This is where their curation happens. Keep it short.
 3. **Write a source summary page** in `wiki/` (`wiki/<slug>.md`): what it is, key claims, notable quotes
    with locations, and `[[links]]` to the entities/concepts it mentions.
-4. **Update the entity and concept pages it touches.** A single source typically updates **10–15
+4. **Update the entity and concept pages it touches.** A single source typically updates **10-15
    pages**. Create pages for important entities/concepts that don't have one yet. Strengthen, revise, or
    flag-contradict existing claims rather than just appending. This integration step is the whole point.
 5. **Update `index.md`** with new/changed pages (one line each, under the right section).
@@ -138,8 +130,9 @@ out to search instead of scanning the index. Suggest this to the user; don't bui
 
 ## Optional: make reading automatic
 
-The wiki only helps if it gets read. Two low-effort ways to make a fresh session pick it up without the
-user typing `/wiki`: (1) a one-line pointer in the user's Claude Code `MEMORY.md` saying the wiki exists
-at `knowledgebase/index.md` and should be consulted when relevant; (2) the `knowledgebase/CLAUDE.md`
-file, which Claude reads automatically when working in that folder. Both are already wired up by this
-skill's bootstrap. Obsidian is purely an optional human viewer over the same markdown; never required.
+The wiki only helps if it gets read. Three ways make a fresh session pick it up without the
+user typing `/wiki`: (1) a one-line pointer in the always-loaded global `~/.claude/CLAUDE.md` (its `## Wikis`
+registry) saying the wiki exists at `knowledgebase/index.md` and should be consulted when relevant; (2) the `knowledgebase/CLAUDE.md`
+file, which Claude reads automatically when working in that folder; (3) a global `SessionStart` hook
+(`~/.claude/hooks/wiki-context.py`) that injects the project and GK index maps into context at session start,
+so they are seen before any search. These are already wired up by this skill's bootstrap and the global hook. Obsidian is purely an optional human viewer over the same markdown; never required.

@@ -71,7 +71,10 @@ Wrap the guide content in `<div id="guide-view">`. Deep-dive pages are siblings 
 
 ```css
 .doc-page { display: none; }
-body.paged #guide-view { display: none; }
+/* Hide the guide AND any sibling that lives OUTSIDE #guide-view. A references
+   section rendered after #guide-view is the classic miss: without naming it
+   here it stays visible under every deep-dive page. */
+body.paged #guide-view, body.paged #references { display: none; }
 body.paged .doc-page.active { display: block; animation: dp-in .22s ease both; }
 body.paged main { padding-top: 40px; }  /* if main has 0 top padding for a bleeding hero */
 ```
@@ -82,7 +85,21 @@ function showPage(id){
   document.querySelectorAll('.doc-page').forEach(p => p.classList.toggle('active', p.id === id));
   document.body.classList.add('paged');
   const page = document.getElementById(id);
-  if (page) { setActive(page.dataset.parent); }   // re-highlight parent nav item
+  const parent = page ? page.dataset.parent : null;
+  // Light up BOTH the deep-dive's own sub-link AND its parent section link, so a
+  // reader on a deep-dive sees exactly where they are. (setActive alone lights only one.)
+  let sub = null;
+  document.querySelectorAll('.ng').forEach(a => {
+    const h = a.getAttribute('href');
+    a.classList.toggle('active', h === '#'+id || (!!parent && h === '#'+parent));
+    if (h === '#'+id) sub = a;
+  });
+  // Reveal the active sub-link if the sidebar is scrolled past it (long navs hide it).
+  const side = document.querySelector('.side');
+  if (sub && side) {
+    const ar = sub.getBoundingClientRect(), sr = side.getBoundingClientRect();
+    if (ar.top < sr.top || ar.bottom > sr.bottom) side.scrollTop += (ar.top - sr.top) - 60;
+  }
   window.scrollTo(0, 0);
 }
 function showGuide(sectionId){
@@ -95,7 +112,13 @@ window.addEventListener('hashchange', () => route(location.hash.slice(1)));
 route(location.hash.slice(1));
 ```
 
-Pause scroll-spy while `body.paged` (early-return in the spy function). For search, a TreeWalker that highlights matches must reject nodes inside `.doc-page` (`if (p.closest && p.closest('.doc-page')) return NodeFilter.FILTER_REJECT;`) so it searches the visible guide, not hidden pages, and call `showGuide(null)` before running a search if currently paged.
+Pause scroll-spy while `body.paged` (early-return in the spy function).
+
+### Search that spans the deep-dive pages (and opens them)
+
+A guide whose deep-dives hold most of the detail should search them too, not just the visible guide. Highlight in `#guide-view` first; if there is a guide hit, stay and scroll to it; if the only matches are on hidden pages, `showPage()` the first matching page and note it in the status ("N matches (opened a deep-dive page)"). Reject only `script`, `style`, and `pre` nodes, not `.doc-page`.
+
+**Tear down highlights cleanly, or repeated searches leak DOM.** The trap: wrapping each matched text node in an outer `<span>` (or `innerHTML`-replacing it) leaves that wrapper behind, because teardown only unwraps the inner `.search-hit`. Over many searches the orphan wrappers accumulate and fragment the text. Fix: splice matches in with a `DocumentFragment` of `[text, span.search-hit, text, ...]` and **no outer wrapper**, so teardown (`replace each .search-hit with its text node, then parent.normalize()`) restores the original DOM exactly. Using `textContent` on the hit span (not `innerHTML`) also sidesteps escaping. Verify with a browser check: run N search/clear cycles and assert total `<span>` count returns to baseline (growth 0).
 
 ## Build order tip
 

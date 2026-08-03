@@ -36,7 +36,8 @@ Then a "CONFIRMED OK" list of high-stakes claims you checked and that hold. Do N
 - Em dashes: zero (U+2014). Use commas, colons, parentheses, or restructure. (User rule; en dashes only for ranges.)
 - Citations: every `[N]` resolves to an `id="ref-N"`; no dangling, ideally no orphans.
 - Anchors: every internal `href="#..."` resolves to a matching `id`.
-- Routing: each deep-dive page activates, the guide hides, the parent nav item re-highlights, scroll resets. Search ignores hidden pages.
+- Routing: each deep-dive page activates; the guide AND any sibling outside `#guide-view` (e.g. a references section) hide; the deep-dive's own sub-link and its parent nav item both re-highlight; scroll resets to top.
+- Search: spans the guide and every deep-dive page; a page-only match opens that page with a status note; highlight teardown leaves zero residue (run N search/clear cycles, assert `<span>` count returns to baseline).
 - Motion: everything is gated behind `prefers-reduced-motion` (with at most one justified slow-decorative exception).
 - Browser check: serve locally and verify in a headless browser, do not trust eyeballing the source.
 
