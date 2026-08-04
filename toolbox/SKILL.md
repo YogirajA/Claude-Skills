@@ -24,8 +24,6 @@ whole deliverable.
   primary sources, with worked examples and do/avoid practice.
 - `/sdd-workshop-walkthrough`: an animated click-through workshop page in the
   Athena house style (specworkshop.html, repo.html).
-- `/qa-deck`: a .pptx about to go out. Renders every slide, hunts visual defects
-  and fabricated facts.
 
 ## Plan before building
 
