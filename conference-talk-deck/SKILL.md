@@ -1,6 +1,7 @@
 ---
 name: conference-talk-deck
 description: Use when the user wants to create a new conference talk / presentation deck (a slide deck), or asks to "make a deck", "start a talk deck", "scaffold slides", or mentions building a PlumDeck-style presentation. Interviews the user, then generates a self-contained, offline HTML slide deck with built-in author mode.
+disable-model-invocation: true
 ---
 
 # Conference Talk Deck

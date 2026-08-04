@@ -14,6 +14,7 @@ description: >-
   to turn a set of workshop steps into a playable page. Trigger even if they do
   not say the word "skill". Do NOT use for PowerPoint/Google Slides decks (use a
   pptx skill), for general web apps or dashboards, or for static prose docs.
+disable-model-invocation: true
 ---
 
 # SDD workshop walkthrough

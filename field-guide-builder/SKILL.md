@@ -1,6 +1,7 @@
 ---
 name: field-guide-builder
 description: Use when building or extending a single-file, source-grounded, visually distinctive teaching guide on a technical topic, the kind with a concept hierarchy of worked examples and do/avoid practice, inline citations to primary sources, an editorial design system, an in-app router, and an optional interactive companion. Triggers on requests like "build a guide", "make a teaching guide / explainer / field guide / learning doc", or polishing and extending one.
+disable-model-invocation: true
 ---
 
 # Field guide builder

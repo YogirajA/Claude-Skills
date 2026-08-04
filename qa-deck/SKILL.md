@@ -1,6 +1,7 @@
 ---
 name: qa-deck
 description: Thorough QA pass for a PowerPoint deck (.pptx). Renders every slide to an image, runs an independent visual-inspection subagent against a comprehensive defect catalog, and runs a separate content/hallucination check against source documents. Use proactively whenever the user asks to "QA", "audit", "review", "check", "verify", "validate", or "sanity-check" a deck, before client delivery, after editing slides, when the user says "is this deck ready", "tear this deck apart", "look for issues in this presentation", or invokes `/qa-deck`. Catches mid-card whitespace, ragged card heights, footer overlap, content overflow, low-contrast text, AND fabricated facts (wrong numbers, invented customer quotes, hallucinated dates, made-up product specs).
+disable-model-invocation: true
 ---
 
 # QA Deck

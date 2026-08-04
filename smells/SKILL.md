@@ -1,6 +1,7 @@
 ---
 name: smells
 description: Review code for the twelve Fowler code smells (Mysterious Name, Duplicated Code, Feature Envy, Data Clumps, Primitive Obsession, Repeated Switches, Shotgun Surgery, Divergent Change, Speculative Generality, Message Chains, Middle Man, Refused Bequest) and name each one Fowler-style with a concrete fix. Defaults to reviewing the current git diff; accepts an optional file or path argument to review specific files instead. Use whenever the user asks to "check for code smells", "smell check", "any smells here", "review for refactoring", "what should I refactor", "is this well structured", or runs /smells, and as a refactoring lens after /code-review. This is about design and structure quality (naming, duplication, coupling, over-abstraction), NOT correctness bugs; use /code-review for bugs.
+disable-model-invocation: true
 ---
 
 # Smells

@@ -4,6 +4,7 @@ description: >-
   Alias for write-wiki. Kept for backward compatibility: /wiki triggers the same behavior as
   /write-wiki. Use write-wiki for adding, ingesting, or updating knowledge. Use read-wiki for
   querying and getting context before doing work.
+disable-model-invocation: true
 ---
 
 # LLM Wiki: a knowledge base the model maintains

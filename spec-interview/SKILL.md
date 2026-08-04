@@ -8,6 +8,7 @@ description: >-
   first", or "help me write the spec". Ends in a spec they approve before any
   building. For a fuzzy idea that still needs 2-3 approaches explored first, use
   superpowers:brainstorming instead.
+disable-model-invocation: true
 ---
 
 # Spec Interview
