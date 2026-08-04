@@ -9,6 +9,9 @@ disable-model-invocation: true
 Yogi typed `/toolbox` because he cannot remember which hand-typed skill fits.
 Read the list, name the one or two that actually fit, and tell him what to type.
 
+Fired bare, with no task attached, ask him what he is working on. Reprinting the
+list back at him is a no-op: he is already looking at it.
+
 You cannot run them. Every skill below is user-invoked, so it has no description
 and nothing reaches it but Yogi typing its name. Naming the right one is the
 whole deliverable.
