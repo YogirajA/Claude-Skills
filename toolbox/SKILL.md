@@ -31,6 +31,9 @@ whole deliverable.
   question at a time, ends in a spec he approves.
 - `/wayfinder`: bigger than one session can hold. Decision tickets on the issue
   tracker, resolved one at a time until the route is clear.
+- `/setup-matt-pocock-skills`: once per repo, before the first `/wayfinder` run
+  there. Picks the issue tracker, so wayfinder stops quietly falling back to
+  local markdown.
 
 ## Cut what is not needed
 
