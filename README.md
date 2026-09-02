@@ -107,6 +107,28 @@ the bundled `/code-review`, and the remember/handoff system already in use here.
 | [to-questionnaire](to-questionnaire/) | Turns open decisions into async markdown questionnaires |
 | [wait-what](wait-what/) | Re-pitches a message with missing context in plain English |
 
+## Token economy suite (JuliusBrussee/caveman)
+
+Adapted from [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman), the "why use many
+token when few do trick" project. Only the MIT-licensed `skills/` surface is copied; the BSL
+compression engine, proxy, and cloud skills are not included. Honest caveat from upstream's own
+docs: the terse-mode rules cost roughly 1,250 input tokens per turn once active, so net savings can
+go negative on short sessions.
+
+The three `cavecrew` subagent presets ship inside [cavecrew/agents/](cavecrew/agents/); copy them
+to `~/.claude/agents/` for the cavecrew skill to route to them.
+
+| Skill | What it does |
+|---|---|
+| [caveman](caveman/) | Ultra-compressed output mode (lite, full, ultra): fluff dies, technical substance stays. Token-aware: no fake abbreviations, no arrow glyphs, grammar kept where mangling saves nothing |
+| [caveman-compress](caveman-compress/) | Compresses a CLAUDE.md, todo list, or memory file into caveman format with a readable backup |
+| [cavecrew](cavecrew/) | When to delegate to the compressed subagent presets (investigator, builder, reviewer) instead of vanilla Explore: same findings in a third of the main-context tokens |
+| [caveman-explore](caveman-explore/) | Haiku-powered read-only explorer returning path:line citations only; for cold-start orientation and broad localization |
+| [safe-refactor](safe-refactor/) | Restructure while preserving behavior: verification brackets every structural edit |
+| [surgical-patch](surgical-patch/) | Fix at the narrowest responsible layer, with regression proof and preserved surrounding behavior |
+| [migration](migration/) | Reversible, compatibility-safe transitions: schema, data, API, config, dependency |
+| [caveman-help](caveman-help/) | Quick-reference card for the caveman modes and skills |
+
 ## Personal and meta
 
 | Skill | What it does |
@@ -118,9 +140,10 @@ the bundled `/code-review`, and the remember/handoff system already in use here.
 ## Credits
 
 `codebase-design`, `prototype`, `resolving-merge-conflicts`, `setup-matt-pocock-skills`,
-`writing-great-skills`, and the whole suite section above are adapted from
-[mattpocock/skills](https://github.com/mattpocock/skills) (MIT). Everything else grew out of
-daily use.
+`writing-great-skills`, and the engineering suite section are adapted from
+[mattpocock/skills](https://github.com/mattpocock/skills) (MIT). The token economy suite is
+adapted from [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) (MIT skills
+surface). Everything else grew out of daily use.
 
 ## License
 
