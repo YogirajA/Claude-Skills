@@ -1,0 +1,60 @@
+{
+  "skill_name": "goal-creator",
+  "evals": [
+    {
+      "id": 0,
+      "name": "two-outcomes",
+      "prompt": "sharpen this into a session goal for tonight: reconcile the stale docs in claw (the README still says there's no job when jobs/edgar_watch.py exists, and SETUP-STATE.md has unchecked boxes for things that are done) and then pick the next job to build",
+      "expected_output": "One goal block, seven slots, char count above the block. The two outcomes (doc reconciliation, job selection) are either collapsed to one or explicitly ordered with 'then'. Values grounded in the real repo (real filenames, real branch).",
+      "files": [],
+      "assertions": [
+        "Response ends with a single fenced block containing the goal text, with nothing substantive after it",
+        "Character count is stated on the line immediately above the fenced block",
+        "Goal text is under 4000 characters",
+        "All seven slots present: outcome, why, scope guard, acceptance criteria, authorities, method, parking",
+        "Every acceptance criterion names a proof: a command, exit code, file path, or visible fact",
+        "At least one timebox or iteration cap on open-ended work",
+        "No unresolved placeholder text such as <branch>, TBD, or 'the relevant tests'",
+        "The two requested outcomes are collapsed into one or explicitly ordered, not left as two parallel goals",
+        "Goal cites real artifacts from the repo (README.md, SETUP-STATE.md, jobs/edgar_watch.py) rather than generic nouns"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "deploy-authority",
+      "prompt": "/goal make the tennis portal load faster and ship it",
+      "expected_output": "One goal block from a very thin intent. Deploy authority explicit because 'ship it' touches a push-to-deploy Railway repo. Unverifiable values (test command, current load time) written as assumptions to verify, not asserted.",
+      "files": [],
+      "assertions": [
+        "Response ends with a single fenced block containing the goal text, with nothing substantive after it",
+        "Character count is stated on the line immediately above the fenced block",
+        "Goal text is under 4000 characters",
+        "All seven slots present: outcome, why, scope guard, acceptance criteria, authorities, method, parking",
+        "Every acceptance criterion names a proof: a command, exit code, file path, or visible fact",
+        "At least one timebox or iteration cap on open-ended work",
+        "No unresolved placeholder text such as <branch>, TBD, or 'the relevant tests'",
+        "Deploy authority is explicit: push-to-deploy either waits for the user's word or names an auto-if condition",
+        "Unverified values are written as assumptions the session must check first, not asserted as fact",
+        "A measurable performance target is named with how it is measured, not just 'faster'"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "review-trap",
+      "prompt": "goal for tomorrow's overnight session: run a security review over the argus frontend auth code and fix what it finds",
+      "expected_output": "One goal block. The review-findings trap is pre-empted: a severity bar and an approval rule for the fix list appear before any fixing, plus a timebox on the review itself.",
+      "files": [],
+      "assertions": [
+        "Response ends with a single fenced block containing the goal text, with nothing substantive after it",
+        "Character count is stated on the line immediately above the fenced block",
+        "Goal text is under 4000 characters",
+        "All seven slots present: outcome, why, scope guard, acceptance criteria, authorities, method, parking",
+        "Every acceptance criterion names a proof: a command, exit code, file path, or visible fact",
+        "At least one timebox or iteration cap on open-ended work",
+        "No unresolved placeholder text such as <branch>, TBD, or 'the relevant tests'",
+        "A triage rule is pre-committed: a severity bar and who approves the fix list, decided before fixing starts",
+        "Findings that are out of scope are parked in a named ledger file rather than fixed"
+      ]
+    }
+  ]
+}
