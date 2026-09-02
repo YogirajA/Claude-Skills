@@ -81,6 +81,32 @@ of the pattern rather than tools you would run as-is.
 | [conference-talk-deck](conference-talk-deck/) | Interviews you, then generates a self-contained offline HTML slide deck with author mode |
 | [qa-deck](qa-deck/) | Two-track QA on a .pptx: renders every slide for visual defects, and checks every verifiable claim against source material |
 
+## Engineering and productivity suite (mattpocock/skills)
+
+Adapted from [mattpocock/skills](https://github.com/mattpocock/skills). The issue-tracker skills
+(ask-matt, triage, to-spec, to-tickets, implement) work as a set and assume
+`setup-matt-pocock-skills` has configured the repo. His `tdd`, `code-review`, `diagnosing-bugs`,
+and `handoff` are intentionally omitted: they duplicate superpowers TDD and systematic-debugging,
+the bundled `/code-review`, and the remember/handoff system already in use here.
+
+| Skill | What it does |
+|---|---|
+| [ask-matt](ask-matt/) | Router: which skill in the suite fits your situation |
+| [grill-me](grill-me/) | Relentless interview to sharpen a plan; thin wrapper over grilling |
+| [grilling](grilling/) | The interview primitive: design-tree questioning in frontier rounds, each question with a recommended answer, facts fetched by subagents |
+| [grill-with-docs](grill-with-docs/) | Grilling session that also builds the domain model into `CONTEXT.md` and ADRs |
+| [domain-modeling](domain-modeling/) | Actively builds and sharpens a project domain model |
+| [improve-codebase-architecture](improve-codebase-architecture/) | Scans the codebase for deepening opportunities, with an HTML report |
+| [research](research/) | Investigates questions against primary sources and captures findings |
+| [to-spec](to-spec/) | Turns a conversation into a spec published to the issue tracker |
+| [to-tickets](to-tickets/) | Breaks plans into tracer-bullet tickets with blocking edges |
+| [triage](triage/) | Moves issues through a triage state machine |
+| [implement](implement/) | Builds work from specs and tickets, driving TDD and code review |
+| [wizard](wizard/) | Generates interactive bash wizards for human-only steps |
+| [teach](teach/) | Teaches new skills over multiple sessions in a stateful workspace |
+| [to-questionnaire](to-questionnaire/) | Turns open decisions into async markdown questionnaires |
+| [wait-what](wait-what/) | Re-pitches a message with missing context in plain English |
+
 ## Personal and meta
 
 | Skill | What it does |
@@ -91,9 +117,10 @@ of the pattern rather than tools you would run as-is.
 
 ## Credits
 
-`codebase-design`, `prototype`, `resolving-merge-conflicts`, `setup-matt-pocock-skills`, and
-`writing-great-skills` are adapted from [mattpocock/skills](https://github.com/mattpocock/skills).
-Everything else grew out of daily use.
+`codebase-design`, `prototype`, `resolving-merge-conflicts`, `setup-matt-pocock-skills`,
+`writing-great-skills`, and the whole suite section above are adapted from
+[mattpocock/skills](https://github.com/mattpocock/skills) (MIT). Everything else grew out of
+daily use.
 
 ## License
 
