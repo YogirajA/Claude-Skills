@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Skills Atlas: 56 skills, three origins, three load tiers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#e9ebef;
+    --sheet:#fbfcfd;
+    --card:#ffffff;
+    --border:#e3e6ea; --border-hi:#d1d6dc;
+    --ink:#0d1219;
+    --text:#252c34;
+    --muted:#63707c;
+
+    /* one dominant + one spark: workshop green + brass */
+    --dominant:#17453b;      /* workshop green */
+    --spark:#c08a2e;         /* brass */
+
+    /* the three origins + maintenance, cool to warm */
+    --c1:#17453b;            /* hand-typed originals    */
+    --c2:#1c5f86;            /* mattpocock suite        */
+    --c3:#a8642a;            /* caveman suite           */
+    --c4:#8a3b4a;            /* maintenance and pruning */
+
+    --good:#0e8a58; --bad:#c2533b; --warn:#c67a12;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --sans:'Hanken Grotesk',system-ui,sans-serif;
+    --display:'Fraunces',Georgia,serif;
+    --radius:11px; --radius-lg:18px; --radius-xl:26px;
+    --pad-x:56px;
+    --shadow-sm:0 1px 2px rgba(11,22,34,.04), 0 4px 14px rgba(11,22,34,.05);
+    --shadow-md:0 2px 8px rgba(11,22,34,.05), 0 18px 40px rgba(11,22,34,.09);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--sans); color:var(--text); background:var(--bg);
+    -webkit-font-smoothing:antialiased; line-height:1.6; font-size:15px;
+  }
+  a{color:inherit;}
+
+  .wrap{display:grid; grid-template-columns:248px minmax(0,1fr); gap:0; max-width:1240px; margin:0 auto;}
+  nav.side{
+    position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto;
+    padding:26px 18px 40px 22px; border-right:1px solid var(--border);
+    background:linear-gradient(180deg,#eef1f4,#e9ebef);
+  }
+  main{
+    background:var(--sheet); min-height:100vh;
+    padding:0 var(--pad-x) 90px; overflow:hidden; box-shadow:var(--shadow-md);
+  }
+
+  .brand{display:flex; align-items:center; gap:11px; margin-bottom:22px; text-decoration:none;}
+  .brand .mini{width:38px; height:38px; flex:none;}
+  .brand-txt b{font-family:var(--display); font-weight:600; font-size:17px; color:var(--ink); letter-spacing:-.01em; display:block; line-height:1;}
+  .brand-txt span{font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);}
+  .ng{margin:2px 0;}
+  .ng-top{
+    display:flex; align-items:center; gap:9px; text-decoration:none;
+    font-size:13.5px; font-weight:600; color:var(--text); padding:7px 10px; border-radius:8px;
+    letter-spacing:-.005em;
+  }
+  .ng-top:hover{background:#ffffff;}
+  .ng-top.active{background:#fff; box-shadow:var(--shadow-sm);}
+  .ng-dot{width:9px; height:9px; border-radius:50%; flex:none; background:var(--c,var(--dominant));}
+  .ng-top .num{font-family:var(--mono); font-size:10px; color:var(--muted); margin-left:auto;}
+  .ng-plain .ng-top{color:var(--muted); font-weight:500;}
+  .ng-1{--c:var(--c1);} .ng-2{--c:var(--c2);} .ng-3{--c:var(--c3);} .ng-4{--c:var(--c4);}
+  .nav-hr{height:1px; background:var(--border); margin:14px 6px;}
+
+  .hero{
+    position:relative; overflow:hidden; isolation:isolate;
+    display:grid; grid-template-columns:1fr auto; align-items:center; gap:30px;
+    margin:0 calc(-1 * var(--pad-x)) 6px; padding:50px var(--pad-x) 42px;
+    background:
+      radial-gradient(120% 150% at 92% 2%, rgba(192,138,46,.16) 0, transparent 44%),
+      radial-gradient(130% 130% at 0% 118%, rgba(23,69,59,.12) 0, transparent 48%),
+      linear-gradient(134deg,#f5f8f6 0%,#eff3f1 55%,#e9efec 100%);
+    border-bottom:1px solid var(--border);
+  }
+  .hero-grain{position:absolute; inset:0; z-index:-1; opacity:.4; mix-blend-mode:soft-light; pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+  .hero-main{position:relative; z-index:1;}
+  .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.19em; text-transform:uppercase; color:var(--dominant); margin-bottom:16px; display:flex; align-items:center; gap:10px;}
+  .eyebrow::before{content:""; width:26px; height:2px; background:linear-gradient(90deg,var(--dominant),var(--spark));}
+  .hero h1{font-family:var(--display); font-weight:600; font-size:clamp(42px,5.7vw,66px); line-height:.99; letter-spacing:-.03em; color:var(--ink);}
+  .hero h1 em{font-style:italic; font-weight:500; color:var(--spark);}
+  .hero .lede{font-size:clamp(17px,1.9vw,21px); color:var(--text); max-width:48ch; margin-top:20px;}
+  .hero .src-line{font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-top:22px; letter-spacing:.01em;}
+  .hero .src-line a{color:var(--dominant); text-decoration:none; border-bottom:1px solid rgba(23,69,59,.3);}
+
+  /* seal: three load-tier rings, a loader needle sweeping */
+  .seal{width:200px; height:200px; overflow:visible; filter:drop-shadow(0 8px 18px rgba(11,22,34,.09));}
+  .seal-ring-outer{fill:rgba(255,255,255,.5); stroke:rgba(23,69,59,.16);}
+  .seal-text{font-family:var(--mono); font-size:8.2px; letter-spacing:1.7px; fill:var(--muted);}
+  .seal-rot{transform-origin:100px 100px; animation:sealspin 32s linear infinite;}
+  @keyframes sealspin{to{transform:rotate(360deg);}}
+  .tier-ring{fill:none; stroke-linecap:round;}
+  .tr1{stroke:var(--spark); stroke-width:2.6; stroke-dasharray:2 4;}
+  .tr2{stroke:rgba(23,69,59,.45); stroke-width:2; stroke-dasharray:8 7;}
+  .tr3{stroke:rgba(28,95,134,.4); stroke-width:1.6; stroke-dasharray:16 10;}
+  .seal-dot{stroke:#fff; stroke-width:1.6;}
+  .seal-needle{stroke:var(--spark); stroke-width:2.6; stroke-linecap:round; transform-origin:100px 100px; animation:sweep 7s ease-in-out infinite;}
+  @keyframes sweep{0%,100%{transform:rotate(-30deg);} 50%{transform:rotate(38deg);}}
+  .seal-core{fill:var(--dominant); stroke:#fff; stroke-width:2.4;}
+  .seal-corelbl{font-family:var(--mono); font-size:6.4px; fill:#fff; font-weight:500; letter-spacing:.5px;}
+  .seal-lbl{font-family:var(--mono); font-size:7px; fill:var(--ink); font-weight:500; letter-spacing:.35px;}
+  .seal-lbl.brass{fill:var(--spark);}
+
+  .prose{max-width:74ch; margin:34px 0;}
+  .prose p{margin:0 0 16px;}
+  .prose strong{color:var(--ink); font-weight:600;}
+  .drop::first-letter{font-family:var(--display); font-weight:600; font-size:58px; float:left; line-height:.82; padding:6px 12px 0 0; color:var(--dominant);}
+  .pull{font-family:var(--display); font-style:italic; font-size:16px; color:var(--ink); border-left:3px solid var(--spark); padding:2px 0 2px 16px; margin:20px 0;}
+  .pull cite{display:block; font-family:var(--mono); font-style:normal; font-size:11px; letter-spacing:.06em; color:var(--muted); margin-top:8px; text-transform:uppercase;}
+
+  h2.cat{
+    font-family:var(--display); font-weight:600; font-size:30px; color:var(--ink);
+    margin:56px 0 4px; padding-top:22px; border-top:1px solid var(--border); position:relative;
+    letter-spacing:-.02em; scroll-margin-top:24px;
+  }
+  h2.cat::before{content:""; position:absolute; top:-1px; left:0; width:58px; height:3px; background:var(--c,var(--dominant));}
+  .cat-kicker{font-family:var(--mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--c,var(--dominant)); margin:0 0 2px;}
+  .cat-sub{color:var(--muted); font-size:15px; max-width:72ch; margin:6px 0 26px;}
+
+  /* tier cards */
+  .axes{display:grid; gap:12px; margin:22px 0 8px;}
+  .axis{
+    display:grid; grid-template-columns:190px 1fr; gap:20px; align-items:start;
+    border:1px solid var(--border); border-left:4px solid var(--ac); border-radius:var(--radius-lg);
+    padding:18px 22px; background:var(--card); box-shadow:var(--shadow-sm);
+  }
+  .axis.t1{--ac:var(--spark);}
+  .axis.t2{--ac:var(--dominant);}
+  .axis.t3{--ac:var(--good);}
+  .axis-name{display:flex; align-items:baseline; gap:9px; flex-wrap:wrap;}
+  .axis-name b{font-family:var(--display); font-weight:600; font-size:19px; color:var(--ink); letter-spacing:-.01em;}
+  .axis-dir{font-family:var(--mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; color:#fff; background:var(--ac); border-radius:999px; padding:3px 9px;}
+  .axis-why{font-size:14.5px; color:var(--text);}
+  .axis-why b{color:var(--ink); font-weight:600;}
+
+  .verdict{margin:24px 0 6px; padding:20px 24px; border-radius:var(--radius-lg);
+    background:linear-gradient(120deg,#f3f7f5,#ecf2ef); border:1px solid var(--border); font-size:15.5px; color:var(--text); max-width:80ch;}
+  .verdict b{color:var(--ink);}
+
+  /* category blocks with compact skill rows */
+  .ctrl{
+    border:1px solid var(--border); border-left:3px solid var(--c);
+    border-radius:var(--radius-lg); padding:22px 24px; margin:16px 0;
+    background:var(--card); box-shadow:var(--shadow-sm); scroll-margin-top:18px;
+  }
+  .ctrl.k1{--c:var(--c1);} .ctrl.k2{--c:var(--c2);} .ctrl.k3{--c:var(--c3);} .ctrl.k4{--c:var(--c4);}
+  .ctrl-head{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
+  .ctrl-num{font-family:var(--mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; color:#fff; background:var(--c); border-radius:999px; padding:3px 10px; align-self:center;}
+  .ctrl-name{font-family:var(--display); font-weight:600; font-size:22px; color:var(--ink); letter-spacing:-.01em; line-height:1.15;}
+  .ctrl-def{color:var(--text); font-size:15.5px; margin:12px 0 4px; max-width:78ch;}
+  .ctrl-def b{color:var(--ink);}
+
+  .skl{margin:14px 0 2px; display:grid; gap:0;}
+  .sk{display:grid; grid-template-columns:210px 1fr; gap:16px; padding:9px 2px; border-bottom:1px solid var(--border); font-size:13.5px; align-items:baseline;}
+  .sk:last-child{border-bottom:none;}
+  .sk .nm{font-family:var(--mono); font-size:12.5px; color:var(--ink); font-weight:500;}
+  .sk .nm .uo{font-family:var(--mono); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:#fff; background:var(--muted); border-radius:4px; padding:1px 5px; margin-left:6px; vertical-align:1px;}
+  .sk .ds{color:var(--muted); line-height:1.55;}
+  .sk .ds b{color:var(--text); font-weight:600;}
+
+  .note{font-size:13.5px; color:var(--muted); margin-top:12px;}
+  .note b{color:var(--text); font-weight:600;}
+  .platform{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
+  .chip{font-size:12.5px; color:var(--text); background:#f4f7f5; border:1px solid var(--border); border-radius:999px; padding:5px 12px;}
+  .chip b{color:var(--ink); font-weight:600;}
+
+  .caveats{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:22px 0 6px;}
+  .cav{border:1px solid var(--border); border-left:4px solid var(--warn); border-radius:var(--radius-lg); padding:20px 22px; background:var(--card); box-shadow:var(--shadow-sm);}
+  .cav-k{font-family:var(--mono); font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--warn); margin-bottom:7px;}
+  .cav-h{font-family:var(--display); font-weight:600; font-size:19px; color:var(--ink); letter-spacing:-.01em; margin-bottom:9px; line-height:1.2;}
+  .cav p{font-size:13.8px; color:var(--text);}
+  .cav p b{color:var(--ink); font-weight:600;}
+
+  .synth{margin:56px 0 0; padding:34px 34px 30px; border-radius:var(--radius-xl); color:#eaf1ee; position:relative; overflow:hidden;
+    background:radial-gradient(120% 140% at 90% 0%, rgba(192,138,46,.32) 0, transparent 46%), linear-gradient(140deg,#17453b,#0e2b24);}
+  .synth .kicker{font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--spark); margin-bottom:12px;}
+  .synth h2{font-family:var(--display); font-weight:600; font-size:28px; color:#fff; letter-spacing:-.02em; margin-bottom:6px; line-height:1.12;}
+  .synth p{color:#c6d5cf; max-width:68ch; margin:10px 0 0;}
+  .synth p b{color:#fff;}
+  .synth .cycle{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:22px 0 4px;}
+  .synth .cy{font-family:var(--display); font-weight:600; font-size:17px; color:#fff; padding:8px 15px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16);}
+  .synth .cy.spark{color:#241a08; background:var(--spark); border-color:var(--spark);}
+  .synth .arw{color:var(--spark); font-weight:800;}
+
+  .refs{margin-top:52px; padding-top:22px; border-top:1px solid var(--border);}
+  .refs h3{font-family:var(--mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); margin-bottom:14px;}
+  .refs ol{list-style:none; counter-reset:r;}
+  .refs li{counter-increment:r; position:relative; padding:8px 0 8px 34px; font-size:13.5px; color:var(--text); border-bottom:1px solid var(--border);}
+  .refs li::before{content:"["counter(r)"]"; position:absolute; left:0; top:8px; font-family:var(--mono); font-size:12px; color:var(--dominant); font-weight:500;}
+  .refs a{color:var(--dominant); text-decoration:none; border-bottom:1px solid rgba(23,69,59,.28); word-break:break-all;}
+  .refs .tier{font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); background:#eef2f0; border-radius:4px; padding:1px 6px; margin-left:6px;}
+  .src{font-size:.72em; vertical-align:super; text-decoration:none; color:var(--dominant); font-weight:600; margin-left:1px;}
+
+  .foot{margin-top:34px; font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:.02em; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+  @media (max-width:900px){
+    .wrap{grid-template-columns:1fr;}
+    nav.side{position:static; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    .hero{grid-template-columns:1fr;}
+    .hero-seal{justify-self:start;}
+    .axis{grid-template-columns:1fr; gap:10px;}
+    .caveats{grid-template-columns:1fr;}
+    .sk{grid-template-columns:1fr; gap:3px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none !important; transition:none !important; scroll-behavior:auto !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===================== NAV ===================== -->
+  <nav class="side">
+    <a class="brand" href="#top">
+      <svg class="mini" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(23,69,59,.25)" stroke-dasharray="2.5 3.5"/>
+        <circle cx="20" cy="20" r="10" fill="none" stroke="rgba(192,138,46,.6)" stroke-width="2" stroke-dasharray="2 3.5"/>
+        <circle cx="20" cy="20" r="4.2" fill="#17453b"/>
+        <circle cx="31" cy="12" r="3" fill="#c08a2e"/>
+      </svg>
+      <span class="brand-txt"><b>The Skills Atlas</b><span>56 skills, 3 tiers</span></span>
+    </a>
+
+    <div class="ng ng-plain"><a class="ng-top" href="#overview">The idea</a></div>
+    <div class="ng ng-plain"><a class="ng-top" href="#economics">The economics</a></div>
+    <div class="nav-hr"></div>
+    <div class="ng ng-1"><a class="ng-top" href="#originals"><span class="ng-dot"></span> Hand-typed <span class="num">33</span></a></div>
+    <div class="ng ng-2"><a class="ng-top" href="#pocock"><span class="ng-dot"></span> Pocock suite <span class="num">15</span></a></div>
+    <div class="ng ng-3"><a class="ng-top" href="#caveman"><span class="ng-dot"></span> Caveman suite <span class="num">8</span></a></div>
+    <div class="nav-hr"></div>
+    <div class="ng ng-4"><a class="ng-top" href="#pruning"><span class="ng-dot"></span> What was refused</a></div>
+    <div class="ng ng-plain"><a class="ng-top" href="#references">Sources</a></div>
+  </nav>
+
+  <!-- ===================== MAIN ===================== -->
+  <main id="top">
+
+    <!-- hero -->
+    <header class="hero">
+      <div class="hero-grain"></div>
+      <div class="hero-main">
+        <div class="eyebrow">A field catalog of the Claude-Skills collection</div>
+        <h1>Many skills.<br><em>Few tokens.</em></h1>
+        <p class="lede">Fifty-six skills from three origins, every one paying rent in one of three load tiers. The catalog, the economics that govern it, and the eight things deliberately kept out.</p>
+        <p class="src-line">Repo: <a href="https://github.com/YogirajA/Claude-Skills" target="_blank" rel="noopener">YogirajA/Claude-Skills</a> <a class="src" href="#ref-1">[1]</a> &#183; suites from mattpocock/skills <a class="src" href="#ref-2">[2]</a> and JuliusBrussee/caveman <a class="src" href="#ref-3">[3]</a>.<br>Snapshot 2026-09-02, commit 3b030a5.</p>
+      </div>
+      <aside class="hero-seal" aria-label="Three concentric rings for the three load tiers, a loader needle sweeping across them">
+        <svg class="seal" viewBox="0 0 200 200" aria-hidden="true">
+          <defs><path id="sealArc" d="M100,100 m0,-80 a80,80 0 1,1 0,160 a80,80 0 1,1 0,-160"/></defs>
+          <circle class="seal-ring-outer" cx="100" cy="100" r="93"/>
+          <g class="seal-rot"><text class="seal-text"><textPath href="#sealArc">DESCRIPTION &#183; EVERY SESSION &#183; BODY &#183; ON INVOKE &#183; REFERENCES &#183; ON READ &#183; </textPath></text></g>
+          <circle class="tier-ring tr1" cx="100" cy="100" r="38"/>
+          <circle class="tier-ring tr2" cx="100" cy="100" r="54"/>
+          <circle class="tier-ring tr3" cx="100" cy="100" r="70"/>
+          <circle class="seal-dot" cx="100" cy="62" r="4" fill="var(--spark)"/>
+          <circle class="seal-dot" cx="140" cy="72" r="4" fill="var(--dominant)"/>
+          <circle class="seal-dot" cx="55" cy="128" r="4" fill="#1c5f86"/>
+          <g class="seal-needle"><path d="M100,100 L100,32"/></g>
+          <circle class="seal-core" cx="100" cy="100" r="13"/>
+          <text class="seal-corelbl" x="100" y="103" text-anchor="middle">LOADER</text>
+          <text class="seal-lbl brass" x="100" y="24" text-anchor="middle">ALWAYS</text>
+          <text class="seal-lbl" x="163" y="150" text-anchor="middle">ON READ</text>
+        </svg>
+      </aside>
+    </header>
+
+    <!-- ===================== OVERVIEW ===================== -->
+    <section id="overview">
+      <div class="prose">
+        <p class="drop">A skill is the smallest unit of packaged judgment in Claude Code: a folder, a SKILL.md with YAML frontmatter, and whatever reference files the body reads on demand. The description in the frontmatter is what the model sees every session; the body loads only when the skill fires. That two-line mechanical fact turns out to govern everything else about running a collection of fifty-six of them.</p>
+        <p>This atlas catalogs the collection as of September 2026: <strong>33 hand-typed originals</strong>, <strong>15 adapted from Matt Pocock's engineering suite</strong>, and <strong>8 from the Caveman token-economy project</strong>, plus three compressed subagent presets riding along with cavecrew. Every import was filtered the same way: standalone over infrastructure-coupled, distinct over duplicate, and nothing whose licence forbids an MIT collection.</p>
+      </div>
+      <div class="pull">&ldquo;Every skill leaks a description into the context window. A hundred skills means a hundred descriptions loaded whether or not you use them.&rdquo;
+        <cite>Matt Pocock, David Ondrej interview, Jun 2026</cite></div>
+    </section>
+
+    <!-- ===================== ECONOMICS ===================== -->
+    <section id="economics">
+      <p class="cat-kicker">What each line costs</p>
+      <h2 class="cat">The three load tiers</h2>
+      <p class="cat-sub">Lines of code in a skill are not one number. They are three numbers, and only one of them is paid unconditionally.</p>
+
+      <div class="axes">
+        <div class="axis t1">
+          <div class="axis-name"><b>Tier 1: description</b> <span class="axis-dir">every session</span></div>
+          <div class="axis-why">The frontmatter description loads into <b>every conversation, used or not</b>. At 50 to 270 tokens each, 56 descriptions cost roughly 8 to 10k tokens before the first prompt. This is the tier to guard: a skill that never fires still bills here forever. <code>disable-model-invocation: true</code> zeroes it for user-only skills.</div>
+        </div>
+        <div class="axis t2">
+          <div class="axis-name"><b>Tier 2: SKILL.md body</b> <span class="axis-dir">on invoke</span></div>
+          <div class="axis-why">Loads when the skill fires. Costly only if bloated: onboard-repo's body is ~3,400 tokens and delegates everything heavy to references. The house rule that fell out of building it: <b>every phase is 10 to 30 lines and points at a reference file</b>, never 90 lines inline.</div>
+        </div>
+        <div class="axis t3">
+          <div class="axis-name"><b>Tier 3: references</b> <span class="axis-dir">only if read</span></div>
+          <div class="axis-why"><b>Free until opened.</b> onboard-repo carries ~14k tokens of interview scripts, hook library, and templates at zero standing cost. This is where depth belongs: the tier explains why a 40-line wrapper plus fat references beats one fat SKILL.md.</div>
+        </div>
+      </div>
+
+      <div class="verdict"><b>The governing rule, from three independent sources:</b> config and skills you have not earned get ignored or actively hurt. Boris Cherny deletes his CLAUDE.md, skills, and hooks every six months and re-adds on repeated failure only. Pocock deletes everything and watches the bare agent. Anthropic's docs name &ldquo;the over-specified CLAUDE.md&rdquo; as a failure pattern. The collection's answer is provenance: every import below records where it came from, what it duplicates, and what was refused.</div>
+    </section>
+
+    <!-- ===================== ORIGINALS ===================== -->
+    <section id="originals">
+      <p class="cat-kicker" style="--c:var(--c1)">Origin one &#183; 33 skills</p>
+      <h2 class="cat" style="--c:var(--c1)">The hand-typed originals</h2>
+      <p class="cat-sub">Grown out of daily use, one repeated need at a time. Grouped as the repo README groups them. <span style="font-family:var(--mono); font-size:11px;">UO</span> marks user-only skills (zero tier-1 cost).</p>
+
+      <div class="ctrl k1">
+        <div class="ctrl-head"><span class="ctrl-num">Onboarding</span><span class="ctrl-name">Repo setup and the harness</span></div>
+        <p class="ctrl-def">The newest and heaviest machinery: a phase machine that earns its config before writing it, then keeps it auditable with a dated manifest.</p>
+        <div class="skl">
+          <div class="sk"><span class="nm">onboard-repo</span><span class="ds">Full onboarding: recon, mutual interrogation, <b>execution-verified</b> feedback loop, capped CLAUDE.md, wiki, cold-context eval, and an interview-gated <b>.claude/ harness</b> with tested hooks and a HARNESS.md manifest carrying per-item justifications and six-month review dates</span></div>
+          <div class="sk"><span class="nm">onboard-light</span><span class="ds">Same flow, harness phase pre-answered &ldquo;skip&rdquo;: knowledge-only onboarding for repos where .claude/ is not yours to write. A 40-line wrapper that cannot drift from its parent</span></div>
+          <div class="sk"><span class="nm">primitive-classifier</span><span class="ds">Audits a folder for Claude Code primitives and classifies each into the one that actually fits, as an interactive HTML report</span></div>
+          <div class="sk"><span class="nm">setup-matt-pocock-skills<span class="uo">UO</span></span><span class="ds">One-time repo config the Pocock engineering suite reads: issue tracker, triage labels, domain doc layout</span></div>
+        </div>
+      </div>
+
+      <div class="ctrl k1">
+        <div class="ctrl-head"><span class="ctrl-num">Knowledge</span><span class="ctrl-name">The LLM wiki</span></div>
+        <p class="ctrl-def">The pull layer: knowledge fetched when needed instead of carried every session. Karpathy's pattern, federated across projects.</p>
+        <div class="skl">
+          <div class="sk"><span class="nm">write-wiki</span><span class="ds">Ingest sources, update pages, lint, bootstrap new wikis; owns page layout and the global registry</span></div>
+          <div class="sk"><span class="nm">read-wiki</span><span class="ds">Query the knowledge base before doing work; strictly read-only</span></div>
+          <div class="sk"><span class="nm">wiki</span><span class="ds">Backward-compatible alias for write-wiki</span></div>
+        </div>
+      </div>
+
+      <div class="ctrl k1">
+        <div class="ctrl-head"><span class="ctrl-num">Quality</span><span class="ctrl-name">Code quality and review</span></div>
+        <p class="ctrl-def">The anti-over-engineering battery, plus Fowler's vocabulary and merge-conflict discipline.</p>
+        <div class="skl">
+          <div class="sk"><span class="nm">ponytail</span><span class="ds">Forces the laziest solution that works: YAGNI, stdlib before custom code, one line before fifty. Intensities: lite, full, ultra</span></div>
+          <div class="sk"><span class="nm">ponytail-review<span class="uo">UO</span></span><span class="ds">Diff review exclusively for over-engineering: what to delete and what replaces it</span></div>
+          <div class="sk"><span class="nm">ponytail-audit<span class="uo">UO</span></span><span class="ds">Whole-repo version: a ranked list of bloat to delete, simplify, or replace</span></div>
+          <div class="sk"><span class="nm">smells<span class="uo">UO</span></span><span class="ds">Reviews the diff for the twelve Fowler smells, named Fowler-style with concrete fixes</span></div>
+        </div>
+      </div>
+
+      <div class="ctrl k1">
+        <div class="ctrl-head"><span class="ctrl-num">Decisions</span><span class="ctrl-name">Specs, plans, and judgment calls</span></div>
+        <p class="ctrl-def">Ways of thinking before building: interviews, frameworks, councils, and a brake.</p>
+        <div class="skl">
+          <div class="sk"><span class="nm">spec-interview<span class="uo">UO</span></span><span class="ds">Interviews you into a written, approved spec instead of prompt-by-prompt iteration</span></div>
+          <div class="sk"><span class="nm">goal-creator</span><span class="ds">Rough intent into a /goal-ready session goal: verifiable outcome, scope guard, acceptance criteria, explicit authorities</span></div>
+          <div class="sk"><span class="nm">mental-models</span><span class="ds">Pressure-tests a decision through named frameworks (inversion, second-order, base rates, regret minimization) and ends with a recommendation</span></div>
+          <div class="sk"><span class="nm">the-llm-council</span><span class="ds">Five advisors attack a decision from different angles, peer-review anonymously, Chairman's verdict</span></div>
+          <div class="sk"><span class="nm">scope-creep-check</span><span class="ds">The self-awareness brake: names the drift, shows the cost, asks proceed / park / drop</span></div>
+        </div>
+      </div>
+
+      <div class="ctrl k1">
+        <div class="ctrl-head"><span class="ctrl-num">Prompts + teaching</span><span class="ctrl-name">Language in, understanding out</span></div>
+        <div class="skl">
+          <div class="sk"><span class="nm">prompt-fixer</span><span class="ds">Rough prompt into clear plain English, handed back; no XML, no execution</span></div>
+          <div class="sk"><span class="nm">prompt-optimizer</span><span class="ds">Messy ask into an XML-structured prompt, validated with you, then executed</span></div>
+          <div class="sk"><span class="nm">explain-yogi-like-he-is-5</span><span class="ds">Deep Socratic teaching session with an incremental mastery loop; teaches rather than summarizes</span></div>
+          <div class="sk"><span class="nm">watch</span><span class="ds">YouTube transcript in, structured notes out: summaries, timestamped takeaways, quotes, answers</span></div>
+          <div class="sk"><span class="nm">field-guide-builder<span class="uo">UO</span></span><span class="ds">Single-file, source-grounded HTML teaching guide with concept hierarchy and editorial design</span></div>
+          <div class="sk"><span class="nm">sdd-workshop-walkthrough<span class="uo">UO</span></span><span class="ds">Animated single-file HTML workshop player with narrated steps and artifact panels</span></div>
+        </div>
+      </div>
+
+      <div class="ctrl k1">
+        <div class="ctrl-head"><span class="ctrl-num">Output</span><span class="ctrl-name">Content, decks, validation, meta</span></div>
+        <div class="skl">
+          <div class="sk"><span class="nm">geo-content</span><span class="ds">Content optimized for classic SEO and AI answer engines both, with an optimization checklist</span></div>
+          <div class="sk"><span class="nm">anthropic-doc-validator</span><span class="ds">Validates claims about Claude Code / API / SDKs against latest official docs, verbatim quotes</span></div>
+          <div class="sk"><span class="nm">conference-talk-deck<span class="uo">UO</span></span><span class="ds">Interview first, then a self-contained offline HTML slide deck with author mode</span></div>
+          <div class="sk"><span class="nm">qa-deck</span><span class="ds">Two-track .pptx QA: every slide rendered for visual defects, every claim checked against source</span></div>
+          <div class="sk"><span class="nm">personal-skill<span class="uo">UO</span></span><span class="ds">Personal: tailors one specific resume to a job posting; kept as a worked example</span></div>
+          <div class="sk"><span class="nm">toolbox<span class="uo">UO</span></span><span class="ds">Index of the hand-typed skills; what each is for</span></div>
+          <div class="sk"><span class="nm">writing-great-skills<span class="uo">UO</span></span><span class="ds">The vocabulary and principles that make a skill predictable</span></div>
+        </div>
+        <p class="note">Plus <b>codebase-design</b>, <b>prototype</b>, <b>resolving-merge-conflicts</b>, and <b>wayfinder</b>, adapted early from the Pocock repo and long since naturalized into daily use.</p>
+      </div>
+    </section>
+
+    <!-- ===================== POCOCK ===================== -->
+    <section id="pocock">
+      <p class="cat-kicker" style="--c:var(--c2)">Origin two &#183; 15 skills</p>
+      <h2 class="cat" style="--c:var(--c2)">The Pocock engineering suite</h2>
+      <p class="cat-sub">Matt Pocock's thesis: AI ate tactical programming, so your leverage is strategic, and real development is a <em>queue</em> of triaged, implemented, reviewed items, not an infinite loop. The suite is that queue made into skills.</p>
+
+      <div class="ctrl k2">
+        <div class="ctrl-head"><span class="ctrl-num">The queue</span><span class="ctrl-name">Issue-tracker suite</span></div>
+        <p class="ctrl-def">Work as a set; all read the repo config that <b>setup-matt-pocock-skills</b> writes once.</p>
+        <div class="skl">
+          <div class="sk"><span class="nm">ask-matt</span><span class="ds">Router: which skill in the suite fits your situation</span></div>
+          <div class="sk"><span class="nm">triage</span><span class="ds">Moves issues through a five-state triage machine (needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix)</span></div>
+          <div class="sk"><span class="nm">to-spec</span><span class="ds">Turns a conversation into a spec published to the tracker</span></div>
+          <div class="sk"><span class="nm">to-tickets</span><span class="ds">Breaks plans into tracer-bullet tickets with blocking edges</span></div>
+          <div class="sk"><span class="nm">implement</span><span class="ds">Builds work from specs and tickets, driving TDD and review</span></div>
+        </div>
+      </div>
+
+      <div class="ctrl k2">
+        <div class="ctrl-head"><span class="ctrl-num">Interrogation</span><span class="ctrl-name">The grilling family</span></div>
+        <p class="ctrl-def">Design-tree interviewing: each round asks the whole <b>frontier</b> (every question whose prerequisites are settled), each question carries a recommended answer, and facts are fetched by subagents so only decisions reach the human.</p>
+        <div class="skl">
+          <div class="sk"><span class="nm">grilling</span><span class="ds">The interview primitive itself</span></div>
+          <div class="sk"><span class="nm">grill-me<span class="uo">UO</span></span><span class="ds">Seven-line wrapper: &ldquo;call the Skill tool with grilling&rdquo;. The same wrapper pattern as onboard-light, discovered independently</span></div>
+          <div class="sk"><span class="nm">grill-with-docs</span><span class="ds">Grilling that also builds the domain model into CONTEXT.md and ADRs</span></div>
+        </div>
+      </div>
+
+      <div class="ctrl k2">
+        <div class="ctrl-head"><span class="ctrl-num">Craft</span><span class="ctrl-name">Modeling, research, teaching</span></div>
+        <div class="skl">
+          <div class="sk"><span class="nm">domain-modeling</span><span class="ds">Actively builds and sharpens a project domain model; owns CONTEXT.md and ADR formats</span></div>
+          <div class="sk"><span class="nm">improve-codebase-architecture</span><span class="ds">Scans for module-deepening opportunities, HTML report; pairs with codebase-design</span></div>
+          <div class="sk"><span class="nm">research</span><span class="ds">Investigates against primary sources, captures findings as a markdown file in the repo</span></div>
+          <div class="sk"><span class="nm">wizard</span><span class="ds">Generates interactive bash wizards for steps only a human can perform: credentials, dashboards, cutovers</span></div>
+          <div class="sk"><span class="nm">teach<span class="uo">UO</span></span><span class="ds">Multi-session teaching in a stateful workspace with glossary, mission, and learning-record formats</span></div>
+          <div class="sk"><span class="nm">to-questionnaire<span class="uo">UO</span></span><span class="ds">Turns open decisions into async markdown questionnaires</span></div>
+          <div class="sk"><span class="nm">wait-what<span class="uo">UO</span></span><span class="ds">Re-pitches a message with missing context in plain English</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CAVEMAN ===================== -->
+    <section id="caveman">
+      <p class="cat-kicker" style="--c:var(--c3)">Origin three &#183; 8 skills + 3 agents</p>
+      <h2 class="cat" style="--c:var(--c3)">The Caveman token-economy suite</h2>
+      <p class="cat-sub">&ldquo;Why use many token when few do trick.&rdquo; The only tools in the collection that cut the <em>output</em> side of the meter, where a token costs five times what an input token does ($50 vs $10 per MTok on Claude Fable).</p>
+
+      <div class="ctrl k3">
+        <div class="ctrl-head"><span class="ctrl-num">Style engine</span><span class="ctrl-name">Terse mode and its craft</span></div>
+        <p class="ctrl-def">Not mere brusqueness: the rules are <b>tokenizer-aware</b>. Invented abbreviations are banned because the tokenizer splits <code>cfg</code> and <code>impl</code> anyway (zero saved, harder to read). Arrow glyphs are banned because they are their own token. Grammar survives wherever mangling is token-neutral. Negations, numbers, code, and error strings are always exact.</p>
+        <div class="skl">
+          <div class="sk"><span class="nm">caveman</span><span class="ds">Ultra-compressed output mode: lite / full / ultra, plus wenyan variants. Fluff dies, substance stays, session-persistent until &ldquo;stop caveman&rdquo;</span></div>
+          <div class="sk"><span class="nm">caveman-compress<span class="uo">UO</span></span><span class="ds">Applies the style to <b>stored</b> context: compresses a CLAUDE.md or memory file with a readable backup, moving savings to the input side of the meter</span></div>
+          <div class="sk"><span class="nm">caveman-help<span class="uo">UO</span></span><span class="ds">Quick-reference card for the modes and skills</span></div>
+        </div>
+      </div>
+
+      <div class="ctrl k3">
+        <div class="ctrl-head"><span class="ctrl-num">Delegation</span><span class="ctrl-name">cavecrew and the subagent tax</span></div>
+        <p class="ctrl-def">Subagent tool results land in the main context <b>verbatim</b>: a vanilla Explore returning 2k tokens of prose costs 2k tokens of main-context budget every delegation. The three presets return the same findings compressed, roughly a third of the tokens across twenty delegations.</p>
+        <div class="skl">
+          <div class="sk"><span class="nm">cavecrew</span><span class="ds">The routing guidance: when to reach for a compressed preset vs vanilla Explore vs main thread</span></div>
+          <div class="sk"><span class="nm">cavecrew-investigator</span><span class="ds">Agent preset: read-only locator, file:line table out, refuses to suggest fixes</span></div>
+          <div class="sk"><span class="nm">cavecrew-builder</span><span class="ds">Agent preset: surgical 1-2 file edit, hard-refuses 3+ file scope, diff receipt out</span></div>
+          <div class="sk"><span class="nm">cavecrew-reviewer</span><span class="ds">Agent preset: one line per finding, severity-tagged, no praise, no scope creep</span></div>
+          <div class="sk"><span class="nm">caveman-explore</span><span class="ds">Haiku-powered read-only explorer, citations only, parallel fan-out on the first turn</span></div>
+        </div>
+      </div>
+
+      <div class="ctrl k3">
+        <div class="ctrl-head"><span class="ctrl-num">Discipline</span><span class="ctrl-name">The task-shape trio</span></div>
+        <p class="ctrl-def">Sixteen-line skills, each naming one task shape and its stop condition. The smallest well-made skills in the collection.</p>
+        <div class="skl">
+          <div class="sk"><span class="nm">safe-refactor</span><span class="ds">Restructure while preserving behavior; verification brackets every structural edit</span></div>
+          <div class="sk"><span class="nm">surgical-patch</span><span class="ds">Fix at the narrowest responsible layer, regression proof, surrounding behavior preserved</span></div>
+          <div class="sk"><span class="nm">migration</span><span class="ds">Reversible, compatibility-safe transitions: schema, data, API, config, dependency</span></div>
+        </div>
+      </div>
+
+      <div class="caveats">
+        <div class="cav">
+          <div class="cav-k">Honest numbers</div>
+          <div class="cav-h">The rules cost ~1,250 input tokens per turn</div>
+          <p>Documented by the project itself: terse-mode rules are injected every turn, so <b>net savings go negative on short sessions</b>. Their own stats output prints the net and says so plainly rather than hiding it behind gross savings. Pays on long, output-heavy sessions; not an always-on default.</p>
+        </div>
+        <div class="cav">
+          <div class="cav-k">Pipeline position</div>
+          <div class="cav-h">A new row in the token-reduction table</div>
+          <p>The wiki's comparison now holds five stages: the wiki cuts re-derivation (write-time), /compact cuts history (session), Headroom and RTK cut payloads (I/O boundary), Graphify cuts codebase-reading (retrieval), and <b>Caveman cuts the model's own prose (generation)</b>. Same boundary as RTK, opposite direction.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PRUNING ===================== -->
+    <section id="pruning">
+      <p class="cat-kicker" style="--c:var(--c4)">The other half of curation</p>
+      <h2 class="cat" style="--c:var(--c4)">What was refused, and why it is written down</h2>
+      <p class="cat-sub">Recording the noes stops a future session from re-importing them. Every refusal is in the commit history with its reason.</p>
+
+      <div class="ctrl k4">
+        <div class="ctrl-head"><span class="ctrl-num">From Pocock</span><span class="ctrl-name">Four duplicates</span></div>
+        <div class="skl">
+          <div class="sk"><span class="nm">tdd</span><span class="ds">Duplicates superpowers:test-driven-development</span></div>
+          <div class="sk"><span class="nm">code-review</span><span class="ds">Would <b>shadow the bundled /code-review by name</b>; the sharpest refusal of the set</span></div>
+          <div class="sk"><span class="nm">diagnosing-bugs</span><span class="ds">Duplicates superpowers:systematic-debugging</span></div>
+          <div class="sk"><span class="nm">handoff</span><span class="ds">Duplicates the /remember handoff system</span></div>
+        </div>
+      </div>
+
+      <div class="ctrl k4">
+        <div class="ctrl-head"><span class="ctrl-num">From Caveman</span><span class="ctrl-name">Eight infrastructure-coupled</span></div>
+        <div class="skl">
+          <div class="sk"><span class="nm">six Cloud skills</span><span class="ds">setup / discover / evidence-review / manage / optimize / learn all need the Caveman Cloud gateway</span></div>
+          <div class="sk"><span class="nm">caveman-stats</span><span class="ds">Delivered by their JS hooks, not by the model</span></div>
+          <div class="sk"><span class="nm">engine, proxy, rewriter</span><span class="ds">BSL-1.1 licensed; the MIT collection copies the skills surface only, verified against upstream LICENSING.md</span></div>
+        </div>
+        <p class="note"><b>The filter, stated once:</b> a skill earns import only if it is standalone (no vendor gateway, no bespoke hooks), distinct (no same-name shadowing, no duplicate of an installed process skill), and licensed for an MIT collection. Everything that passed is above; everything that failed is here.</p>
+      </div>
+    </section>
+
+    <!-- ===================== SYNTHESIS ===================== -->
+    <div class="synth">
+      <div class="kicker">The through-line</div>
+      <h2>A collection is a budget, not a library.</h2>
+      <p>Every skill pays tier-1 rent every session, whether it fires or not. So the discipline that governs the collection is the same one that governs a CLAUDE.md, a harness, or a prompt: <b>import on demonstrated need, record the justification, schedule the review, and let removal be the default answer</b> when the justification no longer holds.</p>
+      <div class="cycle">
+        <span class="cy">need repeats</span><span class="arw">&#8594;</span>
+        <span class="cy">import or write</span><span class="arw">&#8594;</span>
+        <span class="cy spark">record why</span><span class="arw">&#8594;</span>
+        <span class="cy">review in six months</span><span class="arw">&#8594;</span>
+        <span class="cy">delete freely</span>
+      </div>
+      <p>The refusals section exists because the noes decay faster than the yeses: nothing re-proposes a skill you have, but everything re-proposes a skill you declined, unless the reason is written down.</p>
+    </div>
+
+    <!-- ===================== REFERENCES ===================== -->
+    <section id="references" class="refs">
+      <h3>Sources</h3>
+      <ol>
+        <li id="ref-1"><a href="https://github.com/YogirajA/Claude-Skills" target="_blank" rel="noopener">YogirajA/Claude-Skills</a> <span class="tier">first-party</span> The collection itself; snapshot at commit 3b030a5, 2026-09-02. Full one-line index in its README.</li>
+        <li id="ref-2"><a href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">mattpocock/skills</a> <span class="tier">practitioner</span> Upstream of the engineering suite and five earlier naturalized skills. MIT.</li>
+        <li id="ref-3"><a href="https://github.com/JuliusBrussee/caveman" target="_blank" rel="noopener">JuliusBrussee/caveman</a> <span class="tier">practitioner</span> Upstream of the token-economy suite. MIT skills surface; BSL engine excluded. The ~1,250 token/turn overhead figure is theirs (docs/HONEST-NUMBERS.md), self-reported.</li>
+        <li><a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Claude Code docs: Skills</a> <span class="tier">first-party</span> Load mechanics behind the three tiers; also features-overview for the adoption triggers.</li>
+        <li>Matt Pocock, David Ondrej interview (Jun 2026) <span class="tier">practitioner</span> The description-leak observation and the delete-everything discipline; notes in around-the-model.html.</li>
+        <li>Boris Cherny, YC talk (2026) <span class="tier">practitioner</span> The six-month delete and re-add-on-repeated-failure rule; wiki page boris-cherny-yc-talk.</li>
+      </ol>
+      <div class="foot">
+        <span>skills-atlas.html &#183; knowledgebase field note &#183; 2026-09-02</span>
+        <span>house style &#183; Fraunces / Hanken Grotesk / JetBrains Mono</span>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('nav.side .ng-top'));
+  var byHash = {};
+  navLinks.forEach(function(a){
+    var h = a.getAttribute('href');
+    if (h && h.charAt(0) === '#') byHash[h.slice(1)] = a;
+  });
+  var ids = ['overview','economics','originals','pocock','caveman','pruning','references'];
+  var targets = ids.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+
+  function setActive(id){
+    navLinks.forEach(function(a){ a.classList.remove('active'); });
+    if (byHash[id]) byHash[id].classList.add('active');
+  }
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) setActive(e.target.id); });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    targets.forEach(function(t){ io.observe(t); });
+  }
+})();
+</script>
+</body>
+</html>

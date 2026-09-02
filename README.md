@@ -8,6 +8,11 @@ invoked (`/skill-name`) or when Claude decides it applies.
 **Install:** copy a folder into `~/.claude/skills/` (all projects) or `.claude/skills/` (one
 project). No build step, no dependencies beyond what a given skill documents.
 
+**Visual catalog:** [skills-atlas.html](skills-atlas.html) is a single-file field guide to the
+whole collection: the three load tiers and their economics, all 56 skills by origin, and the
+imports that were refused with reasons. Open it locally in a browser, or via
+[githack](https://raw.githack.com/YogirajA/Claude-Skills/main/skills-atlas.html).
+
 A few skills are personal (they carry my name or my resume) and are kept here as worked examples
 of the pattern rather than tools you would run as-is.
 
