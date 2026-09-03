@@ -5,8 +5,44 @@ is one skill, a `SKILL.md` with YAML frontmatter plus any reference files it rea
 frontmatter description is what Claude sees every session; the body loads only when the skill is
 invoked (`/skill-name`) or when Claude decides it applies.
 
-**Install:** copy a folder into `~/.claude/skills/` (all projects) or `.claude/skills/` (one
-project). No build step, no dependencies beyond what a given skill documents.
+## Install
+
+**As a plugin (recommended).** The repo is a plugin marketplace. Add it once, then install only
+the suites a given machine needs:
+
+```bash
+claude plugin marketplace add YogirajA/Claude-Skills
+claude plugin install kb-wiki@yogi-skills
+claude plugin install harness-audit@yogi-skills
+```
+
+The nine suites below are separate plugins on purpose. Every skill's frontmatter description
+loads into **every session whether or not the skill fires**, so a single 62-skill plugin would
+put ~9,140 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~560.
+Run `claude plugin details <name>@yogi-skills` to see any suite's exact always-on cost before
+installing it.
+
+| Suite | Skills | Always-on |
+|---|---:|---:|
+| `meta` | 3 | ~360 |
+| `token-economy` | 8 | ~540 |
+| `kb-wiki` | 3 | ~560 |
+| `harness-audit` | 6 | ~770 |
+| `engineering-suite` | 15 | ~900 |
+| `repo-onboarding` | 4 | ~980 |
+| `code-quality` | 6 | ~1,100 |
+| `authoring` | 8 | ~1,790 |
+| `thinking-and-specs` | 9 | ~2,160 |
+| **all nine** | **62** | **~9,140** |
+
+Always-on figures are `claude plugin details` for `harness-audit`, and raw `chars / 4` scaled by
+the 1.49 factor calibrated against it for the rest. On-invoke cost (the SKILL.md body) is paid
+only when a skill actually fires and is not counted here.
+
+**Or copy by hand.** Each folder is a self-contained skill: drop one into `~/.claude/skills/`
+(all projects) or `.claude/skills/` (one project). No build step, no dependencies beyond what a
+given skill documents. Do not do both for the same skill: a hand-copied skill and an installed
+plugin both register, and you pay the description twice.
 
 **Visual catalog:** [skills-atlas.html](skills-atlas.html) is a single-file field guide to the
 whole collection: the three load tiers and their economics, all 56 skills by origin, and the
@@ -134,6 +170,28 @@ to `~/.claude/agents/` for the cavecrew skill to route to them.
 | [migration](migration/) | Reversible, compatibility-safe transitions: schema, data, API, config, dependency |
 | [caveman-help](caveman-help/) | Quick-reference card for the caveman modes and skills |
 
+## Harness measurement suite (affaan-m/ECC)
+
+Six skills adapted from [affaan-m/ECC](https://github.com/affaan-m/ECC) (MIT), a 286-skill
+harness repo. Only these six were taken: the rest was either infrastructure-coupled, duplicated
+something already here, or was language and domain filler that would have cost ~14 to 20k tokens
+of always-on frontmatter to hold. The full import review, with the measurements behind each
+decision, is in the knowledge base as `ecc-import-review.html`.
+
+Two of the six were edited before install, and each records its own change in its frontmatter
+`metadata.adapted` field: `loop-design-check` had its description cut from 244 to 136 always-on
+tokens, and `gateguard` had its install section rewritten because upstream's hook implementation
+was not imported with it.
+
+| Skill | What it does |
+|---|---|
+| [loop-design-check](loop-design-check/) | The judgement layer for agent loops: a four-condition veto gate on whether to build one at all, a machine-decidable goal test, servo vs regulator typing, then a review against five failure modes and three keep-judgment-with-the-human red lines |
+| [skill-comply](skill-comply/) | Measures whether a skill or rule is actually followed: generates a behavioural spec from any .md, generates scenarios at three prompt-strictness levels, runs `claude -p`, classifies the tool trace, and reports a compliance rate. Spends real quota; start with `--dry-run` |
+| [context-budget](context-budget/) | Audits context consumption across agents, skills, rules, MCP tool schemas and the CLAUDE.md chain, then ranks fixes by tokens reclaimed |
+| [config-gc](config-gc/) | Garbage collection over `~/.claude`: finds stale, orphaned, redundant and low-value items, then walks you through confirm-each deletion |
+| [gateguard](gateguard/) | Design for a three-stage fact-forcing gate: deny the first edit, force a named list of facts (importers, affected functions, real data schema, the instruction verbatim), allow the retry. Imported as a design, not a runnable hook |
+| [skill-scout](skill-scout/) | Searches local, marketplace, GitHub and web sources before you write a new skill |
+
 ## Personal and meta
 
 | Skill | What it does |
@@ -148,7 +206,8 @@ to `~/.claude/agents/` for the cavecrew skill to route to them.
 `writing-great-skills`, and the engineering suite section are adapted from
 [mattpocock/skills](https://github.com/mattpocock/skills) (MIT). The token economy suite is
 adapted from [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) (MIT skills
-surface). Everything else grew out of daily use.
+surface). The harness measurement suite is adapted from
+[affaan-m/ECC](https://github.com/affaan-m/ECC) (MIT). Everything else grew out of daily use.
 
 ## License
 

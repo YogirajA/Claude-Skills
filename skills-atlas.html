@@ -295,7 +295,7 @@
       <div class="axes">
         <div class="axis t1">
           <div class="axis-name"><b>Tier 1: description</b> <span class="axis-dir">every session</span></div>
-          <div class="axis-why">The frontmatter description loads into <b>every conversation, used or not</b>. At 50 to 270 tokens each, 56 descriptions cost roughly 8 to 10k tokens before the first prompt. This is the tier to guard: a skill that never fires still bills here forever. <code>disable-model-invocation: true</code> zeroes it for user-only skills.</div>
+          <div class="axis-why">The frontmatter description loads into <b>every conversation, used or not</b>. At 60 to 340 tokens each, 56 descriptions cost roughly 8.4k tokens before the first prompt, and 62 cost 9.1k (measured with <code>claude plugin details</code>, not estimated). This is the tier to guard: a skill that never fires still bills here forever. <code>disable-model-invocation: true</code> zeroes it for user-only skills.</div>
         </div>
         <div class="axis t2">
           <div class="axis-name"><b>Tier 2: SKILL.md body</b> <span class="axis-dir">on invoke</span></div>

@@ -1,0 +1,274 @@
+{
+  "name": "yogi-skills",
+  "owner": {
+    "name": "Yogiraj Aradhye"
+  },
+  "metadata": {
+    "description": "A working collection of Claude Code skills, split into suites so each repo enables only what it needs.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "kb-wiki",
+      "source": "./",
+      "displayName": "Knowledge base (LLM wiki)",
+      "description": "The LLM-wiki pattern as three skills: query the wiki before working, ingest sources and lint it after, and a compatibility alias.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Yogiraj Aradhye"
+      },
+      "homepage": "https://github.com/YogirajA/Claude-Skills",
+      "repository": "https://github.com/YogirajA/Claude-Skills",
+      "license": "MIT",
+      "category": "workflow",
+      "keywords": [
+        "knowledge-base",
+        "wiki",
+        "documentation",
+        "context"
+      ],
+      "skills": [
+        "./read-wiki",
+        "./wiki",
+        "./write-wiki"
+      ]
+    },
+    {
+      "name": "repo-onboarding",
+      "source": "./",
+      "displayName": "Repo onboarding and harness setup",
+      "description": "Onboard Claude onto a repository so it holds durable, verified context: recon, mutual interrogation, an executed feedback loop, a capped CLAUDE.md, a project wiki, and an interview-gated .claude/ harness.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Yogiraj Aradhye"
+      },
+      "homepage": "https://github.com/YogirajA/Claude-Skills",
+      "repository": "https://github.com/YogirajA/Claude-Skills",
+      "license": "MIT",
+      "category": "workflow",
+      "keywords": [
+        "onboarding",
+        "claude-md",
+        "hooks",
+        "settings",
+        "harness"
+      ],
+      "skills": [
+        "./onboard-light",
+        "./onboard-repo",
+        "./primitive-classifier",
+        "./setup-matt-pocock-skills"
+      ]
+    },
+    {
+      "name": "harness-audit",
+      "source": "./",
+      "displayName": "Harness measurement and hygiene",
+      "description": "Measure the harness instead of trusting it: audit context consumption, garbage-collect the config, test whether skills and rules are actually obeyed, design agent loops that cannot run away, and search before writing a new skill. Adapted from affaan-m/ECC.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Yogiraj Aradhye"
+      },
+      "homepage": "https://github.com/YogirajA/Claude-Skills",
+      "repository": "https://github.com/YogirajA/Claude-Skills",
+      "license": "MIT",
+      "category": "workflow",
+      "keywords": [
+        "context",
+        "tokens",
+        "audit",
+        "agent-loops",
+        "compliance"
+      ],
+      "skills": [
+        "./config-gc",
+        "./context-budget",
+        "./gateguard",
+        "./loop-design-check",
+        "./skill-comply",
+        "./skill-scout"
+      ]
+    },
+    {
+      "name": "token-economy",
+      "source": "./",
+      "displayName": "Token economy (caveman)",
+      "description": "Cut output tokens without losing technical substance: terse response modes, a compressor for stored context, and compressed subagent presets. Adapted from JuliusBrussee/caveman.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Yogiraj Aradhye"
+      },
+      "homepage": "https://github.com/YogirajA/Claude-Skills",
+      "repository": "https://github.com/YogirajA/Claude-Skills",
+      "license": "MIT",
+      "category": "workflow",
+      "keywords": [
+        "tokens",
+        "cost",
+        "output-style",
+        "subagents"
+      ],
+      "skills": [
+        "./cavecrew",
+        "./caveman",
+        "./caveman-compress",
+        "./caveman-explore",
+        "./caveman-help",
+        "./migration",
+        "./safe-refactor",
+        "./surgical-patch"
+      ]
+    },
+    {
+      "name": "engineering-suite",
+      "source": "./",
+      "displayName": "Engineering and issue-tracker suite",
+      "description": "The issue-tracker workflow as a set: grilling interviews, domain modeling, specs and tickets, triage, and implementation. Adapted from mattpocock/skills; assumes setup-matt-pocock-skills has configured the repo.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Yogiraj Aradhye"
+      },
+      "homepage": "https://github.com/YogirajA/Claude-Skills",
+      "repository": "https://github.com/YogirajA/Claude-Skills",
+      "license": "MIT",
+      "category": "workflow",
+      "keywords": [
+        "issues",
+        "specs",
+        "tickets",
+        "tdd",
+        "domain-modeling"
+      ],
+      "skills": [
+        "./ask-matt",
+        "./domain-modeling",
+        "./grill-me",
+        "./grill-with-docs",
+        "./grilling",
+        "./implement",
+        "./improve-codebase-architecture",
+        "./research",
+        "./teach",
+        "./to-questionnaire",
+        "./to-spec",
+        "./to-tickets",
+        "./triage",
+        "./wait-what",
+        "./wizard"
+      ]
+    },
+    {
+      "name": "code-quality",
+      "source": "./",
+      "displayName": "Code quality and review",
+      "description": "Review pressure aimed at over-engineering and code smells, plus the vocabulary for designing deep modules and a walkthrough for in-progress merge conflicts.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Yogiraj Aradhye"
+      },
+      "homepage": "https://github.com/YogirajA/Claude-Skills",
+      "repository": "https://github.com/YogirajA/Claude-Skills",
+      "license": "MIT",
+      "category": "workflow",
+      "keywords": [
+        "review",
+        "refactoring",
+        "yagni",
+        "code-smells"
+      ],
+      "skills": [
+        "./codebase-design",
+        "./ponytail",
+        "./ponytail-audit",
+        "./ponytail-review",
+        "./resolving-merge-conflicts",
+        "./smells"
+      ]
+    },
+    {
+      "name": "thinking-and-specs",
+      "source": "./",
+      "displayName": "Specs, decisions, and prompting",
+      "description": "Get the thinking right before the code: interview into a written spec, plan work too big for one session, pressure-test a decision, catch your own scope creep, and clean up a rough prompt.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Yogiraj Aradhye"
+      },
+      "homepage": "https://github.com/YogirajA/Claude-Skills",
+      "repository": "https://github.com/YogirajA/Claude-Skills",
+      "license": "MIT",
+      "category": "workflow",
+      "keywords": [
+        "planning",
+        "decisions",
+        "specs",
+        "prompting"
+      ],
+      "skills": [
+        "./goal-creator",
+        "./mental-models",
+        "./prompt-fixer",
+        "./prompt-optimizer",
+        "./prototype",
+        "./scope-creep-check",
+        "./spec-interview",
+        "./the-llm-council",
+        "./wayfinder"
+      ]
+    },
+    {
+      "name": "authoring",
+      "source": "./",
+      "displayName": "Teaching, research, and decks",
+      "description": "Turn material into something a person can read: Socratic teaching sessions, YouTube transcripts into notes, single-file HTML field guides and workshops, slide decks, GEO/AEO content, and claim validation against the official Anthropic docs.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Yogiraj Aradhye"
+      },
+      "homepage": "https://github.com/YogirajA/Claude-Skills",
+      "repository": "https://github.com/YogirajA/Claude-Skills",
+      "license": "MIT",
+      "category": "workflow",
+      "keywords": [
+        "teaching",
+        "html",
+        "slides",
+        "content",
+        "validation"
+      ],
+      "skills": [
+        "./anthropic-doc-validator",
+        "./conference-talk-deck",
+        "./explain-yogi-like-he-is-5",
+        "./field-guide-builder",
+        "./geo-content",
+        "./qa-deck",
+        "./sdd-workshop-walkthrough",
+        "./watch"
+      ]
+    },
+    {
+      "name": "meta",
+      "source": "./",
+      "displayName": "Personal and meta",
+      "description": "The collection's own index, the reference for writing skills well, and one personal skill kept as a worked example of the pattern.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Yogiraj Aradhye"
+      },
+      "homepage": "https://github.com/YogirajA/Claude-Skills",
+      "repository": "https://github.com/YogirajA/Claude-Skills",
+      "license": "MIT",
+      "category": "workflow",
+      "keywords": [
+        "meta",
+        "skills"
+      ],
+      "skills": [
+        "./personal-skill",
+        "./toolbox",
+        "./writing-great-skills"
+      ]
+    }
+  ]
+}
