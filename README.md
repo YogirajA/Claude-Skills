@@ -70,8 +70,8 @@ Run it after adding, renaming or removing any skill, and fix `accio/SKILL.md` ra
 script. Exit 0 clean, 1 on any finding, no dependencies. The sibling knowledge base has the
 equivalent for its wiki at `scripts/check-wiki.py`.
 
-Skills that carry real personal data are not versioned here. `personal-skill` lives only in
-`~/.claude/skills/` and is gitignored, because its reference file holds actual contact details.
+Skills that carry real personal data are not versioned here. They live only in
+`~/.claude/skills/` and are gitignored.
 
 ## Onboarding and repo setup
 
