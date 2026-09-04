@@ -220,7 +220,7 @@
       "name": "authoring",
       "source": "./",
       "displayName": "Teaching, research, and decks",
-      "description": "Turn material into something a person can read: Socratic teaching sessions, YouTube transcripts into notes, single-file HTML field guides and workshops, slide decks, GEO/AEO content, and claim validation against the official Anthropic docs.",
+      "description": "Turn material into something a person can read: Socratic teaching sessions, YouTube transcripts into notes, single-file HTML field guides and workshops, slide decks, architecture diagrams as .excalidraw files, GEO/AEO content, and claim validation against the official Anthropic docs.",
       "version": "1.0.0",
       "author": {
         "name": "Yogiraj Aradhye"
@@ -234,11 +234,13 @@
         "html",
         "slides",
         "content",
-        "validation"
+        "validation",
+        "diagrams"
       ],
       "skills": [
         "./anthropic-doc-validator",
         "./conference-talk-deck",
+        "./excalidraw",
         "./explain-yogi-like-he-is-5",
         "./field-guide-builder",
         "./geo-content",

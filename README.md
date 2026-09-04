@@ -18,7 +18,7 @@ claude plugin install harness-audit@yogi-skills
 
 The nine suites below are separate plugins on purpose. Every skill's frontmatter description
 loads into **every session whether or not the skill fires**, so a single 62-skill plugin would
-put ~9,140 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~560.
+put ~9,260 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~560.
 Run `claude plugin details <name>@yogi-skills` to see any suite's exact always-on cost before
 installing it.
 
@@ -31,9 +31,9 @@ installing it.
 | `engineering-suite` | 15 | ~900 |
 | `repo-onboarding` | 4 | ~980 |
 | `code-quality` | 6 | ~1,100 |
-| `authoring` | 8 | ~1,790 |
+| `authoring` | 9 | ~1,910 |
 | `thinking-and-specs` | 9 | ~2,160 |
-| **all nine** | **62** | **~9,140** |
+| **all nine** | **63** | **~9,260** |
 
 Always-on figures are `claude plugin details` for `harness-audit`, and raw `chars / 4` scaled by
 the 1.49 factor calibrated against it for the rest. On-invoke cost (the SKILL.md body) is paid
@@ -114,6 +114,7 @@ of the pattern rather than tools you would run as-is.
 |---|---|
 | [geo-content](geo-content/) | Writes content optimized for both classic SEO and AI answer engines (GEO/AEO), with an "what I optimized and why" checklist |
 | [anthropic-doc-validator](anthropic-doc-validator/) | Validates claims about Claude Code, the Anthropic API, or SDKs against the latest official docs, with verbatim quotes |
+| [excalidraw](excalidraw/) | Generates architecture diagrams as `.excalidraw` files from codebase analysis, with optional PNG/SVG export. Six reference files (JSON format, arrows, colors, validation, export, examples) load only on demand |
 
 ## Decks
 
@@ -207,7 +208,12 @@ was not imported with it.
 [mattpocock/skills](https://github.com/mattpocock/skills) (MIT). The token economy suite is
 adapted from [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) (MIT skills
 surface). The harness measurement suite is adapted from
-[affaan-m/ECC](https://github.com/affaan-m/ECC) (MIT). Everything else grew out of daily use.
+[affaan-m/ECC](https://github.com/affaan-m/ECC) (MIT). `excalidraw` is vendored from
+[ooiyeefei/ccc](https://github.com/ooiyeefei/ccc) (MIT). Everything else grew out of daily use.
+
+Third-party work is **copied in, never depended on as a plugin**: this machine installs plugins only
+from Anthropic's own repos or mine, so anything useful from elsewhere gets vendored under its licence
+with provenance recorded in that skill's frontmatter `metadata` block.
 
 ## License
 
