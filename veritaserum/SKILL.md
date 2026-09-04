@@ -1,5 +1,5 @@
 ---
-name: spec-interview
+name: veritaserum
 description: >-
   Use when the user wants to be interviewed into a written spec instead of
   prompting back and forth: when they already know roughly what they want built
@@ -7,11 +7,13 @@ description: >-
   want to stop, or when they say "interview me", "spec me", "ask me questions
   first", or "help me write the spec". Ends in a spec they approve before any
   building. For a fuzzy idea that still needs 2-3 approaches explored first, use
-  superpowers:brainstorming instead.
+  superpowers:brainstorming instead. Formerly spec-interview.
 disable-model-invocation: true
 ---
 
-# Spec Interview
+# Veritaserum
+
+*Truth Serum,* the interview that gets the real spec out of you.
 
 ## Overview
 

@@ -1,5 +1,5 @@
 ---
-name: sdd-workshop-walkthrough
+name: pensieve
 description: >-
   Generate a self-contained, animated, single-file HTML workshop walkthrough in
   the Athena SDD house style (the specworkshop.html / repo.html players): a
@@ -13,11 +13,13 @@ description: >-
   "animated HTML for this workshop", "make a repo.html / foo.html for X", or ask
   to turn a set of workshop steps into a playable page. Trigger even if they do
   not say the word "skill". Do NOT use for PowerPoint/Google Slides decks (use a
-  pptx skill), for general web apps or dashboards, or for static prose docs.
+  pptx skill), for general web apps or dashboards, or for static prose docs. Formerly sdd-workshop-walkthrough.
 disable-model-invocation: true
 ---
 
-# SDD workshop walkthrough
+# Pensieve
+
+*Memory Basin,* step into an event and walk through it.
 
 Build one HTML file that plays a workshop as an animated, steppable journey. The
 design system and the player engine are fixed and bundled; your job is to write

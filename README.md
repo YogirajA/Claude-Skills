@@ -84,7 +84,7 @@ Skills that carry real personal data are not versioned here. `personal-skill` li
 
 | Skill | What it does |
 |---|---|
-| [spec-interview](spec-interview/) | Interviews you into a written, approved spec instead of prompt-by-prompt iteration |
+| [veritaserum](veritaserum/) | Interviews you into a written, approved spec instead of prompt-by-prompt iteration |
 | [wayfinder](wayfinder/) | Plans work too big for one session as decision tickets on your issue tracker, resolved one at a time |
 | [goal-creator](goal-creator/) | Turns rough intent into a `/goal`-ready session goal: verifiable outcome, scope guard, acceptance criteria, explicit authorities |
 | [prototype](prototype/) | Throwaway prototype to answer a design question before committing to a direction |
@@ -105,8 +105,8 @@ Skills that carry real personal data are not versioned here. `personal-skill` li
 |---|---|
 | [explain-yogi-like-he-is-5](explain-yogi-like-he-is-5/) | Deep Socratic teaching session with an incremental mastery loop; teaches rather than summarizes |
 | [watch](watch/) | Fetches a YouTube video's transcript and turns it into summaries, timestamped notes, quotes, or answers |
-| [field-guide-builder](field-guide-builder/) | Builds a single-file, source-grounded HTML teaching guide with concept hierarchy, citations, and an editorial design system |
-| [sdd-workshop-walkthrough](sdd-workshop-walkthrough/) | Generates an animated single-file HTML workshop player with narrated steps and artifact panels |
+| [lumos](lumos/) | Builds a single-file, source-grounded HTML teaching guide with concept hierarchy, citations, and an editorial design system |
+| [pensieve](pensieve/) | Generates an animated single-file HTML workshop player with narrated steps and artifact panels |
 
 ## Content and validation
 
@@ -120,7 +120,7 @@ Skills that carry real personal data are not versioned here. `personal-skill` li
 
 | Skill | What it does |
 |---|---|
-| [conference-talk-deck](conference-talk-deck/) | Interviews you, then generates a self-contained offline HTML slide deck with author mode |
+| [sonorus](sonorus/) | Interviews you, then generates a self-contained offline HTML slide deck with author mode |
 | [qa-deck](qa-deck/) | Two-track QA on a .pptx: renders every slide for visual defects, and checks every verifiable claim against source material |
 
 ## Engineering and productivity suite (mattpocock/skills)
@@ -201,6 +201,24 @@ was not imported with it.
 | [accio](accio/) | Summoning charm: say what you are working on, get told which one or two skills to type. Routes the whole collection plus enabled plugins, every route verified against disk |
 | [toolbox](toolbox/) | Index of the hand-typed skills: what each is for and when to reach for it |
 | [writing-great-skills](writing-great-skills/) | Reference for writing and editing skills well: the vocabulary and principles that make a skill predictable |
+
+## A note on the charm names
+
+Five skills carry Harry Potter charm names: `accio`, `veritaserum`, `sonorus`, `pensieve`, `lumos`.
+The rule behind which ones got them:
+
+- **Only hand-typed originals.** Vendored skills keep their upstream names, or provenance breaks
+  and they can never be re-synced against the source repo.
+- **Only `disable-model-invocation` skills.** Those are typed from memory, so a short memorable
+  name beats a long descriptive one. Everything the model routes to itself keeps a literal name,
+  because the model matches on name and description together and a charm name makes that worse.
+- **Only where the metaphor is exact.** A summoning charm for a router, a truth serum for the
+  interview that extracts a spec, an amplifying charm for a talk deck, a memory basin you step
+  into for an animated walkthrough, a wand-light for one deep topic. Where the literal name was
+  already the better mnemonic (`wayfinder`, `smells`, `toolbox`) it was left alone.
+
+Each renamed skill keeps its former name in its description, so searching the old one still finds
+it.
 
 ## Credits
 

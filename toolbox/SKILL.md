@@ -18,16 +18,16 @@ whole deliverable.
 
 ## Teach and present
 
-- `/conference-talk-deck`: a new talk. Interviews him, then generates a
+- `/sonorus`: a new talk. Interviews him, then generates a
   self-contained offline HTML deck with author mode.
-- `/field-guide-builder`: one deep teaching page on a technical topic, cited to
+- `/lumos`: one deep teaching page on a technical topic, cited to
   primary sources, with worked examples and do/avoid practice.
-- `/sdd-workshop-walkthrough`: an animated click-through workshop page in the
+- `/pensieve`: an animated click-through workshop page in the
   Athena house style (specworkshop.html, repo.html).
 
 ## Plan before building
 
-- `/spec-interview`: he knows the rough shape and wants it pinned down fast. One
+- `/veritaserum`: he knows the rough shape and wants it pinned down fast. One
   question at a time, ends in a spec he approves.
 - `/wayfinder`: bigger than one session can hold. Decision tickets on the issue
   tracker, resolved one at a time until the route is clear.
