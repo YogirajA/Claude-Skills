@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Skills Atlas: 62 skills, four origins, nine installable suites</title>
+<title>The Skills Atlas: 61 skills, four origins, nine installable suites</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -242,7 +242,7 @@
         <circle cx="20" cy="20" r="4.2" fill="#17453b"/>
         <circle cx="31" cy="12" r="3" fill="#c08a2e"/>
       </svg>
-      <span class="brand-txt"><b>The Skills Atlas</b><span>62 skills, 9 suites</span></span>
+      <span class="brand-txt"><b>The Skills Atlas</b><span>61 skills, 9 suites</span></span>
     </a>
 
     <div class="ng ng-plain"><a class="ng-top" href="#overview">The idea</a></div>
@@ -267,7 +267,7 @@
       <div class="hero-main">
         <div class="eyebrow">A field catalog of the Claude-Skills collection</div>
         <h1>Many skills.<br><em>Few tokens.</em></h1>
-        <p class="lede">Sixty-two skills from four origins, every one paying rent in one of three load tiers, now split into nine suites you install separately. The catalog, the economics that govern it, and what was deliberately kept out.</p>
+        <p class="lede">Sixty-one skills from four origins, every one paying rent in one of three load tiers, now split into nine suites you install separately. The catalog, the economics that govern it, and what was deliberately kept out.</p>
         <p class="src-line">Repo: <a href="https://github.com/YogirajA/Claude-Skills" target="_blank" rel="noopener">YogirajA/Claude-Skills</a> <a class="src" href="#ref-1">[1]</a> &#183; suites from mattpocock/skills <a class="src" href="#ref-2">[2]</a>, JuliusBrussee/caveman <a class="src" href="#ref-3">[3]</a> and affaan-m/ECC <a class="src" href="#ref-4">[4]</a>.<br>Snapshot 2026-09-04.</p>
       </div>
       <aside class="hero-seal" aria-label="Three concentric rings for the three load tiers, a loader needle sweeping across them">
@@ -394,8 +394,8 @@
           <div class="sk"><span class="nm">conference-talk-deck<span class="uo">UO</span></span><span class="ds">Interview first, then a self-contained offline HTML slide deck with author mode</span></div>
           <div class="sk"><span class="nm">qa-deck</span><span class="ds">Two-track .pptx QA: every slide rendered for visual defects, every claim checked against source</span></div>
           <div class="sk"><span class="nm">excalidraw</span><span class="ds">Architecture diagrams as .excalidraw files from codebase analysis; six references load only on demand. Vendored from ooiyeefei/ccc</span></div>
-          <div class="sk"><span class="nm">accio<span class="uo">UO</span></span><span class="ds">Summoning charm: name the problem, get told which one or two skills to type. Routes all 62 plus enabled plugins</span></div>
-          <div class="sk"><span class="nm">toolbox<span class="uo">UO</span></span><span class="ds">Index of the user-only skills; overlaps accio, kept for now</span></div>
+          <div class="sk"><span class="nm">accio<span class="uo">UO</span></span><span class="ds">Summoning charm: name the problem, get told which one or two skills to type. Routes all 61 plus enabled plugins, and is now the only index of the user-only ones</span></div>
+          <div class="sk"><span class="nm">check-routes.py</span><span class="ds">Ships with accio: fails on a dead route, or on a user-only skill the router omits. Replaced <b>toolbox</b>, which held the same index job and silently drifted to missing 11 of its 24</span></div>
           <div class="sk"><span class="nm">writing-great-skills<span class="uo">UO</span></span><span class="ds">The vocabulary and principles that make a skill predictable</span></div>
         </div>
         <p class="note">Plus <b>codebase-design</b>, <b>prototype</b>, <b>resolving-merge-conflicts</b>, and <b>wayfinder</b>, adapted early from the Pocock repo and long since naturalized into daily use. <b>personal-skill</b> was removed from the repo in September: its reference file carries real contact details, so it lives only in <code>~/.claude/skills/</code> and is gitignored.</p>
@@ -539,13 +539,13 @@
 claude plugin install <b>kb-wiki@yogi-skills</b>
 claude plugin details <b>harness-audit@yogi-skills</b>   <span style="color:#7f9b91">// price it before installing</span></pre>
 
-      <p class="cat-sub" style="margin-top:18px">Shipping one 62-skill plugin would put the full standing cost on every repo you open, including <code>qa-deck</code> while you debug a hook. A suite is the unit you actually want on or off.</p>
+      <p class="cat-sub" style="margin-top:18px">Shipping one 61-skill plugin would put the full standing cost on every repo you open, including <code>qa-deck</code> while you debug a hook. A suite is the unit you actually want on or off.</p>
 
       <div class="pk">
         <table>
           <thead><tr><th>Suite</th><th style="text-align:right">Skills</th><th style="text-align:right">Always-on</th><th>What it is for</th></tr></thead>
           <tbody>
-            <tr><td class="s">meta</td><td class="n">3</td><td class="n">~150</td><td>The router, the user-only index, the skill-writing reference</td></tr>
+            <tr><td class="s">meta</td><td class="n">2</td><td class="n">~110</td><td>The router (also the user-only index) and the skill-writing reference</td></tr>
             <tr><td class="s">token-economy</td><td class="n">8</td><td class="n">~540</td><td>Terse output, compressed subagents, stored-context compression</td></tr>
             <tr><td class="s">kb-wiki</td><td class="n">3</td><td class="n">~570</td><td>The LLM-wiki pattern: query before, ingest after</td></tr>
             <tr><td class="s">harness-audit</td><td class="n">6</td><td class="n">~770</td><td>Measure the harness rather than trust it</td></tr>
@@ -555,7 +555,7 @@ claude plugin details <b>harness-audit@yogi-skills</b>   <span style="color:#7f9
             <tr><td class="s">authoring</td><td class="n">9</td><td class="n">~1,910</td><td>Teaching pages, decks, diagrams, claim validation</td></tr>
             <tr><td class="s">thinking-and-specs</td><td class="n">9</td><td class="n">~2,180</td><td>Specs, decisions, prompting</td></tr>
           </tbody>
-          <tfoot><tr><td class="s">all nine</td><td class="n">62</td><td class="n">~9,050</td><td>4.5% of a 200k window, 0.9% of a 1M one</td></tr></tfoot>
+          <tfoot><tr><td class="s">all nine</td><td class="n">61</td><td class="n">~9,010</td><td>4.5% of a 200k window, 0.9% of a 1M one</td></tr></tfoot>
         </table>
       </div>
 

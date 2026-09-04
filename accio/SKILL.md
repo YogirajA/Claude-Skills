@@ -193,8 +193,18 @@ fuzziest decision here: **continue**, **`/clear`**, hand off via **`/remember`**
 **subagent**, or **`/compact`**. Read [PHASE-BOUNDARIES.md](PHASE-BOUNDARIES.md) for the ordered
 tree and why continue is the one to rule out first.
 
-## Also here
+## Keeping this true
 
-**`/toolbox`** (type it) indexes the hand-typed user-only skills specifically. It overlaps this
-page. If you are choosing between them, this one covers the whole landscape including plugins;
-toolbox covers only what must be typed.
+This page is the only index for the **(type it)** skills. They carry no description into the
+model's context, so one missing from here is unreachable by anything but someone remembering its
+name. That is not hypothetical: the `toolbox` skill this page replaced held the same job and
+silently drifted to missing 11 of the 24 it indexed, because nothing checked it.
+
+So there is a check. Run it after adding, renaming or removing any skill:
+
+```bash
+python accio/scripts/check-routes.py
+```
+
+It fails on a **dead route** (this page names a skill that does not exist) and on an
+**unreachable skill** (a user-only skill this page omits). Fix SKILL.md, never the script.

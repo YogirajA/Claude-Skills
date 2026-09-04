@@ -18,13 +18,13 @@ claude plugin install harness-audit@yogi-skills
 
 The nine suites below are separate plugins on purpose. Every skill's frontmatter description
 loads into **every session whether or not the skill fires**, so a single 62-skill plugin would
-put ~9,040 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~570.
+put ~9,010 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~570.
 Run `claude plugin details <name>@yogi-skills` to see any suite's exact always-on cost before
 installing it.
 
 | Suite | Skills | Always-on |
 |---|---:|---:|
-| `meta` | 3 | ~140 |
+| `meta` | 2 | ~110 |
 | `token-economy` | 8 | ~540 |
 | `kb-wiki` | 3 | ~570 |
 | `harness-audit` | 6 | ~770 |
@@ -33,7 +33,7 @@ installing it.
 | `code-quality` | 6 | ~1,100 |
 | `authoring` | 9 | ~1,910 |
 | `thinking-and-specs` | 9 | ~2,180 |
-| **all nine** | **62** | **~9,040** |
+| **all nine** | **61** | **~9,010** |
 
 Always-on figures are `claude plugin details` for `harness-audit`, and raw `chars / 4` scaled by
 the 1.49 factor calibrated against it for the rest. On-invoke cost (the SKILL.md body) is paid
@@ -198,8 +198,7 @@ was not imported with it.
 
 | Skill | What it does |
 |---|---|
-| [accio](accio/) | Summoning charm: say what you are working on, get told which one or two skills to type. Routes the whole collection plus enabled plugins, every route verified against disk |
-| [toolbox](toolbox/) | Index of the hand-typed skills: what each is for and when to reach for it |
+| [accio](accio/) | Summoning charm: say what you are working on, get told which one or two skills to type. Routes the whole collection plus enabled plugins, and is the only index of the user-only skills. `scripts/check-routes.py` fails on a dead route or an omitted user-only skill |
 | [writing-great-skills](writing-great-skills/) | Reference for writing and editing skills well: the vocabulary and principles that make a skill predictable |
 
 ## Credits
