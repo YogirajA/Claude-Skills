@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Skills Atlas: 56 skills, three origins, three load tiers</title>
+<title>The Skills Atlas: 62 skills, four origins, nine installable suites</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -21,11 +21,12 @@
     --dominant:#17453b;      /* workshop green */
     --spark:#c08a2e;         /* brass */
 
-    /* the three origins + maintenance, cool to warm */
+    /* the four origins + maintenance, cool to warm */
     --c1:#17453b;            /* hand-typed originals    */
     --c2:#1c5f86;            /* mattpocock suite        */
     --c3:#a8642a;            /* caveman suite           */
     --c4:#8a3b4a;            /* maintenance and pruning */
+    --c5:#5c4a86;            /* ECC harness suite       */
 
     --good:#0e8a58; --bad:#c2533b; --warn:#c67a12;
     --mono:'JetBrains Mono',ui-monospace,monospace;
@@ -70,7 +71,7 @@
   .ng-dot{width:9px; height:9px; border-radius:50%; flex:none; background:var(--c,var(--dominant));}
   .ng-top .num{font-family:var(--mono); font-size:10px; color:var(--muted); margin-left:auto;}
   .ng-plain .ng-top{color:var(--muted); font-weight:500;}
-  .ng-1{--c:var(--c1);} .ng-2{--c:var(--c2);} .ng-3{--c:var(--c3);} .ng-4{--c:var(--c4);}
+  .ng-1{--c:var(--c1);} .ng-2{--c:var(--c2);} .ng-3{--c:var(--c3);} .ng-4{--c:var(--c4);} .ng-5{--c:var(--c5);}
   .nav-hr{height:1px; background:var(--border); margin:14px 6px;}
 
   .hero{
@@ -154,7 +155,7 @@
     border-radius:var(--radius-lg); padding:22px 24px; margin:16px 0;
     background:var(--card); box-shadow:var(--shadow-sm); scroll-margin-top:18px;
   }
-  .ctrl.k1{--c:var(--c1);} .ctrl.k2{--c:var(--c2);} .ctrl.k3{--c:var(--c3);} .ctrl.k4{--c:var(--c4);}
+  .ctrl.k1{--c:var(--c1);} .ctrl.k2{--c:var(--c2);} .ctrl.k3{--c:var(--c3);} .ctrl.k4{--c:var(--c4);} .ctrl.k5{--c:var(--c5);}
   .ctrl-head{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
   .ctrl-num{font-family:var(--mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; color:#fff; background:var(--c); border-radius:999px; padding:3px 10px; align-self:center;}
   .ctrl-name{font-family:var(--display); font-weight:600; font-size:22px; color:var(--ink); letter-spacing:-.01em; line-height:1.15;}
@@ -202,6 +203,17 @@
   .refs .tier{font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); background:#eef2f0; border-radius:4px; padding:1px 6px; margin-left:6px;}
   .src{font-size:.72em; vertical-align:super; text-decoration:none; color:var(--dominant); font-weight:600; margin-left:1px;}
 
+  .pk{overflow-x:auto; margin:18px 0 6px; border:1px solid var(--border); border-radius:var(--radius-lg); background:var(--card); box-shadow:var(--shadow-sm);}
+  .pk table{border-collapse:collapse; width:100%; min-width:520px; font-size:13.4px;}
+  .pk th{text-align:left; font-family:var(--mono); font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--muted); font-weight:500; padding:13px 14px 8px; border-bottom:1px solid var(--border-hi); background:#f7f9f8;}
+  .pk td{padding:10px 14px; border-bottom:1px solid var(--border); vertical-align:top;}
+  .pk tr:last-child td{border-bottom:none;}
+  .pk td.n{font-family:var(--mono); text-align:right; white-space:nowrap;}
+  .pk td.s{font-family:var(--mono); font-size:12.3px; color:var(--ink);}
+  .pk tfoot td{border-top:1px solid var(--border-hi); background:#f7f9f8; font-weight:600; color:var(--ink);}
+  pre.cmd{background:#0e2b24; color:#dbe8e3; border-radius:var(--radius); padding:14px 16px; overflow-x:auto; font-family:var(--mono); font-size:12.5px; line-height:1.7; margin:14px 0;}
+  pre.cmd b{color:var(--spark); font-weight:500;}
+
   .foot{margin-top:34px; font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:.02em; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
 
   @media (max-width:900px){
@@ -230,16 +242,18 @@
         <circle cx="20" cy="20" r="4.2" fill="#17453b"/>
         <circle cx="31" cy="12" r="3" fill="#c08a2e"/>
       </svg>
-      <span class="brand-txt"><b>The Skills Atlas</b><span>56 skills, 3 tiers</span></span>
+      <span class="brand-txt"><b>The Skills Atlas</b><span>62 skills, 9 suites</span></span>
     </a>
 
     <div class="ng ng-plain"><a class="ng-top" href="#overview">The idea</a></div>
     <div class="ng ng-plain"><a class="ng-top" href="#economics">The economics</a></div>
     <div class="nav-hr"></div>
     <div class="ng ng-1"><a class="ng-top" href="#originals"><span class="ng-dot"></span> Hand-typed <span class="num">33</span></a></div>
-    <div class="ng ng-2"><a class="ng-top" href="#pocock"><span class="ng-dot"></span> Pocock suite <span class="num">15</span></a></div>
+    <div class="ng ng-2"><a class="ng-top" href="#pocock"><span class="ng-dot"></span> Pocock suite <span class="num">14</span></a></div>
     <div class="ng ng-3"><a class="ng-top" href="#caveman"><span class="ng-dot"></span> Caveman suite <span class="num">8</span></a></div>
+    <div class="ng ng-5"><a class="ng-top" href="#harness"><span class="ng-dot"></span> ECC harness <span class="num">6</span></a></div>
     <div class="nav-hr"></div>
+    <div class="ng ng-plain"><a class="ng-top" href="#packaging">Installing it</a></div>
     <div class="ng ng-4"><a class="ng-top" href="#pruning"><span class="ng-dot"></span> What was refused</a></div>
     <div class="ng ng-plain"><a class="ng-top" href="#references">Sources</a></div>
   </nav>
@@ -253,8 +267,8 @@
       <div class="hero-main">
         <div class="eyebrow">A field catalog of the Claude-Skills collection</div>
         <h1>Many skills.<br><em>Few tokens.</em></h1>
-        <p class="lede">Fifty-six skills from three origins, every one paying rent in one of three load tiers. The catalog, the economics that govern it, and the eight things deliberately kept out.</p>
-        <p class="src-line">Repo: <a href="https://github.com/YogirajA/Claude-Skills" target="_blank" rel="noopener">YogirajA/Claude-Skills</a> <a class="src" href="#ref-1">[1]</a> &#183; suites from mattpocock/skills <a class="src" href="#ref-2">[2]</a> and JuliusBrussee/caveman <a class="src" href="#ref-3">[3]</a>.<br>Snapshot 2026-09-02, commit 3b030a5.</p>
+        <p class="lede">Sixty-two skills from four origins, every one paying rent in one of three load tiers, now split into nine suites you install separately. The catalog, the economics that govern it, and what was deliberately kept out.</p>
+        <p class="src-line">Repo: <a href="https://github.com/YogirajA/Claude-Skills" target="_blank" rel="noopener">YogirajA/Claude-Skills</a> <a class="src" href="#ref-1">[1]</a> &#183; suites from mattpocock/skills <a class="src" href="#ref-2">[2]</a>, JuliusBrussee/caveman <a class="src" href="#ref-3">[3]</a> and affaan-m/ECC <a class="src" href="#ref-4">[4]</a>.<br>Snapshot 2026-09-04.</p>
       </div>
       <aside class="hero-seal" aria-label="Three concentric rings for the three load tiers, a loader needle sweeping across them">
         <svg class="seal" viewBox="0 0 200 200" aria-hidden="true">
@@ -280,7 +294,7 @@
     <section id="overview">
       <div class="prose">
         <p class="drop">A skill is the smallest unit of packaged judgment in Claude Code: a folder, a SKILL.md with YAML frontmatter, and whatever reference files the body reads on demand. The description in the frontmatter is what the model sees every session; the body loads only when the skill fires. That two-line mechanical fact turns out to govern everything else about running a collection of fifty-six of them.</p>
-        <p>This atlas catalogs the collection as of September 2026: <strong>33 hand-typed originals</strong>, <strong>15 adapted from Matt Pocock's engineering suite</strong>, and <strong>8 from the Caveman token-economy project</strong>, plus three compressed subagent presets riding along with cavecrew. Every import was filtered the same way: standalone over infrastructure-coupled, distinct over duplicate, and nothing whose licence forbids an MIT collection.</p>
+        <p>This atlas catalogs the collection as of September 2026: <strong>33 hand-typed originals</strong>, <strong>14 adapted from Matt Pocock's engineering suite</strong>, <strong>8 from the Caveman token-economy project</strong>, and <strong>6 from ECC's harness-measurement layer</strong>, plus one diagram skill vendored from ccc and three compressed subagent presets riding along with cavecrew. Every import was filtered the same way: standalone over infrastructure-coupled, distinct over duplicate, and nothing whose licence forbids an MIT collection.</p>
       </div>
       <div class="pull">&ldquo;Every skill leaks a description into the context window. A hundred skills means a hundred descriptions loaded whether or not you use them.&rdquo;
         <cite>Matt Pocock, David Ondrej interview, Jun 2026</cite></div>
@@ -379,17 +393,18 @@
           <div class="sk"><span class="nm">anthropic-doc-validator</span><span class="ds">Validates claims about Claude Code / API / SDKs against latest official docs, verbatim quotes</span></div>
           <div class="sk"><span class="nm">conference-talk-deck<span class="uo">UO</span></span><span class="ds">Interview first, then a self-contained offline HTML slide deck with author mode</span></div>
           <div class="sk"><span class="nm">qa-deck</span><span class="ds">Two-track .pptx QA: every slide rendered for visual defects, every claim checked against source</span></div>
-          <div class="sk"><span class="nm">personal-skill<span class="uo">UO</span></span><span class="ds">Personal: tailors one specific resume to a job posting; kept as a worked example</span></div>
-          <div class="sk"><span class="nm">toolbox<span class="uo">UO</span></span><span class="ds">Index of the hand-typed skills; what each is for</span></div>
+          <div class="sk"><span class="nm">excalidraw</span><span class="ds">Architecture diagrams as .excalidraw files from codebase analysis; six references load only on demand. Vendored from ooiyeefei/ccc</span></div>
+          <div class="sk"><span class="nm">accio<span class="uo">UO</span></span><span class="ds">Summoning charm: name the problem, get told which one or two skills to type. Routes all 62 plus enabled plugins</span></div>
+          <div class="sk"><span class="nm">toolbox<span class="uo">UO</span></span><span class="ds">Index of the user-only skills; overlaps accio, kept for now</span></div>
           <div class="sk"><span class="nm">writing-great-skills<span class="uo">UO</span></span><span class="ds">The vocabulary and principles that make a skill predictable</span></div>
         </div>
-        <p class="note">Plus <b>codebase-design</b>, <b>prototype</b>, <b>resolving-merge-conflicts</b>, and <b>wayfinder</b>, adapted early from the Pocock repo and long since naturalized into daily use.</p>
+        <p class="note">Plus <b>codebase-design</b>, <b>prototype</b>, <b>resolving-merge-conflicts</b>, and <b>wayfinder</b>, adapted early from the Pocock repo and long since naturalized into daily use. <b>personal-skill</b> was removed from the repo in September: its reference file carries real contact details, so it lives only in <code>~/.claude/skills/</code> and is gitignored.</p>
       </div>
     </section>
 
     <!-- ===================== POCOCK ===================== -->
     <section id="pocock">
-      <p class="cat-kicker" style="--c:var(--c2)">Origin two &#183; 15 skills</p>
+      <p class="cat-kicker" style="--c:var(--c2)">Origin two &#183; 14 skills</p>
       <h2 class="cat" style="--c:var(--c2)">The Pocock engineering suite</h2>
       <p class="cat-sub">Matt Pocock's thesis: AI ate tactical programming, so your leverage is strategic, and real development is a <em>queue</em> of triaged, implemented, reviewed items, not an infinite loop. The suite is that queue made into skills.</p>
 
@@ -397,7 +412,6 @@
         <div class="ctrl-head"><span class="ctrl-num">The queue</span><span class="ctrl-name">Issue-tracker suite</span></div>
         <p class="ctrl-def">Work as a set; all read the repo config that <b>setup-matt-pocock-skills</b> writes once.</p>
         <div class="skl">
-          <div class="sk"><span class="nm">ask-matt</span><span class="ds">Router: which skill in the suite fits your situation</span></div>
           <div class="sk"><span class="nm">triage</span><span class="ds">Moves issues through a five-state triage machine (needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix)</span></div>
           <div class="sk"><span class="nm">to-spec</span><span class="ds">Turns a conversation into a spec published to the tracker</span></div>
           <div class="sk"><span class="nm">to-tickets</span><span class="ds">Breaks plans into tracer-bullet tickets with blocking edges</span></div>
@@ -481,11 +495,89 @@
       </div>
     </section>
 
+
+    <!-- ===================== ECC HARNESS ===================== -->
+    <section id="harness">
+      <p class="cat-kicker" style="--c:var(--c5)">Origin four &#183; 6 of 286 offered</p>
+      <h2 class="cat" style="--c:var(--c5)">The ECC harness-measurement suite</h2>
+      <p class="cat-sub">affaan-m/ECC ships 286 skills. Holding all of them would cost roughly <b>30,000 always-on tokens</b>, more than three times this whole collection, to buy skills like <code>cisco-ios-patterns</code> and <code>homelab-pihole-dns</code>. Six were taken, for 770.</p>
+
+      <div class="ctrl k5">
+        <div class="ctrl-head"><span class="ctrl-num">Measure</span><span class="ctrl-name">Tools that audit the setup, not the code</span></div>
+        <p class="ctrl-def">The theme: stop trusting the harness and start measuring it. Every other section here is about doing work; this one is about whether the machinery doing it is sound.</p>
+        <div class="skl">
+          <div class="sk"><span class="nm">loop-design-check</span><span class="ds">The judgment layer for agent loops: a four-condition veto on building one at all, a machine-decidable goal test, servo vs regulator typing, five named failure modes, three red lines</span></div>
+          <div class="sk"><span class="nm">skill-comply</span><span class="ds">Measures whether a skill or rule is actually <b>obeyed</b>: scenarios at three prompt-strictness levels, real <code>claude -p</code> runs, tool traces classified and ordered</span></div>
+          <div class="sk"><span class="nm">context-budget</span><span class="ds">Audits agents, skills, rules, MCP tool schemas and the CLAUDE.md chain; ranks fixes by tokens reclaimed</span></div>
+          <div class="sk"><span class="nm">config-gc</span><span class="ds">Garbage collection over ~/.claude: stale, orphaned, redundant, low-value, with confirm-each deletion</span></div>
+          <div class="sk"><span class="nm">gateguard</span><span class="ds">Three-stage fact-forcing gate: deny the first edit, force named facts, allow the retry. Imported as a design, not a runnable hook</span></div>
+          <div class="sk"><span class="nm">skill-scout</span><span class="ds">Search local, marketplace, GitHub and web sources <b>before</b> writing a new skill</span></div>
+        </div>
+      </div>
+
+      <div class="caveats">
+        <div class="cav">
+          <div class="cav-k">The load-bearing part</div>
+          <div class="cav-h">Each one starts by telling you what to delete</div>
+          <p>The references open with a <b>subtract</b> table, not an add list. Opus 5 over-verifies when told to verify; Sonnet 5 under-reports when told to be conservative; Fable 5.1 goes quiet when told to hold findings for the end. Newer models invert the advice older prompts were built on, so removing beats adding.</p>
+        </div>
+        <div class="cav">
+          <div class="cav-k">Vendoring policy</div>
+          <div class="cav-h">Copied in, never depended on as a plugin</div>
+          <p>ECC is a plugin marketplace, and plugins here are installed only from Anthropic's repos or my own. So the useful parts are <b>vendored under their licence with provenance in the frontmatter</b>, and the marketplace is not installed. <b>excalidraw</b> came from ooiyeefei/ccc the same way, after that marketplace was removed.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PACKAGING ===================== -->
+    <section id="packaging">
+      <p class="cat-kicker">How it is actually installed</p>
+      <h2 class="cat">Nine suites, not one plugin</h2>
+      <p class="cat-sub">The repo is a plugin marketplace. Two manifest files turn it from &ldquo;copy the folder&rdquo; into an install command, and the split into suites is the tier-1 economics applied to its own packaging.</p>
+
+      <pre class="cmd">claude plugin marketplace add <b>YogirajA/Claude-Skills</b>
+claude plugin install <b>kb-wiki@yogi-skills</b>
+claude plugin details <b>harness-audit@yogi-skills</b>   <span style="color:#7f9b91">// price it before installing</span></pre>
+
+      <p class="cat-sub" style="margin-top:18px">Shipping one 62-skill plugin would put the full standing cost on every repo you open, including <code>qa-deck</code> while you debug a hook. A suite is the unit you actually want on or off.</p>
+
+      <div class="pk">
+        <table>
+          <thead><tr><th>Suite</th><th style="text-align:right">Skills</th><th style="text-align:right">Always-on</th><th>What it is for</th></tr></thead>
+          <tbody>
+            <tr><td class="s">meta</td><td class="n">3</td><td class="n">~150</td><td>The router, the user-only index, the skill-writing reference</td></tr>
+            <tr><td class="s">token-economy</td><td class="n">8</td><td class="n">~540</td><td>Terse output, compressed subagents, stored-context compression</td></tr>
+            <tr><td class="s">kb-wiki</td><td class="n">3</td><td class="n">~570</td><td>The LLM-wiki pattern: query before, ingest after</td></tr>
+            <tr><td class="s">harness-audit</td><td class="n">6</td><td class="n">~770</td><td>Measure the harness rather than trust it</td></tr>
+            <tr><td class="s">engineering-suite</td><td class="n">14</td><td class="n">~850</td><td>The issue-tracker queue, end to end</td></tr>
+            <tr><td class="s">repo-onboarding</td><td class="n">4</td><td class="n">~980</td><td>Arriving at a repo, and wiring its harness</td></tr>
+            <tr><td class="s">code-quality</td><td class="n">6</td><td class="n">~1,100</td><td>Over-engineering, code smells, module shape</td></tr>
+            <tr><td class="s">authoring</td><td class="n">9</td><td class="n">~1,910</td><td>Teaching pages, decks, diagrams, claim validation</td></tr>
+            <tr><td class="s">thinking-and-specs</td><td class="n">9</td><td class="n">~2,180</td><td>Specs, decisions, prompting</td></tr>
+          </tbody>
+          <tfoot><tr><td class="s">all nine</td><td class="n">62</td><td class="n">~9,050</td><td>4.5% of a 200k window, 0.9% of a 1M one</td></tr></tfoot>
+        </table>
+      </div>
+
+      <div class="verdict"><b>How these numbers were measured, and a correction.</b> They are <code>claude plugin details</code> output, or raw <code>chars&#247;4</code> scaled by the <b>1.49</b> factor calibrated against it. An earlier draft of this page used the raw estimate and &ldquo;corrected&rdquo; the tier-1 figure down to 4.5k. The CLI then reported <b>770</b> where chars&#247;4 predicted 517, a ratio that held between 1.46 and 1.61 across six skills, which put the original 8-to-10k claim back where it started. The estimator you reach for first is the thing to check.</div>
+    </section>
+
     <!-- ===================== PRUNING ===================== -->
     <section id="pruning">
       <p class="cat-kicker" style="--c:var(--c4)">The other half of curation</p>
       <h2 class="cat" style="--c:var(--c4)">What was refused, and why it is written down</h2>
       <p class="cat-sub">Recording the noes stops a future session from re-importing them. Every refusal is in the commit history with its reason.</p>
+
+      <div class="ctrl k4">
+        <div class="ctrl-head"><span class="ctrl-num">From ECC</span><span class="ctrl-name">280 of 286</span></div>
+        <div class="skl">
+          <div class="sk"><span class="nm">codebase-onboarding</span><span class="ds">Superseded: no interview, no executed loop, no cold eval, no line cap. onboard-repo does all four</span></div>
+          <div class="sk"><span class="nm">prompt-optimizer</span><span class="ds">The <b>only name collision</b> across 286 candidates; installing it would have silently shadowed the existing one</span></div>
+          <div class="sk"><span class="nm">continuous-learning-v2</span><span class="ds">Best idea in the repo, worst install: 12 files, 28 ECC references, a background observer, its own storage tree. Concept taken, code left</span></div>
+          <div class="sk"><span class="nm">hooks.json</span><span class="ds">41 KB of hook logic inlined as single-line <code>node -e</code> strings. Unreadable, untestable, undiffable. The recipes were taken, the file was not</span></div>
+          <div class="sk"><span class="nm">~200 language skills</span><span class="ds">cisco-ios-patterns, perl-security, homelab-pihole-dns. Never triggered, still billed every session</span></div>
+        </div>
+      </div>
 
       <div class="ctrl k4">
         <div class="ctrl-head"><span class="ctrl-num">From Pocock</span><span class="ctrl-name">Four duplicates</span></div>
@@ -530,6 +622,7 @@
         <li id="ref-1"><a href="https://github.com/YogirajA/Claude-Skills" target="_blank" rel="noopener">YogirajA/Claude-Skills</a> <span class="tier">first-party</span> The collection itself; snapshot at commit 3b030a5, 2026-09-02. Full one-line index in its README.</li>
         <li id="ref-2"><a href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">mattpocock/skills</a> <span class="tier">practitioner</span> Upstream of the engineering suite and five earlier naturalized skills. MIT.</li>
         <li id="ref-3"><a href="https://github.com/JuliusBrussee/caveman" target="_blank" rel="noopener">JuliusBrussee/caveman</a> <span class="tier">practitioner</span> Upstream of the token-economy suite. MIT skills surface; BSL engine excluded. The ~1,250 token/turn overhead figure is theirs (docs/HONEST-NUMBERS.md), self-reported.</li>
+          <li id="ref-4"><a href="https://github.com/affaan-m/ECC" target="_blank" rel="noopener">affaan-m/ECC</a> <span class="tier">MIT</span> v2.2.1, 286 skills, 3,519 files. Six taken; the full import review with the measurements behind each decision is <code>ecc-import-review.html</code> in the knowledge base.</li>
         <li><a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Claude Code docs: Skills</a> <span class="tier">first-party</span> Load mechanics behind the three tiers; also features-overview for the adoption triggers.</li>
         <li>Matt Pocock, David Ondrej interview (Jun 2026) <span class="tier">practitioner</span> The description-leak observation and the delete-everything discipline; notes in around-the-model.html.</li>
         <li>Boris Cherny, YC talk (2026) <span class="tier">practitioner</span> The six-month delete and re-add-on-repeated-failure rule; wiki page boris-cherny-yc-talk.</li>
@@ -552,7 +645,7 @@
     var h = a.getAttribute('href');
     if (h && h.charAt(0) === '#') byHash[h.slice(1)] = a;
   });
-  var ids = ['overview','economics','originals','pocock','caveman','pruning','references'];
+  var ids = ['overview','economics','originals','pocock','caveman','harness','packaging','pruning','references'];
   var targets = ids.map(function(id){ return document.getElementById(id); }).filter(Boolean);
 
   function setActive(id){
