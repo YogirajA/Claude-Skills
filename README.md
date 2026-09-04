@@ -17,7 +17,7 @@ claude plugin install harness-audit@yogi-skills
 ```
 
 The nine suites below are separate plugins on purpose. Every skill's frontmatter description
-loads into **every session whether or not the skill fires**, so a single 62-skill plugin would
+loads into **every session whether or not the skill fires**, so a single 61-skill plugin would
 put ~9,010 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~570.
 Run `claude plugin details <name>@yogi-skills` to see any suite's exact always-on cost before
 installing it.
@@ -45,9 +45,30 @@ given skill documents. Do not do both for the same skill: a hand-copied skill an
 plugin both register, and you pay the description twice.
 
 **Visual catalog:** [skills-atlas.html](skills-atlas.html) is a single-file field guide to the
-whole collection: the three load tiers and their economics, all 56 skills by origin, and the
-imports that were refused with reasons. Open it locally in a browser, or via
+whole collection: the three load tiers and their economics, all 61 skills by their four origins,
+how the nine suites are priced, and the imports that were refused with reasons. Open it locally in
+a browser, or via
 [githack](https://raw.githack.com/YogirajA/Claude-Skills/main/skills-atlas.html).
+
+## Checking it
+
+```bash
+python accio/scripts/check-routes.py
+```
+
+`accio` is the router, and it is the **only** index for the 22 user-only skills: those carry no
+description into the model's context, so one missing from the router is reachable by nothing but
+someone remembering its name. A router nobody checks goes stale silently, which is exactly how the
+retired `toolbox` skill came to be missing 11 of the 24 it indexed.
+
+| | Fails on |
+|---|---|
+| **DEAD ROUTE** | `accio` names a `/skill` that does not exist |
+| **UNREACHABLE** | a user-only skill `accio` omits |
+
+Run it after adding, renaming or removing any skill, and fix `accio/SKILL.md` rather than the
+script. Exit 0 clean, 1 on any finding, no dependencies. The sibling knowledge base has the
+equivalent for its wiki at `scripts/check-wiki.py`.
 
 Skills that carry real personal data are not versioned here. `personal-skill` lives only in
 `~/.claude/skills/` and is gitignored, because its reference file holds actual contact details.
