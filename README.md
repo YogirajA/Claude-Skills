@@ -18,22 +18,22 @@ claude plugin install harness-audit@yogi-skills
 
 The nine suites below are separate plugins on purpose. Every skill's frontmatter description
 loads into **every session whether or not the skill fires**, so a single 62-skill plugin would
-put ~9,030 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~570.
+put ~9,040 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~570.
 Run `claude plugin details <name>@yogi-skills` to see any suite's exact always-on cost before
 installing it.
 
 | Suite | Skills | Always-on |
 |---|---:|---:|
-| `meta` | 2 | ~90 |
+| `meta` | 3 | ~140 |
 | `token-economy` | 8 | ~540 |
 | `kb-wiki` | 3 | ~570 |
 | `harness-audit` | 6 | ~770 |
-| `engineering-suite` | 15 | ~900 |
+| `engineering-suite` | 14 | ~850 |
 | `repo-onboarding` | 4 | ~980 |
 | `code-quality` | 6 | ~1,100 |
 | `authoring` | 9 | ~1,910 |
 | `thinking-and-specs` | 9 | ~2,180 |
-| **all nine** | **62** | **~9,030** |
+| **all nine** | **62** | **~9,040** |
 
 Always-on figures are `claude plugin details` for `harness-audit`, and raw `chars / 4` scaled by
 the 1.49 factor calibrated against it for the rest. On-invoke cost (the SKILL.md body) is paid
@@ -126,14 +126,15 @@ Skills that carry real personal data are not versioned here. `personal-skill` li
 ## Engineering and productivity suite (mattpocock/skills)
 
 Adapted from [mattpocock/skills](https://github.com/mattpocock/skills). The issue-tracker skills
-(ask-matt, triage, to-spec, to-tickets, implement) work as a set and assume
+(triage, to-spec, to-tickets, implement) work as a set and assume
 `setup-matt-pocock-skills` has configured the repo. His `tdd`, `code-review`, `diagnosing-bugs`,
 and `handoff` are intentionally omitted: they duplicate superpowers TDD and systematic-debugging,
-the bundled `/code-review`, and the remember/handoff system already in use here.
+the bundled `/code-review`, and the remember/handoff system already in use here. His `ask-matt`
+router was replaced by [ask-overlord](ask-overlord/), which maps this collection and the enabled
+plugins rather than his suite; the original routed to five skills that do not exist here.
 
 | Skill | What it does |
 |---|---|
-| [ask-matt](ask-matt/) | Router: which skill in the suite fits your situation |
 | [grill-me](grill-me/) | Relentless interview to sharpen a plan; thin wrapper over grilling |
 | [grilling](grilling/) | The interview primitive: design-tree questioning in frontier rounds, each question with a recommended answer, facts fetched by subagents |
 | [grill-with-docs](grill-with-docs/) | Grilling session that also builds the domain model into `CONTEXT.md` and ADRs |
@@ -197,6 +198,7 @@ was not imported with it.
 
 | Skill | What it does |
 |---|---|
+| [ask-overlord](ask-overlord/) | Router over the whole collection plus enabled plugins: names the one or two skills that fit your situation. Every route verified against disk |
 | [toolbox](toolbox/) | Index of the hand-typed skills: what each is for and when to reach for it |
 | [writing-great-skills](writing-great-skills/) | Reference for writing and editing skills well: the vocabulary and principles that make a skill predictable |
 

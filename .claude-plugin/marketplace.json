@@ -140,7 +140,6 @@
         "domain-modeling"
       ],
       "skills": [
-        "./ask-matt",
         "./domain-modeling",
         "./grill-me",
         "./grill-with-docs",
@@ -253,7 +252,7 @@
       "name": "meta",
       "source": "./",
       "displayName": "Personal and meta",
-      "description": "The collection's own index and the reference for writing skills well.",
+      "description": "The router over the whole collection, the index of the user-only skills, and the reference for writing skills well.",
       "version": "1.0.0",
       "author": {
         "name": "Yogiraj Aradhye"
@@ -267,6 +266,7 @@
         "skills"
       ],
       "skills": [
+        "./ask-overlord",
         "./toolbox",
         "./writing-great-skills"
       ]
