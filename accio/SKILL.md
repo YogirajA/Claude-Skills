@@ -41,7 +41,7 @@ The route most work travels.
    `CONTEXT.md` and ADRs. Use it whenever there is a working directory to leave that trail in.
    **`/grill-me`** (type it) is the same interview with no repo under it. Both run **`/grilling`**,
    which you reach directly only when you want the interview with no wrapper.
-   - Lighter alternative: **`/veritaserum`** (type it) when the shape is roughly known and you
+   - Lighter alternative: **`/spec-interview`** (type it) when the shape is roughly known and you
      just want it pinned down fast, one question at a time.
    - `brainstorming` (plugin, superpowers) covers the same ground from the other direction and
      fires on its own. If it has already run, do not re-interview from scratch.
@@ -155,9 +155,9 @@ The tools that measure the setup rather than the code.
 
 - **`/explain-yogi-like-he-is-5`**: a Socratic session that teaches rather than summarizes.
 - **`/watch`**: a YouTube transcript turned into notes, chapters, quotes, or answers.
-- **`/lumos`** (type it): one deep, source-grounded, single-file HTML teaching page.
-- **`/sonorus`** (type it): interviews you, then generates an offline HTML deck.
-- **`/pensieve`** (type it): an animated single-file workshop player.
+- **`/field-guide-builder`** (type it): one deep, source-grounded, single-file HTML teaching page.
+- **`/conference-talk-deck`** (type it): interviews you, then generates an offline HTML deck.
+- **`/sdd-workshop-walkthrough`** (type it): an animated single-file workshop player.
 - **`/qa-deck`**: QA a `.pptx` for visual defects and fabricated claims before it ships.
 - **`/excalidraw`**: architecture diagrams as `.excalidraw` files from codebase analysis. PNG/SVG
   export needs the Playwright MCP server connected.

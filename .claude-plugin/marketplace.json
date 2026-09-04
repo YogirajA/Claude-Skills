@@ -210,8 +210,8 @@
         "./prompt-optimizer",
         "./prototype",
         "./scope-creep-check",
+        "./spec-interview",
         "./the-llm-council",
-        "./veritaserum",
         "./wayfinder"
       ]
     },
@@ -238,13 +238,13 @@
       ],
       "skills": [
         "./anthropic-doc-validator",
+        "./conference-talk-deck",
         "./excalidraw",
         "./explain-yogi-like-he-is-5",
+        "./field-guide-builder",
         "./geo-content",
-        "./lumos",
-        "./pensieve",
         "./qa-deck",
-        "./sonorus",
+        "./sdd-workshop-walkthrough",
         "./watch"
       ]
     },

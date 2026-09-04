@@ -1,12 +1,10 @@
 ---
-name: lumos
-description: Use when building or extending a single-file, source-grounded, visually distinctive teaching guide on a technical topic, the kind with a concept hierarchy of worked examples and do/avoid practice, inline citations to primary sources, an editorial design system, an in-app router, and an optional interactive companion. Triggers on requests like "build a guide", "make a teaching guide / explainer / field guide / learning doc", or polishing and extending one. Formerly field-guide-builder.
+name: field-guide-builder
+description: Use when building or extending a single-file, source-grounded, visually distinctive teaching guide on a technical topic, the kind with a concept hierarchy of worked examples and do/avoid practice, inline citations to primary sources, an editorial design system, an in-app router, and an optional interactive companion. Triggers on requests like "build a guide", "make a teaching guide / explainer / field guide / learning doc", or polishing and extending one.
 disable-model-invocation: true
 ---
 
-# Lumos
-
-*Wand-Lighting Charm,* throws light on one topic, deeply.
+# Field guide builder
 
 Build the kind of guide we build: one self-contained HTML file that teaches a technical topic to a high standard, with **distinctive design, rigorous sourcing, and one consistent teaching hierarchy**. Optionally ship an interactive companion (a step-through "session") next to it. The canonical instance this skill was distilled from is a prompting guide, but the recipe is topic-agnostic.
 

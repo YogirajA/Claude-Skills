@@ -10,7 +10,7 @@ description: >-
   up to speed on this codebase", "learn this repo", "set this repo up for Claude", or "build a wiki
   for this repo". Runs once per repo to establish context. Do NOT use for querying an existing wiki
   (that is read-wiki), for ingesting a single source or linting a wiki (that is write-wiki), for
-  interviewing the user about work they want built (that is veritaserum), or for teaching the
+  interviewing the user about work they want built (that is spec-interview), or for teaching the
   user one file, PR, or concept (that is explain-yogi-like-he-is-5).
 ---
 

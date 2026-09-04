@@ -1,12 +1,10 @@
 ---
-name: sonorus
-description: Use when the user wants to create a new conference talk / presentation deck (a slide deck), or asks to "make a deck", "start a talk deck", "scaffold slides", or mentions building a PlumDeck-style presentation. Interviews the user, then generates a self-contained, offline HTML slide deck with built-in author mode. Formerly conference-talk-deck.
+name: conference-talk-deck
+description: Use when the user wants to create a new conference talk / presentation deck (a slide deck), or asks to "make a deck", "start a talk deck", "scaffold slides", or mentions building a PlumDeck-style presentation. Interviews the user, then generates a self-contained, offline HTML slide deck with built-in author mode.
 disable-model-invocation: true
 ---
 
-# Sonorus
-
-*Amplifying Charm,* makes your voice carry to a room.
+# Conference Talk Deck
 
 Generate a self-contained, offline, projector-ready HTML slide deck styled like PlumDeck, with the
 full presentation engine built in (keyboard nav, overview grid, inline **author/edit mode**, save,
