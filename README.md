@@ -97,7 +97,7 @@ of the pattern rather than tools you would run as-is.
 | Skill | What it does |
 |---|---|
 | [prompt-fixer](prompt-fixer/) | Cleans a rough prompt into clear plain English and hands it back to you; no XML, no execution |
-| [prompt-optimizer](prompt-optimizer/) | Wraps a messy ask into an XML-structured Claude prompt, validates it with you, then runs it |
+| [prompt-optimizer](prompt-optimizer/) | Wraps a messy ask into an XML-structured Claude prompt, validates it with you, then runs it. Model-aware: reads a per-model reference (Opus 5, Sonnet 5, Fable 5.1) and applies Anthropic's documented behaviour for that model, including the instructions it says to **remove** |
 
 ## Learning and teaching
 

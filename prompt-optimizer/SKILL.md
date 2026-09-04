@@ -1,6 +1,6 @@
 ---
 name: prompt-optimizer
-description: Transform a raw or messy ask into an XML-structured Claude prompt (role / context / task / examples / output format / constraints), validate it with the user, then execute it to produce the actual deliverable. The XML output is built to be used as-is and run for you, not hand-edited. Use when the user explicitly invokes /prompt-optimizer, says "optimize this prompt", "wrap this in XML tags", "rewrite this as a Claude prompt", or "structure this and run it", or pastes a long, ambiguous, multi-requirement, multi-step ask that clearly benefits from structured framing before execution. Do NOT use when the user just wants a cleaned-up, plain-English prompt handed back to read, paste, and tweak themselves, that is the prompt-fixer skill (English hygiene, no XML, no execution). Also skip simple one-liners, greetings, trivial code edits, direct file reads, or clear conversational follow-ups.
+description: Transform a raw or messy ask into an XML-structured Claude prompt (role / context / task / examples / output format / constraints), tuned to the target Claude model's documented behaviour, validate it with the user, then execute it to produce the actual deliverable. The XML output is built to be used as-is and run for you, not hand-edited. Use when the user explicitly invokes /prompt-optimizer, says "optimize this prompt", "wrap this in XML tags", "rewrite this as a Claude prompt", or "structure this and run it", or pastes a long, ambiguous, multi-requirement, multi-step ask that clearly benefits from structured framing before execution. Do NOT use when the user just wants a cleaned-up, plain-English prompt handed back to read, paste, and tweak themselves, that is the prompt-fixer skill (English hygiene, no XML, no execution). Also skip simple one-liners, greetings, trivial code edits, direct file reads, or clear conversational follow-ups.
 ---
 
 # Prompt Optimizer
@@ -24,6 +24,30 @@ Claude models perform best when instructions arrive as **XML-tagged** structured
 When in doubt on a borderline case, ask: *"This looks complex — want me to run it through prompt-optimizer first, or just go?"* One sentence, then proceed based on the answer.
 
 ## Workflow
+
+### 0. Establish the target model, then read its reference
+
+**Do this first.** Anthropic publishes per-model prompting guidance because the same prompt behaves
+differently across models, and some generic advice is actively wrong on newer ones.
+
+Decide the target without asking where you can: if the prompt will be executed here, it is the
+model running this session. If the user names a model, use that. If the prompt is destined for an
+API integration and no model is named, ask in one line, offering the session model as the default.
+
+| Target | Read |
+|---|---|
+| Claude Opus 5 | `references/opus-5.md` |
+| Claude Sonnet 5 | `references/sonnet-5.md` |
+| Claude Fable 5.1 / Mythos 5.1 | `references/fable-5-1.md` |
+| Anything else, or unknown | Skip the reference. Build the model-agnostic prompt and say which model you assumed. |
+
+**The reference subtracts as well as adds.** Each one opens with a table of instructions to *remove*.
+This matters more than the additions: Opus 5 over-verifies when told to verify, Sonnet 5 under-reports
+when told to be conservative, and Fable 5.1 goes quiet when told to hold findings for the end. If the
+user handed you an existing prompt, run the subtract table over it before writing anything new.
+
+Never invent model-specific guidance. If the reference does not cover a behaviour, treat it as
+model-agnostic rather than guessing, and say so.
 
 ### 1. Parse intent
 
@@ -96,6 +120,12 @@ subjective tasks.]
 </success_criteria>
 ```
 
+**Apply the model reference here.** After the scaffold is assembled, pass it through the target
+model's file: delete anything its subtract table names, and add only the steering text the task
+actually needs. Do not paste every snippet from the reference; a prompt carrying all of them is worse
+than one carrying the two that apply. Quote the snippets verbatim when you do use them, punctuation
+included, since they are published as text to paste.
+
 **Style notes for the body:**
 - Imperative voice ("Generate…", "List…", "Refactor…").
 - Concrete > abstract. "List 5 risks ranked by severity" beats "think about risks".
@@ -106,7 +136,10 @@ subjective tasks.]
 
 Show the assembled prompt in a code block and ask, in one short message:
 
-> Here's the optimized prompt. Look good? (Reply "go" / edits / "scrap it".)
+> Here's the optimized prompt, tuned for <model>. Look good? (Reply "go" / edits / "scrap it".)
+
+If the model reference caused you to *remove* something the user wrote, say so in one line with the
+reason. A silent deletion of their instruction is the one change they will not expect.
 
 Don't over-explain — the prompt should speak for itself. If they reply with edits, fold them in and show the diff or the new version, then proceed.
 
@@ -129,6 +162,9 @@ JSON is fine when the *output* needs to be machine-parseable. For the *prompt it
 - **Don't invent constraints the user didn't imply.** Defaults should be flagged so they can override.
 - **Don't ask >1 clarifying question round.** Batch all gaps into one message, propose defaults for the rest.
 - **Don't make the user approve a prompt twice.** One validation pass. If they edit, apply and go.
+- **Don't apply another model's guidance.** The per-model files are measured on that model. Carrying
+  Sonnet 5 advice onto Opus 5, or either onto a model with no reference file, is worse than staying
+  generic.
 - **Don't keep the scaffold rigid.** If `<role>` or `<examples>` doesn't help this specific ask, drop the tag.
 
 ## Example transformation
