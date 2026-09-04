@@ -1,12 +1,12 @@
 ---
-name: ask-overlord
-description: "Ask which skill or flow fits your situation. A router over this whole collection plus the enabled plugins."
+name: accio
+description: "Summon the right skill. A router over this whole collection plus the enabled plugins: say what you are working on, get told what to type."
 disable-model-invocation: true
 ---
 
-# Ask Overlord
+# Accio
 
-You do not remember 62 skills. Ask.
+*Summoning Charm.* You do not remember 62 skills. Name the problem, not the skill.
 
 Fired bare, with nothing attached, ask what is being worked on. Reprinting this map back is a
 no-op: the reader is already looking at it. **Name the one or two that fit and say what to type.**

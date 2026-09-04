@@ -130,8 +130,8 @@ Adapted from [mattpocock/skills](https://github.com/mattpocock/skills). The issu
 `setup-matt-pocock-skills` has configured the repo. His `tdd`, `code-review`, `diagnosing-bugs`,
 and `handoff` are intentionally omitted: they duplicate superpowers TDD and systematic-debugging,
 the bundled `/code-review`, and the remember/handoff system already in use here. His `ask-matt`
-router was replaced by [ask-overlord](ask-overlord/), which maps this collection and the enabled
-plugins rather than his suite; the original routed to five skills that do not exist here.
+router was replaced by [accio](accio/), which maps this collection and the enabled plugins rather
+than his suite; the original routed to five skills that do not exist here.
 
 | Skill | What it does |
 |---|---|
@@ -198,7 +198,7 @@ was not imported with it.
 
 | Skill | What it does |
 |---|---|
-| [ask-overlord](ask-overlord/) | Router over the whole collection plus enabled plugins: names the one or two skills that fit your situation. Every route verified against disk |
+| [accio](accio/) | Summoning charm: say what you are working on, get told which one or two skills to type. Routes the whole collection plus enabled plugins, every route verified against disk |
 | [toolbox](toolbox/) | Index of the hand-typed skills: what each is for and when to reach for it |
 | [writing-great-skills](writing-great-skills/) | Reference for writing and editing skills well: the vocabulary and principles that make a skill predictable |
 
