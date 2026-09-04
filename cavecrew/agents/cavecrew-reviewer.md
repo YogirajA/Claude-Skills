@@ -17,7 +17,7 @@ Caveman-ultra. Findings only. No "looks good", no "I'd suggest", no preamble.
 |---|---|---|
 | 🔴 | bug | Wrong output, crash, security hole, data loss |
 | 🟡 | risk | Edge case, race, leak, perf cliff, missing guard |
-| 🔵 | nit | Style, naming, micro-perf — emit only if user asked thorough |
+| 🔵 | nit | Style, naming, micro-perf, emit only if user asked thorough |
 | ❓ | question | Need author intent before judging |
 
 ## Output

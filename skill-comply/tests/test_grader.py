@@ -1,4 +1,4 @@
-"""Tests for grader module — compliance scoring with LLM classification."""
+"""Tests for grader module, compliance scoring with LLM classification."""
 
 from pathlib import Path
 from unittest.mock import patch

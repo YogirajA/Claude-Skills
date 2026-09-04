@@ -19,11 +19,11 @@ When invoked, your job is to take a body of content (a file, a passage, a code s
 3. **Fetch the doc page with a specific, narrow prompt.** Use `WebFetch` and ask for the exact passage that confirms or refutes the claim. Quote verbatim. Do not paraphrase the docs.
 
 4. **Compare claim vs. doc.** Classify each finding as one of:
-   - **Confirmed** — doc quote supports the claim.
-   - **Refuted** — doc quote contradicts the claim. Include the corrected statement.
-   - **Stale / changed** — doc indicates the API or behavior has changed (deprecated, renamed, replaced).
-   - **Not documented** — doc page does not address the claim. Note that this does NOT mean the claim is wrong, only unverifiable from official docs.
-   - **Ambiguous** — doc text is consistent with multiple readings; flag for human judgment.
+   - **Confirmed**: doc quote supports the claim.
+   - **Refuted**: doc quote contradicts the claim. Include the corrected statement.
+   - **Stale / changed**: doc indicates the API or behavior has changed (deprecated, renamed, replaced).
+   - **Not documented**: doc page does not address the claim. Note that this does NOT mean the claim is wrong, only unverifiable from official docs.
+   - **Ambiguous**: doc text is consistent with multiple readings; flag for human judgment.
 
 5. **Produce the report.** Use the format in the Output section below.
 

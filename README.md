@@ -18,22 +18,22 @@ claude plugin install harness-audit@yogi-skills
 
 The nine suites below are separate plugins on purpose. Every skill's frontmatter description
 loads into **every session whether or not the skill fires**, so a single 62-skill plugin would
-put ~9,260 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~560.
+put ~9,030 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~570.
 Run `claude plugin details <name>@yogi-skills` to see any suite's exact always-on cost before
 installing it.
 
 | Suite | Skills | Always-on |
 |---|---:|---:|
-| `meta` | 3 | ~360 |
+| `meta` | 2 | ~90 |
 | `token-economy` | 8 | ~540 |
-| `kb-wiki` | 3 | ~560 |
+| `kb-wiki` | 3 | ~570 |
 | `harness-audit` | 6 | ~770 |
 | `engineering-suite` | 15 | ~900 |
 | `repo-onboarding` | 4 | ~980 |
 | `code-quality` | 6 | ~1,100 |
 | `authoring` | 9 | ~1,910 |
-| `thinking-and-specs` | 9 | ~2,160 |
-| **all nine** | **63** | **~9,260** |
+| `thinking-and-specs` | 9 | ~2,180 |
+| **all nine** | **62** | **~9,030** |
 
 Always-on figures are `claude plugin details` for `harness-audit`, and raw `chars / 4` scaled by
 the 1.49 factor calibrated against it for the rest. On-invoke cost (the SKILL.md body) is paid
@@ -49,8 +49,8 @@ whole collection: the three load tiers and their economics, all 56 skills by ori
 imports that were refused with reasons. Open it locally in a browser, or via
 [githack](https://raw.githack.com/YogirajA/Claude-Skills/main/skills-atlas.html).
 
-A few skills are personal (they carry my name or my resume) and are kept here as worked examples
-of the pattern rather than tools you would run as-is.
+Skills that carry real personal data are not versioned here. `personal-skill` lives only in
+`~/.claude/skills/` and is gitignored, because its reference file holds actual contact details.
 
 ## Onboarding and repo setup
 
@@ -197,7 +197,6 @@ was not imported with it.
 
 | Skill | What it does |
 |---|---|
-| [personal-skill](personal-skill/) | Tailors my resume to a specific job posting (personal; kept as a worked example) |
 | [toolbox](toolbox/) | Index of the hand-typed skills: what each is for and when to reach for it |
 | [writing-great-skills](writing-great-skills/) | Reference for writing and editing skills well: the vocabulary and principles that make a skill predictable |
 

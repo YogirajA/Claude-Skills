@@ -1176,7 +1176,7 @@ const DISCLAIMERS = [
   {
     level: 'inferred',
     title: '"ddd-patterns at 66 lines is a stub" / "should be ~148 lines"',
-    body: 'Anthropic does not publish a minimum skill size. The "stub" label here means "the rules live elsewhere (in MCP), not in the skill body" — that part is doc-grounded. The specific 148-line target comes from Acme governance deck slide 13. Treat the size as Acme\'s call, not Anthropic\'s.',
+    body: 'Anthropic does not publish a minimum skill size. The "stub" label here means "the rules live elsewhere (in MCP), not in the skill body": that part is doc-grounded. The specific 148-line target comes from Acme governance deck slide 13. Treat the size as Acme\'s call, not Anthropic\'s.',
   },
 ];
 
@@ -2479,7 +2479,7 @@ if (initialTab && document.querySelector(`nav.tabs button[data-tab="${initialTab
   activateTab(initialTab);
 }
 
-// Provenance defaults — applied if an item does not already declare one.
+// Provenance defaults, applied if an item does not already declare one.
 // Heuristic: skill-bucket items sourced from Anthropic guidance get DOCUMENTED
 // (they map onto explicit doc language). MCP-bucket items get DOCUMENTED for
 // connectivity uses, INFERRED when we judged the cadence. Hooks/Subagents/

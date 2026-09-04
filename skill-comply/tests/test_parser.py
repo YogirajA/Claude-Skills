@@ -1,4 +1,4 @@
-"""Tests for parser module — JSONL trace and YAML spec parsing."""
+"""Tests for parser module, JSONL trace and YAML spec parsing."""
 
 from pathlib import Path
 

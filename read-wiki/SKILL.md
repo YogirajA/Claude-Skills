@@ -32,7 +32,7 @@ If a project wiki exists for this folder, read it first.
 - The question is cross-cutting (architecture patterns, methodology, prior engagement experience), OR
 - The project wiki doesn't have a relevant answer,
 
-...also read `C:\code\knowledgebase\index.md`.
+...also read the General Knowledge `index.md` whose path is given by the Wikis registry in `~/.claude/CLAUDE.md`.
 
 Both wikis can contribute to one answer. Synthesize across them, project content takes priority.
 

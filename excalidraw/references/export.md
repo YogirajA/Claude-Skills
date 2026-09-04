@@ -24,7 +24,7 @@ SERVER_PID=$!
 browser_navigate → http://localhost:8765/
 ```
 
-The 404 page is fine — we only need the HTTP origin for the dynamic import to work.
+The 404 page is fine: we only need the HTTP origin for the dynamic import to work.
 
 ### 3. Read the .excalidraw File
 
@@ -107,8 +107,8 @@ kill $SERVER_PID
 
 ## Key Details
 
-- **Import path**: Export functions are on `utils.default`, not named exports — this is how `esm.sh` wraps the `@excalidraw/utils` package
-- **Console errors**: `<text> attribute y: Expected length` warnings are cosmetic — exports are valid
+- **Import path**: Export functions are on `utils.default`, not named exports: this is how `esm.sh` wraps the `@excalidraw/utils` package
+- **Console errors**: `<text> attribute y: Expected length` warnings are cosmetic, exports are valid
 - **Background**: `exportBackground: true` includes the white background in exports
 - **Output location**: Save exported files alongside the `.excalidraw` file with matching filename (e.g., `system-architecture.excalidraw` → `system-architecture.svg`, `system-architecture.png`)
 - **Visual fidelity**: Both exports produce the same visual output as opening in excalidraw.com
@@ -121,4 +121,4 @@ kill $SERVER_PID
 | Dynamic import fails | Check network connectivity; `esm.sh` CDN must be reachable |
 | Playwright tools not available | Ensure Playwright MCP server is configured and running |
 | PNG is blank/corrupted | Verify the base64 prefix was stripped before decoding |
-| SVG missing text | Cosmetic only — text renders correctly when opened in a browser |
+| SVG missing text | Cosmetic only, text renders correctly when opened in a browser |

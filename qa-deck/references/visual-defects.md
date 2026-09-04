@@ -20,7 +20,7 @@ The catalog is organized by failure mode, not by severity. Severity depends on c
 - **Card grids floating in the lower half.** A 2x2 or 2x3 grid whose top edge is at y ≥ 3.0" leaves a giant empty band above. Pull the grid up to y ≈ 1.7" and make cards taller, OR add a header strip above.
 - **Sparse content stranded at the bottom.** A title and a single short paragraph at y ≈ 5.0" with everything above blank. Switch to a layout designed for sparse content (key-message, big-stat, quote slide).
 - **Uneven column lengths leaving a dead corner.** Two-column slide where the left column ends at y = 3.5" and the right column ends at y = 6.2". Fill the short column's tail with a stat, callout, image, or extend the content.
-- **Last content line ending well above the footer.** Last content at y ≈ 5.0", footer at y ≈ 7.1" — over 2 inches of trapped empty space.
+- **Last content line ending well above the footer.** Last content at y ≈ 5.0", footer at y ≈ 7.1", over 2 inches of trapped empty space.
 - **Mid-card vertical gap between top-anchored body and bottom-anchored footnote.** Card body paragraph hugs the top of the card; an italic tag or bullet block is pinned to the bottom of the card; a >0.8" empty band sits between them. The card looks broken even though it is technically "filled". Fix by (a) shrinking the card to hug the actual content, (b) removing the bottom anchor so the tag sits directly under the body with normal paragraph spacing, or (c) adding a middle element to bridge the gap.
 - **Sibling cards with mismatched content density and identical heights.** Two cards forced to the same height; one has 6 lines of body, the other has 3 lines + a tagline. The shorter card develops a mid-card void.
 
@@ -29,7 +29,7 @@ The catalog is organized by failure mode, not by severity. Severity depends on c
 - **Right-edge dead zone.** Content stops at x ≈ 8" on a 13.33" slide, leaving a ≈5" empty right strip. Either extend content or commit to a deliberate half-canvas layout with a clear visual reason.
 - **Left-edge dead zone.** Mirror of the above. Content sits at x ≥ 4" with the entire left third blank.
 - **Title/body x-misalignment ("stair-step").** Title at x = 0.5", body at x = 1.2". Looks like an accidental indent. Title and body left edges should match unless the layout intentionally indents body content.
-- **Centred body text on a non-cover slide.** Bullets, paragraphs, and lists centred horizontally — looks amateur. Centre only titles, key-messages, quotes, and big-stat numbers.
+- **Centred body text on a non-cover slide.** Bullets, paragraphs, and lists centred horizontally, looks amateur. Centre only titles, key-messages, quotes, and big-stat numbers.
 - **Asymmetric column widths with no semantic reason.** Two-column slide with col1 = 3" and col2 = 9" where the content is two parallel ideas. Size columns equally or commit to a deliberately asymmetric motif repeated across the deck.
 - **Inconsistent gutters across a grid.** Gap between cards 1–2 is 0.3" but between 2–3 is 0.5". Pick one gutter.
 - **Floating single column ignoring the right half.** A single text column at x = 0.5–6.0" leaves the right half blank with no visual element.
@@ -39,7 +39,7 @@ The catalog is organized by failure mode, not by severity. Severity depends on c
 - **Uneven card heights in a single row.** Copy length differs between cards, so bottom edges are ragged. Fix by normalising copy length, using fixed card heights with content wrapping, or top-aligned content inside equal-height cards.
 - **Mid-card whitespace.** A 3-line paragraph inside a 3.5"-tall card leaves a huge blank area that looks like a forgotten second paragraph. Either shrink the card OR add the missing content.
 - **5-item grids with a dangling bottom row.** 3+2 layouts (3 top, 2 centred below) create an L-shape that reads as "missing card." Either drop to 4 items, stretch to 5 in a single row, or split into 4 cards + a full-width banner for the fifth.
-- **Column headers wrapping unevenly.** One header wraps to 2 lines while siblings are 1 line — header band heights differ. Shorten the long label OR reserve 2-line header space for all.
+- **Column headers wrapping unevenly.** One header wraps to 2 lines while siblings are 1 line, header band heights differ. Shorten the long label OR reserve 2-line header space for all.
 - **Ragged tag baselines.** When cards have a bottom tag/italic accent, all tags should share a baseline. If body lengths differ and tags flow after body, tags will land at different y values. Bottom-anchor the tag at a uniform offset from the card bottom.
 
 ## Overflow and clipping
@@ -60,8 +60,8 @@ The catalog is organized by failure mode, not by severity. Severity depends on c
 ## Text and character rendering
 
 - **Literal special characters that don't render.** `★`, `✦`, `✓`, `»` and similar glyphs often fall back to a different font or render as an asterisk on LibreOffice. Swap for filled shapes, standard bullets, or Unicode that the target font guarantees.
-- **Floating body text with no container.** An italic line sitting below a grid with no background, no strip, no card — looks like a forgotten element. Wrap orphan lines in a styled strip or a card.
-- **Trailing content touching the footer.** The last line at y ≈ 7.0", footer bar at y ≈ 7.15" — reads as cramped.
+- **Floating body text with no container.** An italic line sitting below a grid with no background, no strip, no card, looks like a forgotten element. Wrap orphan lines in a styled strip or a card.
+- **Trailing content touching the footer.** The last line at y ≈ 7.0", footer bar at y ≈ 7.15", reads as cramped.
 - **Excessively long lines.** Body text running the full 12" of a wide slide is hard to scan. Column-constrain long-form body to ≤ 5" per line.
 - **Leftover placeholder text.** "Lorem ipsum", "XXXX", "TBD" (where the TBD was supposed to be filled in), "this slide layout" instructional text from a template.
 - **Inconsistent en-dash / em-dash / hyphen usage.** Especially relevant if the user has a documented preference (e.g., "never use em dashes").

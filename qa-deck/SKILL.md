@@ -76,7 +76,7 @@ For every verifiable claim in the deck, check it. Read `references/hallucination
 
 **Pay special attention to:**
 
-- Customer case study stats (e.g., "80 percent faster", "650+ PRs/month") — these are the most-fabricated category
+- Customer case study stats (e.g., "80 percent faster", "650+ PRs/month"): these are the most-fabricated category
 - Model names and versions (Claude 4.6 vs Claude 4.7, Haiku/Sonnet/Opus assignments)
 - Dates and timeframes ("Q4 2025", "by Thursday", "next quarter")
 - Product names spelled exactly (CLAUDE.md not Claude.md, MCP not MPC)
@@ -147,7 +147,7 @@ If LibreOffice or PyMuPDF are missing, install them or fall back to whatever the
 
 ## Further reading
 
-- `references/visual-defects.md` — the full defect catalog. Hand this to the visual-QA subagent verbatim.
-- `references/visual-qa-prompt.md` — the subagent prompt template.
-- `references/hallucination-checks.md` — claim taxonomy and verification protocol.
-- `references/severity-rubric.md` — what counts as Blocking vs Important vs Minor vs Nit.
+- `references/visual-defects.md`: the full defect catalog. Hand this to the visual-QA subagent verbatim.
+- `references/visual-qa-prompt.md`: the subagent prompt template.
+- `references/hallucination-checks.md`: claim taxonomy and verification protocol.
+- `references/severity-rubric.md`: what counts as Blocking vs Important vs Minor vs Nit.

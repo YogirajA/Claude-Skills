@@ -5,7 +5,7 @@ description: >-
   source (article, PDF, URL, meeting notes, runbook, design doc), update existing pages, lint the
   wiki for stale or orphaned content, or save a synthesis back to the wiki. Also the entry point
   for creating a new wiki: if no wiki exists for the current project, write-wiki asks whether to
-  create a General Knowledge wiki (C:\code\knowledgebase) or a project-specific one (inside the
+  create a General Knowledge wiki (path from the Wikis registry in ~/.claude/CLAUDE.md) or a project-specific one (inside the
   current folder). Triggers on /write-wiki, /wiki, "add this to the wiki", "ingest this", "save
   this to the wiki", "update the wiki", "lint the wiki", "file this", "remember this source".
 ---
@@ -27,7 +27,7 @@ Also check for `./knowledgebase/index.md` in the current working directory.
 Ask the user once:
 
 > No wiki found for this project. Create one?
-> [1] General Knowledge: adds to `C:\code\knowledgebase` (reusable patterns across engagements)
+> [1] General Knowledge: adds to the GK wiki named in the Wikis registry in `~/.claude/CLAUDE.md` (reusable patterns across engagements)
 > [2] Project-specific: creates `./knowledgebase/` inside this project folder
 
 Then bootstrap based on their choice (see Bootstrap section below) and proceed.
@@ -92,11 +92,11 @@ Fix safe issues directly. Propose wholesale rewrites before acting. Append lint 
 
 ## Bootstrap: creating a new wiki
 
-### Option 1: General Knowledge (`C:\code\knowledgebase`)
+### Option 1: General Knowledge (path from the Wikis registry in `~/.claude/CLAUDE.md`)
 
 The GK wiki already exists. Add to the `## Wikis` section in `~/.claude/CLAUDE.md` if not present:
 ```
-- General Knowledge: `C:\code\knowledgebase\index.md` - reusable patterns across engagements
+- General Knowledge: the `index.md` of the GK wiki in the Wikis registry in `~/.claude/CLAUDE.md` - reusable patterns across engagements
 ```
 Then proceed with the ingest/update operation.
 

@@ -7,7 +7,7 @@ description: >
   "help me understand", "I want to learn X", "break this down", "quiz me on",
   or shares a file or link and wants to be taught rather than just told. Also
   trigger when the user wants to understand a past decision, trace through logic,
-  or prepare to explain something to someone else. Do not just summarize — run
+  or prepare to explain something to someone else. Do not just summarize, run
   the full incremental mastery loop.
 ---
 
@@ -67,18 +67,18 @@ demonstrates mastery.
 
 Work through checklist items one at a time. For each:
 
-1. Give a concise explanation — high-level motivation first, then details.
+1. Give a concise explanation, high-level motivation first, then details.
 2. Ask the user to restate it in his own words.
 3. If he gets it wrong or is fuzzy, fill the gap and repeat.
 4. Quiz before moving on (see quizzing section below).
 
 Use these explanation modes on request or when warranted:
 
-- **ELI5** — pure analogy, no jargon
-- **ELI14** — light jargon, one concrete example
-- **ELI-intern** — technical but foundational, assume smart but new
-- **Show code** — paste a relevant snippet and walk through it line by line
-- **Debugger mode** — have the user trace execution mentally, predict output,
+- **ELI5**: pure analogy, no jargon
+- **ELI14**: light jargon, one concrete example
+- **ELI-intern**: technical but foundational, assume smart but new
+- **Show code**: paste a relevant snippet and walk through it line by line
+- **Debugger mode**: have the user trace execution mentally, predict output
   then confirm
 
 ### 4. Quizzing

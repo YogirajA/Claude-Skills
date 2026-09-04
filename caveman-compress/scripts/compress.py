@@ -51,7 +51,7 @@ def split_frontmatter(text: str):
 
     Memory files (and many other markdown docs) start with a YAML frontmatter
     block delimited by `---` lines. The compression LLM has a habit of stripping
-    or rewriting these despite preserve-structure rules in the prompt — so we
+    or rewriting these despite preserve-structure rules in the prompt, so we
     surgically remove the frontmatter before compression and prepend it back
     verbatim to the output. Files without frontmatter pass through unchanged.
     """
@@ -61,7 +61,7 @@ def split_frontmatter(text: str):
     return "", text
 
 # Filenames and paths that almost certainly hold secrets or PII. Compressing
-# them ships raw bytes to the Anthropic API — a third-party data boundary that
+# them ships raw bytes to the Anthropic API: a third-party data boundary that
 # developers on sensitive codebases cannot cross. detect.py already skips .env
 # by extension, but credentials.md / secrets.txt / ~/.aws/credentials would
 # slip through the natural-language filter. This is a hard refuse before read.
@@ -91,7 +91,7 @@ SENSITIVE_NAME_TOKENS = (
 
 
 def _state_base_dir(kind: str) -> Path:
-    """Shared platform-aware base dir for caveman-compress state (backups, locks) — Windows uses %LOCALAPPDATA%, else $XDG_DATA_HOME or ~/.local/share."""
+    """Shared platform-aware base dir for caveman-compress state (backups, locks), Windows uses %LOCALAPPDATA%, else $XDG_DATA_HOME or ~/.local/share."""
     if _IS_WINDOWS:
         local_appdata = os.environ.get("LOCALAPPDATA")
         base = Path(local_appdata) if local_appdata else Path.home() / "AppData" / "Local"
@@ -102,7 +102,7 @@ def _state_base_dir(kind: str) -> Path:
 
 
 def backup_dir_for(filepath: Path) -> Path:
-    """Out-of-tree backup dir for filepath, keyed by its parent dir name — kept outside the source tree so skill auto-loaders don't re-ingest `.original.md` backups as live files."""
+    """Out-of-tree backup dir for filepath, keyed by its parent dir name, kept outside the source tree so skill auto-loaders don't re-ingest `.original.md` backups as live files."""
     return _state_base_dir("backups") / filepath.parent.name
 
 
@@ -115,7 +115,7 @@ class LockTimeoutError(TimeoutError):
 
 
 def lock_path_for(filepath: Path) -> Path:
-    """Cross-session lock path keyed on the same (parent-dir-name, stem) identity backup_dir_for uses for its own collision guard, derived from backup_dir_for itself so the two can't drift apart — two source files that would write the same backup path must also serialize on the same lock. Hashed into a fixed-length digest rather than embedded as plaintext so the key stays filesystem-safe regardless of the source path's length or characters."""
+    """Cross-session lock path keyed on the same (parent-dir-name, stem) identity backup_dir_for uses for its own collision guard, derived from backup_dir_for itself so the two can't drift apart, two source files that would write the same backup path must also serialize on the same lock. Hashed into a fixed-length digest rather than embedded as plaintext so the key stays filesystem-safe regardless of the source path's length or characters."""
     resolved = filepath.resolve()
     backup_path = backup_dir_for(resolved) / (resolved.stem + ".original.md")
     digest = hashlib.sha256(str(backup_path).encode("utf-8")).hexdigest()[:16]
@@ -148,7 +148,7 @@ def _unlock(fd: int) -> None:
 
 @contextlib.contextmanager
 def file_lock(filepath: Path):
-    """Cross-session exclusive lock on filepath's resolved path, backed by the OS's own file lock (fcntl.flock on POSIX, msvcrt.locking on Windows) — a crashed or killed holder releases it automatically, so unlike a hand-rolled marker file there's no staleness bookkeeping to get wrong."""
+    """Cross-session exclusive lock on filepath's resolved path, backed by the OS's own file lock (fcntl.flock on POSIX, msvcrt.locking on Windows), a crashed or killed holder releases it automatically, so unlike a hand-rolled marker file there's no staleness bookkeeping to get wrong."""
     lock_path = lock_path_for(filepath)
     lock_dir = lock_path.parent
     if lock_dir.is_symlink():  # best-effort: catches a pre-staged symlink at this exact component; mkdir(exist_ok=True) would otherwise follow it, and _O_NOFOLLOW below only guards the final path component
@@ -174,7 +174,7 @@ def file_lock(filepath: Path):
                 if time.monotonic() >= deadline:
                     raise LockTimeoutError(
                         f"Another caveman-compress run appears to be compressing {filepath} "
-                        f"(lock: {lock_path}). Giving up after {LOCK_WAIT_SECONDS}s — retry once "
+                        f"(lock: {lock_path}). Giving up after {LOCK_WAIT_SECONDS}s, retry once "
                         "it finishes."
                     ) from None
                 if not printed_waiting:  # 900s of silence reads as a hang; tell the user once why nothing's happening yet. flush explicitly since stdout is a pipe when this script runs non-interactively
@@ -182,8 +182,8 @@ def file_lock(filepath: Path):
                     printed_waiting = True
                 time.sleep(LOCK_POLL_INTERVAL)
             except OSError as e:
-                if e.errno in (errno.EOPNOTSUPP, errno.ENOSYS):  # filesystem doesn't implement flock/byte-range locking at all (some NFS/SMB/FUSE mounts) — degrade to no coordination rather than fail a run that worked before this lock existed. ENOLCK deliberately excluded: it can mean transient kernel lock-record exhaustion, so it isn't a reliable "unsupported" signal — treating it as one could let a genuinely contended lock proceed unlocked
-                    print(f"⚠️ {lock_dir}'s filesystem doesn't support file locking — proceeding without cross-session coordination.", flush=True)
+                if e.errno in (errno.EOPNOTSUPP, errno.ENOSYS):  # filesystem doesn't implement flock/byte-range locking at all (some NFS/SMB/FUSE mounts), degrade to no coordination rather than fail a run that worked before this lock existed. ENOLCK deliberately excluded: it can mean transient kernel lock-record exhaustion, so it isn't a reliable "unsupported" signal, treating it as one could let a genuinely contended lock proceed unlocked
+                    print(f"⚠️ {lock_dir}'s filesystem doesn't support file locking, proceeding without cross-session coordination.", flush=True)
                     break
                 raise
         try:
@@ -219,8 +219,8 @@ def strip_llm_wrapper(text: str) -> str:
     The wrapper is only real when the first and last fence lines are the SAME
     block. The old regex (``\A\s*(fence)[^\n]*\n(.*)\n\1\s*\Z`` with DOTALL and
     a greedy ``.*``) never checked that: it matched any document that merely
-    STARTS and ENDS with a fence line. An ordinary README section —
-    ```bash npm install``` , prose, ```bash npm test``` — came back with its
+    STARTS and ENDS with a fence line. An ordinary README section, 
+    ```bash npm install```, prose, ```bash npm test```, came back with its
     first and last fence markers deleted and its two code blocks merged into
     prose, so validation failed on both the compress and the fix path and the
     section was permanently uncompressible after three paid API calls.
@@ -254,7 +254,7 @@ def strip_llm_wrapper(text: str) -> str:
 def write_text_atomic(path: Path, text: str, newline: str = "\n") -> None:
     """Write ``text`` to ``path`` atomically as UTF-8.
 
-    Path.write_text() truncates the destination before encoding the string —
+    Path.write_text() truncates the destination before encoding the string, 
     a UnicodeEncodeError (or any other failure) partway through leaves a
     0-byte file, destroying whatever was there before (issue #655). Encode
     first, write the bytes to a sibling temp file, fsync, then os.replace()
@@ -262,7 +262,7 @@ def write_text_atomic(path: Path, text: str, newline: str = "\n") -> None:
     another. Preserves the original file's permission bits across the swap.
 
     ``newline`` is the line terminator to emit. Callers pass the terminator
-    read_source() found in the source file so a CRLF document stays CRLF —
+    read_source() found in the source file so a CRLF document stays CRLF, 
     text-mode writes translating LF to the platform default rewrote every
     line ending in every file the tool touched (issue #762), and reading the
     bytes ourselves means nothing translates them back.
@@ -300,7 +300,7 @@ def read_source(filepath: Path) -> tuple[str, str, bytes]:
     """Read a source file as UTF-8, returning (text, line_terminator, raw_bytes).
 
     Decodes strictly. The old errors="ignore" silently DROPPED every byte that
-    was not valid UTF-8 — a cp1252-authored file holding `\xe9` for "e-acute"
+    was not valid UTF-8, a cp1252-authored file holding `\xe9` for "e-acute"
     lost that byte, the mangled text was what got written to the backup, the
     backup readback compared mangled-to-mangled so verification passed, and
     then the original was overwritten. The bytes were unrecoverable and
@@ -310,7 +310,7 @@ def read_source(filepath: Path) -> tuple[str, str, bytes]:
     Line endings are detected from the raw bytes and returned to the caller
     rather than being universal-newline'd away, so write_text_atomic can put
     back what was there (issue #762). A mixed-ending file takes the terminator
-    the majority of its lines use — presence of one CRLF is not a mandate to
+    the majority of its lines use, presence of one CRLF is not a mandate to
     rewrite every LF in the document. The raw bytes come back too, so the
     backup can be a byte-for-byte copy rather than a re-rendering.
     """
@@ -331,7 +331,7 @@ def read_source(filepath: Path) -> tuple[str, str, bytes]:
 
 
 def first_nonblank_line(text: str) -> str:
-    """Return the first non-blank line, stripped — used to detect a prose
+    """Return the first non-blank line, stripped, used to detect a prose
     preamble smuggled in ahead of the real content (issue #588)."""
     for line in text.splitlines():
         if line.strip():
@@ -378,7 +378,7 @@ def call_claude(prompt: str) -> str:
     back to the ``claude --print`` CLI (which handles desktop auth).
 
     On Windows the CLI subprocess decoding defaults to the system codepage
-    (cp1251 / cp1252) and crashes on UTF-8 output — see issue #152. Pinning
+    (cp1251 / cp1252) and crashes on UTF-8 output, see issue #152. Pinning
     ``encoding="utf-8"`` with ``errors="replace"`` matches the CLI's actual
     native I/O and prevents the UnicodeDecodeError before validation can
     report. Windows users with non-ASCII content can also set
@@ -441,12 +441,12 @@ Compress this markdown into caveman format.
 
 STRICT RULES:
 - Do NOT modify anything inside ``` code blocks
-- Do NOT modify anything inside a 4-space-indented code block either — those are code too, and they are validated
+- Do NOT modify anything inside a 4-space-indented code block either: those are code too, and they are validated
 - Do NOT modify anything inside inline backticks
 - Preserve ALL URLs exactly
 - Preserve ALL headings exactly
 - Preserve file paths and commands
-- Return ONLY the compressed markdown body — do NOT wrap the entire output in a ```markdown fence or any other fence. Inner code blocks from the original stay as-is; do not add a new outer fence around the whole file.
+- Return ONLY the compressed markdown body, do NOT wrap the entire output in a ```markdown fence or any other fence. Inner code blocks from the original stay as-is; do not add a new outer fence around the whole file.
 
 Only compress natural language.
 
@@ -461,7 +461,7 @@ def build_fix_prompt(original: str, compressed: str, errors: List[str]) -> str:
 
 CRITICAL RULES:
 - DO NOT recompress or rephrase the file
-- ONLY fix the listed errors — leave everything else exactly as-is
+- ONLY fix the listed errors, leave everything else exactly as-is
 - The ORIGINAL is provided as reference only (to restore missing content)
 - Preserve caveman style in all untouched sections
 
@@ -566,14 +566,14 @@ def compress_file(filepath: Path) -> bool:
     filepath = filepath.resolve()
 
     MAX_FILE_SIZE = 500_000  # 500KB
-    # None of these three checks depends on mutual exclusion, so they run before the lock is taken — a rejected input (bad path, oversized, sensitive name) shouldn't leave a permanent lock file behind in shared state.
+    # None of these three checks depends on mutual exclusion, so they run before the lock is taken: a rejected input (bad path, oversized, sensitive name) shouldn't leave a permanent lock file behind in shared state.
     if not filepath.exists():
         raise FileNotFoundError(f"File not found: {filepath}")
     if filepath.stat().st_size > MAX_FILE_SIZE:
         raise ValueError(f"File too large to compress safely (max 500KB): {filepath}")
 
     # Refuse files that look like they contain secrets or PII. Compressing ships
-    # the raw bytes to the Anthropic API — a third-party boundary — so we fail
+    # the raw bytes to the Anthropic API, a third-party boundary, so we fail
     # loudly rather than silently exfiltrate credentials or keys. Override is
     # intentional: the user must rename the file if the heuristic is wrong.
     if is_sensitive_path(filepath):
@@ -619,7 +619,7 @@ def _compress_file_locked(filepath: Path) -> bool:
     # by removing it from the input and re-prepending it to the output.
     frontmatter, body = split_frontmatter(original_text)
     if frontmatter:
-        print(f"Detected YAML frontmatter ({len(frontmatter)} chars) — preserving verbatim")
+        print(f"Detected YAML frontmatter ({len(frontmatter)} chars), preserving verbatim")
 
     if not body.strip():
         print("❌ Refusing to compress: body is empty after frontmatter removal.")
@@ -641,7 +641,7 @@ def _compress_file_locked(filepath: Path) -> bool:
         print("   Original file is untouched (no backup created).")
         return False
 
-    # Compare the BODY (not the whole file) — frontmatter is preserved verbatim
+    # Compare the BODY (not the whole file): frontmatter is preserved verbatim
     # and would never change, so identity must be judged on the compressible part.
     if compressed_body.strip() == body.strip():
         print("❌ Compression aborted: output is identical to input.")
@@ -703,7 +703,7 @@ def _compress_file_locked(filepath: Path) -> bool:
 
         # Guard against a prose preamble smuggled in ahead of the real fixed
         # content (issue #588). Only enforced when the original starts with a
-        # structural anchor (frontmatter `---` or a heading) — plain-prose
+        # structural anchor (frontmatter `---` or a heading): plain-prose
         # first lines get legitimately rewritten by compression, and requiring
         # them verbatim would reject every valid fix.
         anchor = first_nonblank_line(original_text)

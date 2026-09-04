@@ -5,7 +5,7 @@ metadata:
   origin: community
 ---
 
-# GateGuard — Fact-Forcing Pre-Action Gate
+# GateGuard: Fact-Forcing Pre-Action Gate
 
 A PreToolUse hook that forces Claude to investigate before editing. Instead of self-evaluation ("are you sure?"), it demands concrete facts. The act of investigation creates awareness that self-evaluation never did.
 
@@ -48,7 +48,7 @@ Both agents produce code that runs and passes tests. The difference is design de
 
 ### Edit / MultiEdit Gate (first edit per file)
 
-MultiEdit is handled identically — each file in the batch is gated individually.
+MultiEdit is handled identically, each file in the batch is gated individually.
 
 ```
 Before editing {file_path}, present these facts:
@@ -123,7 +123,7 @@ command after presenting facts never re-triggers the gate.
 #### Graduated controls
 
 `ECC_GATEGUARD=off` (or `GATEGUARD_DISABLED=1`) turns the gate off entirely.
-The variables in this table do **not** — each narrows one behaviour while the
+The variables in this table do **not**: each narrows one behaviour while the
 load-bearing destructive-Bash checks keep running:
 
 | Variable | Default | Effect |
@@ -143,14 +143,14 @@ leaves the gate on.
 | Variable | Effect |
 |---|---|
 | `ECC_GATEGUARD=off` | Disables GateGuard for the session. Accepts `0`, `false`, `off`, `disabled`, or `disable`. |
-| `GATEGUARD_DISABLED=1` | Same effect. Recognises `1` only — the spellings above do **not** apply here. |
+| `GATEGUARD_DISABLED=1` | Same effect. Recognises `1` only, the spellings above do **not** apply here. |
 
 For hook-level control, keep using `ECC_DISABLED_HOOKS` with the GateGuard hook ID.
 
 #### Glob semantics for `GATEGUARD_EXEMPT_GLOBS`
 
 Patterns are matched, unanchored, against the target path with backslashes
-normalized to `/` and the whole string lowercased — the path exactly as the
+normalized to `/` and the whole string lowercased, the path exactly as the
 hook receives it, which for Claude Code tool payloads is absolute. `*` matches
 within a path segment, `**` across segments, `?` a single character. Matching
 is fail-open: a malformed pattern is dropped rather than raising.
@@ -186,11 +186,11 @@ This adds `.gateguard.yml` for per-project configuration (custom messages, ignor
 
 ## Best Practices
 
-- Let the gate fire naturally. Don't try to pre-answer the gate questions — the investigation itself is what improves quality.
+- Let the gate fire naturally. Don't try to pre-answer the gate questions, the investigation itself is what improves quality.
 - Customize gate messages for your domain. If your project has specific conventions, add them to the gate prompts.
 - Use `.gateguard.yml` to ignore paths like `.venv/`, `node_modules/`, `.git/`.
 
 ## Related Skills
 
-- `safety-guard` — Runtime safety checks (complementary, not overlapping)
-- `code-reviewer` — Post-edit review (GateGuard is pre-edit investigation)
+- `safety-guard`: Runtime safety checks (complementary, not overlapping)
+- `code-reviewer`: Post-edit review (GateGuard is pre-edit investigation)

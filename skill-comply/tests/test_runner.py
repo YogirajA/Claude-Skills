@@ -1,4 +1,4 @@
-"""Tests for runner module — scenario execution + subprocess error handling."""
+"""Tests for runner module, scenario execution + subprocess error handling."""
 
 from __future__ import annotations
 
@@ -78,7 +78,7 @@ class TestSetupSandboxSkipsShellBuiltins:
             return subprocess.CompletedProcess(args=args, returncode=0)
 
         with patch("scripts.runner.subprocess.run", side_effect=fake_run):
-            # Must NOT raise — missing tools are skipped, not fatal
+            # Must NOT raise: missing tools are skipped, not fatal
             _setup_sandbox(tmp_path, scenario)
 
     def test_real_commands_still_run(self, tmp_path):
@@ -127,7 +127,7 @@ class TestRunScenarioMaxTurnsTermination:
         )
 
         with patch("scripts.runner.subprocess.run", return_value=fake_result):
-            # Must NOT raise — max_turns is graceful termination
+            # Must NOT raise: max_turns is graceful termination
             run_scenario(scenario, model="haiku")
 
     def test_rc1_without_max_turns_marker_still_raises(self, tmp_path, monkeypatch):
@@ -146,7 +146,7 @@ class TestRunScenarioMaxTurnsTermination:
 
 @pytest.mark.unit
 class TestParseStreamJsonRedactsHomePath:
-    """Observations feed grade() and then a written report (results/<skill>.md) —
+    """Observations feed grade() and then a written report (results/<skill>.md), 
     a raw absolute path bakes the operator's username into every tool call
     that touched anything under $HOME. --add-dir restricts the sandbox, but
     scenario setup_commands or the model's own tool calls can still reference

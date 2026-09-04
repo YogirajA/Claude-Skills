@@ -40,7 +40,7 @@ Claude Code will analyze any codebase (Node.js, Python, Java, Go, etc.), identif
 
 After generating a diagram, Claude Code will ask if you want to export to PNG, SVG, or both.
 
-The export uses `@excalidraw/utils` loaded in a Playwright browser — fully programmatic, no manual upload to excalidraw.com needed.
+The export uses `@excalidraw/utils` loaded in a Playwright browser, fully programmatic, no manual upload to excalidraw.com needed.
 
 **Requirements:** Playwright MCP tools must be available.
 

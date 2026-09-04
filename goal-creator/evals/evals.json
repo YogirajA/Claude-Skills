@@ -22,7 +22,7 @@
     {
       "id": 1,
       "name": "deploy-authority",
-      "prompt": "/goal make the tennis portal load faster and ship it",
+      "prompt": "/goal make the customer portal load faster and ship it",
       "expected_output": "One goal block from a very thin intent. Deploy authority explicit because 'ship it' touches a push-to-deploy Railway repo. Unverifiable values (test command, current load time) written as assumptions to verify, not asserted.",
       "files": [],
       "assertions": [

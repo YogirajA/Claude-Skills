@@ -177,7 +177,7 @@ Run validation before writing. Save to `docs/` or user-specified path.
 
 After writing the `.excalidraw` file, ask the user if they want PNG, SVG, or both exports.
 
-Uses Playwright MCP tools and `@excalidraw/utils` to programmatically render the diagram — no manual upload to excalidraw.com needed.
+Uses Playwright MCP tools and `@excalidraw/utils` to programmatically render the diagram, no manual upload to excalidraw.com needed.
 
 **Requires:** Playwright MCP tools (`browser_navigate`, `browser_run_code`, `browser_close`).
 

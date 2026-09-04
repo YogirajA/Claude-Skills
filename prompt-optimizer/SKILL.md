@@ -5,14 +5,14 @@ description: Transform a raw or messy ask into an XML-structured Claude prompt (
 
 # Prompt Optimizer
 
-Claude models perform best when instructions arrive as **XML-tagged** structured prompts. (Anthropic's own prompt-engineering docs recommend XML tags over JSON for prompts — tags are easier to nest, easier for Claude to parse, and don't fight with code or strings inside the content.) This skill takes a user's raw ask, restructures it into that format, validates with the user, then executes.
+Claude models perform best when instructions arrive as **XML-tagged** structured prompts. (Anthropic's own prompt-engineering docs recommend XML tags over JSON for prompts, tags are easier to nest, easier for Claude to parse, and don't fight with code or strings inside the content.) This skill takes a user's raw ask, restructures it into that format, validates with the user, then executes.
 
 ## When to invoke
 
 **Invoke when:**
 - User typed `/prompt-optimizer` explicitly.
 - The ask is **complex**: ≥2 of {multi-step workflow, specific output format required, domain-specific reasoning, examples would meaningfully change the answer, constraints that are easy to miss, persona/role matters}.
-- User pasted a wall of requirements and said "do this" — the prompt itself is the bottleneck.
+- User pasted a wall of requirements and said "do this", the prompt itself is the bottleneck.
 
 **Skip when:**
 - One-shot lookups: "what does this function do", "read this file", "what's the date".
@@ -21,7 +21,7 @@ Claude models perform best when instructions arrive as **XML-tagged** structured
 - Anything where the structuring overhead > the clarity gain.
 - The user wants a plain-English prompt handed back to edit by hand, not XML you'll execute. That's the **prompt-fixer** skill. This skill owns the XML lane; prompt-fixer owns plain-English hygiene.
 
-When in doubt on a borderline case, ask: *"This looks complex — want me to run it through prompt-optimizer first, or just go?"* One sentence, then proceed based on the answer.
+When in doubt on a borderline case, ask: *"This looks complex, want me to run it through prompt-optimizer first, or just go?"* One sentence, then proceed based on the answer.
 
 ## Workflow
 
@@ -52,17 +52,17 @@ model-agnostic rather than guessing, and say so.
 ### 1. Parse intent
 
 Read the user's raw ask and extract:
-- **Core task** — the verb. What do they want produced?
-- **Implicit role** — is there a clear persona that would sharpen the answer? (e.g., "senior security reviewer", "Postgres DBA", "technical writer for non-technical audience")
-- **Context already provided** — files, prior decisions, constraints they mentioned.
-- **Output format** — did they specify? (markdown table, JSON, code only, a doc, etc.)
-- **Examples** — did they include any input→output pairs?
-- **Constraints / non-goals** — things to avoid, scope limits.
-- **Success criteria** — how will they know the answer is good?
+- **Core task**: the verb. What do they want produced?
+- **Implicit role**: is there a clear persona that would sharpen the answer? (e.g., "senior security reviewer", "Postgres DBA", "technical writer for non-technical audience")
+- **Context already provided**: files, prior decisions, constraints they mentioned.
+- **Output format**: did they specify? (markdown table, JSON, code only, a doc, etc.)
+- **Examples**: did they include any input→output pairs?
+- **Constraints / non-goals**: things to avoid, scope limits.
+- **Success criteria**: how will they know the answer is good?
 
 ### 2. Identify gaps
 
-List what's *missing* that would materially improve the output. Be selective — don't demand fields the task doesn't need. A code-refactor ask probably doesn't need a "persona"; a tone-sensitive writing ask probably does.
+List what's *missing* that would materially improve the output. Be selective, don't demand fields the task doesn't need. A code-refactor ask probably doesn't need a "persona"; a tone-sensitive writing ask probably does.
 
 ### 3. Handle missing examples (for complex tasks)
 
@@ -71,7 +71,7 @@ If the task is complex and examples would meaningfully help (classification, tra
 > Examples would sharpen this. Three options:
 > **a)** You provide 1–2 input/output examples.
 > **b)** I generate plausible examples and you sanity-check them.
-> **c)** Skip — proceed without examples.
+> **c)** Skip, proceed without examples.
 
 Don't badger. If they pick (c), move on.
 
@@ -79,7 +79,7 @@ For non-example gaps (output format, constraints, role): make a reasonable defau
 
 ### 4. Build the optimized prompt
 
-Use this XML scaffold. **Omit tags that don't apply** — empty tags are noise. Order matters: role → context → task → examples → format → constraints. Claude reads top-down and weights later instructions more heavily for *how* to execute, so put format/constraints near the end.
+Use this XML scaffold. **Omit tags that don't apply**: empty tags are noise. Order matters: role → context → task → examples → format → constraints. Claude reads top-down and weights later instructions more heavily for *how* to execute, so put format/constraints near the end.
 
 ```xml
 <role>
@@ -129,7 +129,7 @@ included, since they are published as text to paste.
 **Style notes for the body:**
 - Imperative voice ("Generate…", "List…", "Refactor…").
 - Concrete > abstract. "List 5 risks ranked by severity" beats "think about risks".
-- Explain *why* for non-obvious constraints — Claude follows reasoned rules more reliably than bare prohibitions.
+- Explain *why* for non-obvious constraints, Claude follows reasoned rules more reliably than bare prohibitions.
 - Inline references with `[[filename.md]]` or absolute paths the executor can read.
 
 ### 5. Validate with user
@@ -141,18 +141,18 @@ Show the assembled prompt in a code block and ask, in one short message:
 If the model reference caused you to *remove* something the user wrote, say so in one line with the
 reason. A silent deletion of their instruction is the one change they will not expect.
 
-Don't over-explain — the prompt should speak for itself. If they reply with edits, fold them in and show the diff or the new version, then proceed.
+Don't over-explain, the prompt should speak for itself. If they reply with edits, fold them in and show the diff or the new version, then proceed.
 
 ### 6. Execute
 
-Once approved, **act on the optimized prompt yourself** — don't paste it back to the user as if it were the deliverable. The optimized prompt is the *instruction set you now follow* to produce the real output.
+Once approved, **act on the optimized prompt yourself**: don't paste it back to the user as if it were the deliverable. The optimized prompt is the *instruction set you now follow* to produce the real output.
 
 ## Why XML over JSON
 
 For prompt structure, XML wins because:
 - Tags nest cleanly and survive code/string content inside them without escaping.
 - Claude is specifically trained to attend to XML-tagged structure.
-- Edits are local — changing `<constraints>` doesn't risk breaking JSON syntax.
+- Edits are local, changing `<constraints>` doesn't risk breaking JSON syntax.
 
 JSON is fine when the *output* needs to be machine-parseable. For the *prompt itself*, use XML.
 
@@ -205,4 +205,4 @@ fix direction (not the actual code).
 </constraints>
 ```
 
-The user sees that, says "go", and execution proceeds against the structured version — which will produce a sharper, more navigable answer than acting on the raw ask.
+The user sees that, says "go", and execution proceeds against the structured version, which will produce a sharper, more navigable answer than acting on the raw ask.

@@ -190,7 +190,7 @@ For the full schema with optional fields, see `reference/output-shape.md`.
 ## Quick start
 
 ```text
-audit primitives in C:/code/Launchpad-AWS/digital-skills 1/
+audit primitives in ~/code/example-platform/digital-skills 1/
 ```
 
 Claude reads this skill, walks the five phases, and writes `primitives-categorization.html` next to the target folder.

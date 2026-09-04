@@ -253,7 +253,7 @@
       "name": "meta",
       "source": "./",
       "displayName": "Personal and meta",
-      "description": "The collection's own index, the reference for writing skills well, and one personal skill kept as a worked example of the pattern.",
+      "description": "The collection's own index and the reference for writing skills well.",
       "version": "1.0.0",
       "author": {
         "name": "Yogiraj Aradhye"
@@ -267,7 +267,6 @@
         "skills"
       ],
       "skills": [
-        "./personal-skill",
         "./toolbox",
         "./writing-great-skills"
       ]

@@ -127,7 +127,7 @@ def _redact_home_path(text: str) -> str:
     """Replace the operator's home directory with a portable placeholder.
 
     Observations flow into grade() and then into a written report
-    (results/<skill>.md) that's meant to be read, diffed, and shared —
+    (results/<skill>.md) that's meant to be read, diffed, and shared, 
     an absolute path bakes the operator's username into every tool call
     that happened to touch anything under $HOME (including the sandbox
     itself, which lives under a tempdir but scenario setup_commands or

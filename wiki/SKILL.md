@@ -21,7 +21,7 @@ if you need the "why."
 
 ## Where it lives
 
-Default root: **`C:\code\knowledgebase\`** (if the user points at a different folder, use that instead).
+Default root: the General Knowledge wiki named in the Wikis registry in `~/.claude/CLAUDE.md` (if the user points at a different folder, use that instead).
 
 ```
 knowledgebase/
