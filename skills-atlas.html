@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Skills Atlas: 61 skills, four origins, nine installable suites</title>
+<title>The Skills Atlas: 62 skills, four origins, nine installable suites</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -242,13 +242,13 @@
         <circle cx="20" cy="20" r="4.2" fill="#17453b"/>
         <circle cx="31" cy="12" r="3" fill="#c08a2e"/>
       </svg>
-      <span class="brand-txt"><b>The Skills Atlas</b><span>61 skills, 9 suites</span></span>
+      <span class="brand-txt"><b>The Skills Atlas</b><span>62 skills, 9 suites</span></span>
     </a>
 
     <div class="ng ng-plain"><a class="ng-top" href="#overview">The idea</a></div>
     <div class="ng ng-plain"><a class="ng-top" href="#economics">The economics</a></div>
     <div class="nav-hr"></div>
-    <div class="ng ng-1"><a class="ng-top" href="#originals"><span class="ng-dot"></span> Hand-typed <span class="num">33</span></a></div>
+    <div class="ng ng-1"><a class="ng-top" href="#originals"><span class="ng-dot"></span> Hand-typed <span class="num">34</span></a></div>
     <div class="ng ng-2"><a class="ng-top" href="#pocock"><span class="ng-dot"></span> Pocock suite <span class="num">14</span></a></div>
     <div class="ng ng-3"><a class="ng-top" href="#caveman"><span class="ng-dot"></span> Caveman suite <span class="num">8</span></a></div>
     <div class="ng ng-5"><a class="ng-top" href="#harness"><span class="ng-dot"></span> ECC harness <span class="num">6</span></a></div>
@@ -267,8 +267,8 @@
       <div class="hero-main">
         <div class="eyebrow">A field catalog of the Claude-Skills collection</div>
         <h1>Many skills.<br><em>Few tokens.</em></h1>
-        <p class="lede">Sixty-one skills from four origins, every one paying rent in one of three load tiers, now split into nine suites you install separately. The catalog, the economics that govern it, and what was deliberately kept out.</p>
-        <p class="src-line">Repo: <a href="https://github.com/YogirajA/Claude-Skills" target="_blank" rel="noopener">YogirajA/Claude-Skills</a> <a class="src" href="#ref-1">[1]</a> &#183; suites from mattpocock/skills <a class="src" href="#ref-2">[2]</a>, JuliusBrussee/caveman <a class="src" href="#ref-3">[3]</a> and affaan-m/ECC <a class="src" href="#ref-4">[4]</a>.<br>Snapshot 2026-09-04.</p>
+        <p class="lede">Sixty-two skills from four origins, every one paying rent in one of three load tiers, now split into nine suites you install separately. The catalog, the economics that govern it, and what was deliberately kept out.</p>
+        <p class="src-line">Repo: <a href="https://github.com/YogirajA/Claude-Skills" target="_blank" rel="noopener">YogirajA/Claude-Skills</a> <a class="src" href="#ref-1">[1]</a> &#183; suites from mattpocock/skills <a class="src" href="#ref-2">[2]</a>, JuliusBrussee/caveman <a class="src" href="#ref-3">[3]</a> and affaan-m/ECC <a class="src" href="#ref-4">[4]</a>; archify from tt-a1i/archify <a class="src" href="#ref-5">[5]</a>.<br>Snapshot 2026-09-07.</p>
       </div>
       <aside class="hero-seal" aria-label="Three concentric rings for the three load tiers, a loader needle sweeping across them">
         <svg class="seal" viewBox="0 0 200 200" aria-hidden="true">
@@ -294,7 +294,7 @@
     <section id="overview">
       <div class="prose">
         <p class="drop">A skill is the smallest unit of packaged judgment in Claude Code: a folder, a SKILL.md with YAML frontmatter, and whatever reference files the body reads on demand. The description in the frontmatter is what the model sees every session; the body loads only when the skill fires. That two-line mechanical fact turns out to govern everything else about running a collection of fifty-six of them.</p>
-        <p>This atlas catalogs the collection as of September 2026: <strong>33 hand-typed originals</strong>, <strong>14 adapted from Matt Pocock's engineering suite</strong>, <strong>8 from the Caveman token-economy project</strong>, and <strong>6 from ECC's harness-measurement layer</strong>, plus one diagram skill vendored from ccc and three compressed subagent presets riding along with cavecrew. Every import was filtered the same way: standalone over infrastructure-coupled, distinct over duplicate, and nothing whose licence forbids an MIT collection.</p>
+        <p>This atlas catalogs the collection as of September 2026: <strong>34 hand-typed originals</strong>, <strong>14 adapted from Matt Pocock's engineering suite</strong>, <strong>8 from the Caveman token-economy project</strong>, and <strong>6 from ECC's harness-measurement layer</strong>, plus two diagram skills vendored from ccc and tt-a1i/archify, and three compressed subagent presets riding along with cavecrew. Every import was filtered the same way: standalone over infrastructure-coupled, distinct over duplicate, and nothing whose licence forbids an MIT collection.</p>
       </div>
       <div class="pull">&ldquo;Every skill leaks a description into the context window. A hundred skills means a hundred descriptions loaded whether or not you use them.&rdquo;
         <cite>Matt Pocock, David Ondrej interview, Jun 2026</cite></div>
@@ -326,7 +326,7 @@
 
     <!-- ===================== ORIGINALS ===================== -->
     <section id="originals">
-      <p class="cat-kicker" style="--c:var(--c1)">Origin one &#183; 33 skills</p>
+      <p class="cat-kicker" style="--c:var(--c1)">Origin one &#183; 34 skills</p>
       <h2 class="cat" style="--c:var(--c1)">The hand-typed originals</h2>
       <p class="cat-sub">Grown out of daily use, one repeated need at a time. Grouped as the repo README groups them. <span style="font-family:var(--mono); font-size:11px;">UO</span> marks user-only skills (zero tier-1 cost).</p>
 
@@ -394,7 +394,8 @@
           <div class="sk"><span class="nm">conference-talk-deck<span class="uo">UO</span></span><span class="ds">Interview first, then a self-contained offline HTML slide deck with author mode</span></div>
           <div class="sk"><span class="nm">qa-deck</span><span class="ds">Two-track .pptx QA: every slide rendered for visual defects, every claim checked against source</span></div>
           <div class="sk"><span class="nm">excalidraw</span><span class="ds">Architecture diagrams as .excalidraw files from codebase analysis; six references load only on demand. Vendored from ooiyeefei/ccc</span></div>
-          <div class="sk"><span class="nm">accio<span class="uo">UO</span></span><span class="ds">Summoning charm: name the problem, get told which one or two skills to type. Routes all 61 plus enabled plugins, and is now the only index of the user-only ones</span></div>
+          <div class="sk"><span class="nm">archify</span><span class="ds">System diagrams (architecture, workflow, sequence, data-flow, lifecycle) as one self-contained interactive HTML file from typed JSON, validated by its Node CLI. Vendored from tt-a1i/archify, update checker removed</span></div>
+          <div class="sk"><span class="nm">accio<span class="uo">UO</span></span><span class="ds">Summoning charm: name the problem, get told which one or two skills to type. Routes all 62 plus enabled plugins, and is now the only index of the user-only ones</span></div>
           <div class="sk"><span class="nm">check-routes.py</span><span class="ds">Ships with accio: fails on a dead route, or on a user-only skill the router omits. Replaced <b>toolbox</b>, which held the same index job and silently drifted to missing 11 of its 24</span></div>
           <div class="sk"><span class="nm">writing-great-skills<span class="uo">UO</span></span><span class="ds">The vocabulary and principles that make a skill predictable</span></div>
         </div>
@@ -524,7 +525,7 @@
         <div class="cav">
           <div class="cav-k">Vendoring policy</div>
           <div class="cav-h">Copied in, never depended on as a plugin</div>
-          <p>ECC is a plugin marketplace, and plugins here are installed only from Anthropic's repos or my own. So the useful parts are <b>vendored under their licence with provenance in the frontmatter</b>, and the marketplace is not installed. <b>excalidraw</b> came from ooiyeefei/ccc the same way, after that marketplace was removed.</p>
+          <p>ECC is a plugin marketplace, and plugins here are installed only from Anthropic's repos or my own. So the useful parts are <b>vendored under their licence with provenance in the frontmatter</b>, and the marketplace is not installed. <b>excalidraw</b> came from ooiyeefei/ccc the same way, after that marketplace was removed, and <b>archify</b> from tt-a1i/archify, with its phone-home update checker cut out before install.</p>
         </div>
       </div>
     </section>
@@ -539,7 +540,7 @@
 claude plugin install <b>kb-wiki@yogi-skills</b>
 claude plugin details <b>harness-audit@yogi-skills</b>   <span style="color:#7f9b91">// price it before installing</span></pre>
 
-      <p class="cat-sub" style="margin-top:18px">Shipping one 61-skill plugin would put the full standing cost on every repo you open, including <code>qa-deck</code> while you debug a hook. A suite is the unit you actually want on or off.</p>
+      <p class="cat-sub" style="margin-top:18px">Shipping one 62-skill plugin would put the full standing cost on every repo you open, including <code>qa-deck</code> while you debug a hook. A suite is the unit you actually want on or off.</p>
 
       <div class="pk">
         <table>
@@ -552,10 +553,10 @@ claude plugin details <b>harness-audit@yogi-skills</b>   <span style="color:#7f9
             <tr><td class="s">engineering-suite</td><td class="n">14</td><td class="n">~850</td><td>The issue-tracker queue, end to end</td></tr>
             <tr><td class="s">repo-onboarding</td><td class="n">4</td><td class="n">~980</td><td>Arriving at a repo, and wiring its harness</td></tr>
             <tr><td class="s">code-quality</td><td class="n">6</td><td class="n">~1,100</td><td>Over-engineering, code smells, module shape</td></tr>
-            <tr><td class="s">authoring</td><td class="n">9</td><td class="n">~1,910</td><td>Teaching pages, decks, diagrams, claim validation</td></tr>
+            <tr><td class="s">authoring</td><td class="n">10</td><td class="n">~2,150</td><td>Teaching pages, decks, diagrams, claim validation</td></tr>
             <tr><td class="s">thinking-and-specs</td><td class="n">9</td><td class="n">~2,180</td><td>Specs, decisions, prompting</td></tr>
           </tbody>
-          <tfoot><tr><td class="s">all nine</td><td class="n">61</td><td class="n">~9,010</td><td>4.5% of a 200k window, 0.9% of a 1M one</td></tr></tfoot>
+          <tfoot><tr><td class="s">all nine</td><td class="n">62</td><td class="n">~9,250</td><td>4.6% of a 200k window, 0.9% of a 1M one</td></tr></tfoot>
         </table>
       </div>
 
@@ -623,6 +624,7 @@ claude plugin details <b>harness-audit@yogi-skills</b>   <span style="color:#7f9
         <li id="ref-2"><a href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">mattpocock/skills</a> <span class="tier">practitioner</span> Upstream of the engineering suite and five earlier naturalized skills. MIT.</li>
         <li id="ref-3"><a href="https://github.com/JuliusBrussee/caveman" target="_blank" rel="noopener">JuliusBrussee/caveman</a> <span class="tier">practitioner</span> Upstream of the token-economy suite. MIT skills surface; BSL engine excluded. The ~1,250 token/turn overhead figure is theirs (docs/HONEST-NUMBERS.md), self-reported.</li>
           <li id="ref-4"><a href="https://github.com/affaan-m/ECC" target="_blank" rel="noopener">affaan-m/ECC</a> <span class="tier">MIT</span> v2.2.1, 286 skills, 3,519 files. Six taken; the full import review with the measurements behind each decision is <code>ecc-import-review.html</code> in the knowledge base.</li>
+        <li id="ref-5"><a href="https://github.com/tt-a1i/archify" target="_blank" rel="noopener">tt-a1i/archify</a> <span class="tier">MIT</span> v2.17 at commit 920543b, 2026-09-07. One skill taken whole, minus its update checker, upstream tests, and rendered examples; provenance in its frontmatter.</li>
         <li><a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Claude Code docs: Skills</a> <span class="tier">first-party</span> Load mechanics behind the three tiers; also features-overview for the adoption triggers.</li>
         <li>Matt Pocock, David Ondrej interview (Jun 2026) <span class="tier">practitioner</span> The description-leak observation and the delete-everything discipline; notes in around-the-model.html.</li>
         <li>Boris Cherny, YC talk (2026) <span class="tier">practitioner</span> The six-month delete and re-add-on-repeated-failure rule; wiki page boris-cherny-yc-talk.</li>

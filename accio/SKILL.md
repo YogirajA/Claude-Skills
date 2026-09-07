@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Accio
 
-*Summoning Charm.* You do not remember 62 skills. Name the problem, not the skill.
+*Summoning Charm.* You do not remember 63 skills. Name the problem, not the skill.
 
 Fired bare, with nothing attached, ask what is being worked on. Reprinting this map back is a
 no-op: the reader is already looking at it. **Name the one or two that fit and say what to type.**
@@ -161,6 +161,9 @@ The tools that measure the setup rather than the code.
 - **`/qa-deck`**: QA a `.pptx` for visual defects and fabricated claims before it ships.
 - **`/excalidraw`**: architecture diagrams as `.excalidraw` files from codebase analysis. PNG/SVG
   export needs the Playwright MCP server connected.
+- **`/archify`**: system diagrams (architecture, workflow, sequence, data-flow, lifecycle) as one
+  self-contained interactive HTML file, authored as typed JSON and validated by its Node CLI. Over
+  `/excalidraw` when the reader will open it in a browser rather than edit it.
 - **`/geo-content`**: content written for both classic SEO and AI answer engines.
 - **`/anthropic-doc-validator`**: check claims about Claude Code, the API or the SDKs against the
   official docs, with verbatim quotes. Reach for it before asserting anything version-specific.
