@@ -268,7 +268,7 @@
         <div class="eyebrow">A field catalog of the Claude-Skills collection</div>
         <h1>Many skills.<br><em>Few tokens.</em></h1>
         <p class="lede">Sixty-three skills from four origins, every one paying rent in one of three load tiers, now split into nine suites you install separately. The catalog, the economics that govern it, and what was deliberately kept out.</p>
-        <p class="src-line">Repo: <a href="https://github.com/YogirajA/Claude-Skills" target="_blank" rel="noopener">YogirajA/Claude-Skills</a> <a class="src" href="#ref-1">[1]</a> &#183; suites from mattpocock/skills <a class="src" href="#ref-2">[2]</a>, JuliusBrussee/caveman <a class="src" href="#ref-3">[3]</a> and affaan-m/ECC <a class="src" href="#ref-4">[4]</a>; archify from tt-a1i/archify <a class="src" href="#ref-5">[5]</a> and no-ai-slop from petergyang/no-ai-slop <a class="src" href="#ref-6">[6]</a>.<br>Snapshot 2026-09-12.</p>
+        <p class="src-line">Repo: <a href="https://github.com/YogirajA/Claude-Skills" target="_blank" rel="noopener">YogirajA/Claude-Skills</a> <a class="src" href="#ref-1">[1]</a> &#183; suites from mattpocock/skills <a class="src" href="#ref-2">[2]</a>, JuliusBrussee/caveman <a class="src" href="#ref-3">[3]</a> and affaan-m/ECC <a class="src" href="#ref-4">[4]</a>; archify from tt-a1i/archify <a class="src" href="#ref-5">[5]</a> and no-ai-slop from petergyang/no-ai-slop <a class="src" href="#ref-6">[6]</a>.<br>Snapshot 2026-09-16.</p>
       </div>
       <aside class="hero-seal" aria-label="Three concentric rings for the three load tiers, a loader needle sweeping across them">
         <svg class="seal" viewBox="0 0 200 200" aria-hidden="true">
@@ -293,7 +293,7 @@
     <!-- ===================== OVERVIEW ===================== -->
     <section id="overview">
       <div class="prose">
-        <p class="drop">A skill is the smallest unit of packaged judgment in Claude Code: a folder, a SKILL.md with YAML frontmatter, and whatever reference files the body reads on demand. The description in the frontmatter is what the model sees every session; the body loads only when the skill fires. That two-line mechanical fact turns out to govern everything else about running a collection of fifty-six of them.</p>
+        <p class="drop">A skill is the smallest unit of packaged judgment in Claude Code: a folder, a SKILL.md with YAML frontmatter, and whatever reference files the body reads on demand. The description in the frontmatter is what the model sees every session; the body loads only when the skill fires. That two-line mechanical fact turns out to govern everything else about running a collection of sixty-three of them.</p>
         <p>This atlas catalogs the collection as of September 2026: <strong>35 hand-typed originals</strong>, <strong>14 adapted from Matt Pocock's engineering suite</strong>, <strong>8 from the Caveman token-economy project</strong>, and <strong>6 from ECC's harness-measurement layer</strong>, plus two diagram skills vendored from ccc and tt-a1i/archify, a writing editor vendored from petergyang/no-ai-slop, and three compressed subagent presets riding along with cavecrew. Every import was filtered the same way: standalone over infrastructure-coupled, distinct over duplicate, and nothing whose licence forbids an MIT collection.</p>
       </div>
       <div class="pull">&ldquo;Every skill leaks a description into the context window. A hundred skills means a hundred descriptions loaded whether or not you use them.&rdquo;
@@ -309,7 +309,7 @@
       <div class="axes">
         <div class="axis t1">
           <div class="axis-name"><b>Tier 1: description</b> <span class="axis-dir">every session</span></div>
-          <div class="axis-why">The frontmatter description loads into <b>every conversation, used or not</b>. At 60 to 340 tokens each, 56 descriptions cost roughly 8.4k tokens before the first prompt, and 62 cost 9.1k (measured with <code>claude plugin details</code>, not estimated). This is the tier to guard: a skill that never fires still bills here forever. <code>disable-model-invocation: true</code> zeroes it for user-only skills.</div>
+          <div class="axis-why">The frontmatter description loads into <b>every conversation, used or not</b>. At 60 to 340 tokens each, 56 descriptions cost roughly 8.4k tokens before the first prompt at the 2026-09-02 snapshot, and 62 cost 9.1k by 2026-09-04 (measured with <code>claude plugin details</code>, not estimated); both figures counted every description, user-only ones included. This is the tier to guard: a skill that never fires still bills here forever. <code>disable-model-invocation: true</code> zeroes it for user-only skills: 22 of the 63 are, so the 41 descriptions that actually load cost ~6.9k as of 2026-09-16.</div>
         </div>
         <div class="axis t2">
           <div class="axis-name"><b>Tier 2: SKILL.md body</b> <span class="axis-dir">on invoke</span></div>
@@ -347,7 +347,7 @@
         <div class="skl">
           <div class="sk"><span class="nm">write-wiki</span><span class="ds">Ingest sources, update pages, lint, bootstrap new wikis; owns page layout and the global registry</span></div>
           <div class="sk"><span class="nm">read-wiki</span><span class="ds">Query the knowledge base before doing work; strictly read-only</span></div>
-          <div class="sk"><span class="nm">wiki</span><span class="ds">Backward-compatible alias for write-wiki</span></div>
+          <div class="sk"><span class="nm">wiki<span class="uo">UO</span></span><span class="ds">Backward-compatible alias for write-wiki</span></div>
         </div>
       </div>
 
@@ -414,10 +414,10 @@
         <div class="ctrl-head"><span class="ctrl-num">The queue</span><span class="ctrl-name">Issue-tracker suite</span></div>
         <p class="ctrl-def">Work as a set; all read the repo config that <b>setup-matt-pocock-skills</b> writes once.</p>
         <div class="skl">
-          <div class="sk"><span class="nm">triage</span><span class="ds">Moves issues through a five-state triage machine (needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix)</span></div>
-          <div class="sk"><span class="nm">to-spec</span><span class="ds">Turns a conversation into a spec published to the tracker</span></div>
-          <div class="sk"><span class="nm">to-tickets</span><span class="ds">Breaks plans into tracer-bullet tickets with blocking edges</span></div>
-          <div class="sk"><span class="nm">implement</span><span class="ds">Builds work from specs and tickets, driving TDD and review</span></div>
+          <div class="sk"><span class="nm">triage<span class="uo">UO</span></span><span class="ds">Moves issues through a five-state triage machine (needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix)</span></div>
+          <div class="sk"><span class="nm">to-spec<span class="uo">UO</span></span><span class="ds">Turns a conversation into a spec published to the tracker</span></div>
+          <div class="sk"><span class="nm">to-tickets<span class="uo">UO</span></span><span class="ds">Breaks plans into tracer-bullet tickets with blocking edges</span></div>
+          <div class="sk"><span class="nm">implement<span class="uo">UO</span></span><span class="ds">Builds work from specs and tickets, driving TDD and review</span></div>
         </div>
       </div>
 
@@ -427,7 +427,7 @@
         <div class="skl">
           <div class="sk"><span class="nm">grilling</span><span class="ds">The interview primitive itself</span></div>
           <div class="sk"><span class="nm">grill-me<span class="uo">UO</span></span><span class="ds">Seven-line wrapper: &ldquo;call the Skill tool with grilling&rdquo;. The same wrapper pattern as onboard-light, discovered independently</span></div>
-          <div class="sk"><span class="nm">grill-with-docs</span><span class="ds">Grilling that also builds the domain model into CONTEXT.md and ADRs</span></div>
+          <div class="sk"><span class="nm">grill-with-docs<span class="uo">UO</span></span><span class="ds">Grilling that also builds the domain model into CONTEXT.md and ADRs</span></div>
         </div>
       </div>
 
@@ -435,7 +435,7 @@
         <div class="ctrl-head"><span class="ctrl-num">Craft</span><span class="ctrl-name">Modeling, research, teaching</span></div>
         <div class="skl">
           <div class="sk"><span class="nm">domain-modeling</span><span class="ds">Actively builds and sharpens a project domain model; owns CONTEXT.md and ADR formats</span></div>
-          <div class="sk"><span class="nm">improve-codebase-architecture</span><span class="ds">Scans for module-deepening opportunities, HTML report; pairs with codebase-design</span></div>
+          <div class="sk"><span class="nm">improve-codebase-architecture<span class="uo">UO</span></span><span class="ds">Scans for module-deepening opportunities, HTML report; pairs with codebase-design</span></div>
           <div class="sk"><span class="nm">research</span><span class="ds">Investigates against primary sources, captures findings as a markdown file in the repo</span></div>
           <div class="sk"><span class="nm">wizard</span><span class="ds">Generates interactive bash wizards for steps only a human can perform: credentials, dashboards, cutovers</span></div>
           <div class="sk"><span class="nm">teach<span class="uo">UO</span></span><span class="ds">Multi-session teaching in a stateful workspace with glossary, mission, and learning-record formats</span></div>
@@ -456,8 +456,8 @@
         <p class="ctrl-def">Not mere brusqueness: the rules are <b>tokenizer-aware</b>. Invented abbreviations are banned because the tokenizer splits <code>cfg</code> and <code>impl</code> anyway (zero saved, harder to read). Arrow glyphs are banned because they are their own token. Grammar survives wherever mangling is token-neutral. Negations, numbers, code, and error strings are always exact.</p>
         <div class="skl">
           <div class="sk"><span class="nm">caveman</span><span class="ds">Ultra-compressed output mode: lite / full / ultra, plus wenyan variants. Fluff dies, substance stays, session-persistent until &ldquo;stop caveman&rdquo;</span></div>
-          <div class="sk"><span class="nm">caveman-compress<span class="uo">UO</span></span><span class="ds">Applies the style to <b>stored</b> context: compresses a CLAUDE.md or memory file with a readable backup, moving savings to the input side of the meter</span></div>
-          <div class="sk"><span class="nm">caveman-help<span class="uo">UO</span></span><span class="ds">Quick-reference card for the modes and skills</span></div>
+          <div class="sk"><span class="nm">caveman-compress</span><span class="ds">Applies the style to <b>stored</b> context: compresses a CLAUDE.md or memory file with a readable backup, moving savings to the input side of the meter</span></div>
+          <div class="sk"><span class="nm">caveman-help</span><span class="ds">Quick-reference card for the modes and skills</span></div>
         </div>
       </div>
 
@@ -547,21 +547,21 @@ claude plugin details <b>harness-audit@yogi-skills</b>   <span style="color:#7f9
         <table>
           <thead><tr><th>Suite</th><th style="text-align:right">Skills</th><th style="text-align:right">Always-on</th><th>What it is for</th></tr></thead>
           <tbody>
-            <tr><td class="s">meta</td><td class="n">2</td><td class="n">~110</td><td>The router (also the user-only index) and the skill-writing reference</td></tr>
+            <tr><td class="s">meta</td><td class="n">2</td><td class="n">0</td><td>The router (also the user-only index) and the skill-writing reference</td></tr>
             <tr><td class="s">token-economy</td><td class="n">8</td><td class="n">~540</td><td>Terse output, compressed subagents, stored-context compression</td></tr>
-            <tr><td class="s">kb-wiki</td><td class="n">3</td><td class="n">~570</td><td>The LLM-wiki pattern: query before, ingest after</td></tr>
+            <tr><td class="s">kb-wiki</td><td class="n">3</td><td class="n">~470</td><td>The LLM-wiki pattern: query before, ingest after</td></tr>
             <tr><td class="s">harness-audit</td><td class="n">6</td><td class="n">~770</td><td>Measure the harness rather than trust it</td></tr>
-            <tr><td class="s">engineering-suite</td><td class="n">14</td><td class="n">~850</td><td>The issue-tracker queue, end to end</td></tr>
-            <tr><td class="s">repo-onboarding</td><td class="n">4</td><td class="n">~980</td><td>Arriving at a repo, and wiring its harness</td></tr>
-            <tr><td class="s">code-quality</td><td class="n">6</td><td class="n">~1,100</td><td>Over-engineering, code smells, module shape</td></tr>
-            <tr><td class="s">authoring</td><td class="n">11</td><td class="n">~2,250</td><td>Teaching pages, decks, diagrams, claim validation</td></tr>
-            <tr><td class="s">thinking-and-specs</td><td class="n">9</td><td class="n">~2,180</td><td>Specs, decisions, prompting</td></tr>
+            <tr><td class="s">engineering-suite</td><td class="n">14</td><td class="n">~320</td><td>The issue-tracker queue, end to end</td></tr>
+            <tr><td class="s">repo-onboarding</td><td class="n">4</td><td class="n">~900</td><td>Arriving at a repo, and wiring its harness</td></tr>
+            <tr><td class="s">code-quality</td><td class="n">6</td><td class="n">~430</td><td>Over-engineering, code smells, module shape</td></tr>
+            <tr><td class="s">authoring</td><td class="n">11</td><td class="n">~1,560</td><td>Teaching pages, decks, diagrams, claim validation</td></tr>
+            <tr><td class="s">thinking-and-specs</td><td class="n">9</td><td class="n">~1,900</td><td>Specs, decisions, prompting</td></tr>
           </tbody>
-          <tfoot><tr><td class="s">all nine</td><td class="n">63</td><td class="n">~9,350</td><td>4.7% of a 200k window, 0.9% of a 1M one</td></tr></tfoot>
+          <tfoot><tr><td class="s">all nine</td><td class="n">63</td><td class="n">~6,890</td><td>3.4% of a 200k window, 0.7% of a 1M one</td></tr></tfoot>
         </table>
       </div>
 
-      <div class="verdict"><b>How these numbers were measured, and a correction.</b> They are <code>claude plugin details</code> output, or raw <code>chars&#247;4</code> scaled by the <b>1.49</b> factor calibrated against it. An earlier draft of this page used the raw estimate and &ldquo;corrected&rdquo; the tier-1 figure down to 4.5k. The CLI then reported <b>770</b> where chars&#247;4 predicted 517, a ratio that held between 1.46 and 1.61 across six skills, which put the original 8-to-10k claim back where it started. The estimator you reach for first is the thing to check.</div>
+      <div class="verdict"><b>How these numbers were measured, and a correction.</b> They are <code>claude plugin details</code> output, or raw <code>chars&#247;4</code> scaled by the <b>1.49</b> factor calibrated against it. User-only skills (<code>disable-model-invocation: true</code>, 22 of the 63) count zero, since their descriptions never load; an earlier version of this table counted them and read ~9,350. An earlier draft of this page used the raw estimate and &ldquo;corrected&rdquo; the tier-1 figure down to 4.5k. The CLI then reported <b>770</b> where chars&#247;4 predicted 517, a ratio that held between 1.46 and 1.61 across six skills, which put the original 8-to-10k claim back where it started. The estimator you reach for first is the thing to check.</div>
     </section>
 
     <!-- ===================== PRUNING ===================== -->
@@ -621,7 +621,7 @@ claude plugin details <b>harness-audit@yogi-skills</b>   <span style="color:#7f9
     <section id="references" class="refs">
       <h3>Sources</h3>
       <ol>
-        <li id="ref-1"><a href="https://github.com/YogirajA/Claude-Skills" target="_blank" rel="noopener">YogirajA/Claude-Skills</a> <span class="tier">first-party</span> The collection itself; snapshot at commit 3b030a5, 2026-09-02. Full one-line index in its README.</li>
+        <li id="ref-1"><a href="https://github.com/YogirajA/Claude-Skills" target="_blank" rel="noopener">YogirajA/Claude-Skills</a> <span class="tier">first-party</span> The collection itself; snapshot at commit 9cf9cb0, 2026-09-16. Full one-line index in its README.</li>
         <li id="ref-2"><a href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">mattpocock/skills</a> <span class="tier">practitioner</span> Upstream of the engineering suite and five earlier naturalized skills. MIT.</li>
         <li id="ref-3"><a href="https://github.com/JuliusBrussee/caveman" target="_blank" rel="noopener">JuliusBrussee/caveman</a> <span class="tier">practitioner</span> Upstream of the token-economy suite. MIT skills surface; BSL engine excluded. The ~1,250 token/turn overhead figure is theirs (docs/HONEST-NUMBERS.md), self-reported.</li>
           <li id="ref-4"><a href="https://github.com/affaan-m/ECC" target="_blank" rel="noopener">affaan-m/ECC</a> <span class="tier">MIT</span> v2.2.1, 286 skills, 3,519 files. Six taken; the full import review with the measurements behind each decision is <code>ecc-import-review.html</code> in the knowledge base.</li>

@@ -16,28 +16,29 @@ claude plugin install kb-wiki@yogi-skills
 claude plugin install harness-audit@yogi-skills
 ```
 
-The nine suites below are separate plugins on purpose. Every skill's frontmatter description
-loads into **every session whether or not the skill fires**, so a single 63-skill plugin would
-put ~9,350 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~570.
-Run `claude plugin details <name>@yogi-skills` to see any suite's exact always-on cost before
-installing it.
+The nine suites below are separate plugins on purpose. Every model-invocable skill's frontmatter
+description loads into **every session whether or not the skill fires**, so a single 63-skill
+plugin would put ~6,890 tokens of standing cost on every repo you open. Installing `kb-wiki`
+alone costs ~470. Run `claude plugin details <name>@yogi-skills` to see any suite's exact
+always-on cost before installing it.
 
 | Suite | Skills | Always-on |
 |---|---:|---:|
-| `meta` | 2 | ~110 |
+| `meta` | 2 | 0 |
 | `token-economy` | 8 | ~540 |
-| `kb-wiki` | 3 | ~570 |
+| `kb-wiki` | 3 | ~470 |
 | `harness-audit` | 6 | ~770 |
-| `engineering-suite` | 14 | ~850 |
-| `repo-onboarding` | 4 | ~980 |
-| `code-quality` | 6 | ~1,100 |
-| `authoring` | 11 | ~2,250 |
-| `thinking-and-specs` | 9 | ~2,180 |
-| **all nine** | **63** | **~9,350** |
+| `engineering-suite` | 14 | ~320 |
+| `repo-onboarding` | 4 | ~900 |
+| `code-quality` | 6 | ~430 |
+| `authoring` | 11 | ~1,560 |
+| `thinking-and-specs` | 9 | ~1,900 |
+| **all nine** | **63** | **~6,890** |
 
 Always-on figures are `claude plugin details` for `harness-audit`, and raw `chars / 4` scaled by
-the 1.49 factor calibrated against it for the rest. On-invoke cost (the SKILL.md body) is paid
-only when a skill actually fires and is not counted here.
+the 1.49 factor calibrated against it for the rest. User-only skills count zero
+(`disable-model-invocation: true`, 22 of the 63): their descriptions never load. On-invoke cost
+(the SKILL.md body) is paid only when a skill actually fires and is not counted here.
 
 **Or copy by hand.** Each folder is a self-contained skill: drop one into `~/.claude/skills/`
 (all projects) or `.claude/skills/` (one project). No build step, no dependencies beyond what a
@@ -203,10 +204,11 @@ something already here, or was language and domain filler that would have cost ~
 of always-on frontmatter to hold. The full import review, with the measurements behind each
 decision, is in the knowledge base as `ecc-import-review.html`.
 
-Two of the six were edited before install, and each records its own change in its frontmatter
-`metadata.adapted` field: `loop-design-check` had its description cut from 244 to 136 always-on
-tokens, and `gateguard` had its install section rewritten because upstream's hook implementation
-was not imported with it.
+Two of the six were edited before install, and each records its own change where it was made:
+`loop-design-check` had its description cut from 244 to 136 always-on tokens (noted in its
+frontmatter `metadata.adapted` field), and `gateguard` had its install section rewritten because
+upstream's hook implementation was not imported with it (noted in an "Adapted 2026-09-03" block
+at the top of that section).
 
 | Skill | What it does |
 |---|---|
@@ -233,9 +235,10 @@ adapted from [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) (
 surface). The harness measurement suite is adapted from
 [affaan-m/ECC](https://github.com/affaan-m/ECC) (MIT). `excalidraw` is vendored from
 [ooiyeefei/ccc](https://github.com/ooiyeefei/ccc) (MIT). `archify` is vendored from
-[tt-a1i/archify](https://github.com/tt-a1i/archify) (MIT, v2.17, update checker removed).
-`no-ai-slop` is vendored from [petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop)
-(MIT, v1.0.6, em-dash rule tightened to none). Everything else grew out of daily use.
+[tt-a1i/archify](https://github.com/tt-a1i/archify) (MIT, v2.17, update checker removed), which
+is itself based on Cocoon-AI/architecture-diagram-generator (MIT, v1.0). `no-ai-slop` is vendored
+from [petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop) (MIT, v1.0.6, em-dash rule
+tightened to none). Everything else grew out of daily use.
 
 Third-party work is **copied in, never depended on as a plugin**: this machine installs plugins only
 from Anthropic's own repos or mine, so anything useful from elsewhere gets vendored under its licence
