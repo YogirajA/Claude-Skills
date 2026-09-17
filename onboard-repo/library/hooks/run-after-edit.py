@@ -35,9 +35,14 @@ COMMANDS = [
         "command": "npx eslint {file}",
         "report_failure": True,      # lint findings are the point
     },
+    # Python via the modern-python skill: exit 1 when findings remain, JSON on stdout.
+    # Expand the home directory here, in Python: shell=True is cmd.exe on Windows, where
+    # a literal ~ never expands. Earned by harness interview section 7 at "enforced".
     # {
     #     "extensions": (".py",),
-    #     "command": "python -m ruff check {file}",
+    #     "command": 'python "' + os.path.expanduser(
+    #         "~/.claude/skills/modern-python/scripts/modern_python.py"
+    #     ) + '" check --profile modern {file}',
     #     "report_failure": True,
     # },
 ]

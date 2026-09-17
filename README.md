@@ -17,8 +17,8 @@ claude plugin install harness-audit@yogi-skills
 ```
 
 The nine suites below are separate plugins on purpose. Every model-invocable skill's frontmatter
-description loads into **every session whether or not the skill fires**, so a single 64-skill
-plugin would put ~6,890 tokens of standing cost on every repo you open. Installing `kb-wiki`
+description loads into **every session whether or not the skill fires**, so a single 65-skill
+plugin would put ~6,980 tokens of standing cost on every repo you open. Installing `kb-wiki`
 alone costs ~470. Run `claude plugin details <name>@yogi-skills` to see any suite's exact
 always-on cost before installing it.
 
@@ -30,14 +30,14 @@ always-on cost before installing it.
 | `harness-audit` | 7 | ~770 |
 | `engineering-suite` | 14 | ~320 |
 | `repo-onboarding` | 4 | ~900 |
-| `code-quality` | 6 | ~430 |
+| `code-quality` | 7 | ~520 |
 | `authoring` | 11 | ~1,560 |
 | `thinking-and-specs` | 9 | ~1,900 |
-| **all nine** | **64** | **~6,890** |
+| **all nine** | **65** | **~6,980** |
 
 Always-on figures are `claude plugin details` for `harness-audit`, and raw `chars / 4` scaled by
 the 1.49 factor calibrated against it for the rest. User-only skills count zero
-(`disable-model-invocation: true`, 23 of the 64): their descriptions never load. On-invoke cost
+(`disable-model-invocation: true`, 23 of the 65): their descriptions never load. On-invoke cost
 (the SKILL.md body) is paid only when a skill actually fires and is not counted here.
 
 **Or copy by hand.** Each folder is a self-contained skill: drop one into `~/.claude/skills/`
@@ -46,7 +46,7 @@ given skill documents. Do not do both for the same skill: a hand-copied skill an
 plugin both register, and you pay the description twice.
 
 **Visual catalog:** [skills-atlas.html](skills-atlas.html) is a single-file field guide to the
-whole collection: the three load tiers and their economics, all 64 skills by their four origins,
+whole collection: the three load tiers and their economics, all 65 skills by their four origins,
 how the nine suites are priced, and the imports that were refused with reasons. Open it locally in
 a browser, or via
 [githack](https://raw.githack.com/YogirajA/Claude-Skills/main/skills-atlas.html).
@@ -57,7 +57,7 @@ a browser, or via
 python accio/scripts/check-routes.py
 ```
 
-`accio` is the router, and it is the **only** index for the 22 user-only skills: those carry no
+`accio` is the router, and it is the **only** index for the 23 user-only skills: those carry no
 description into the model's context, so one missing from the router is reachable by nothing but
 someone remembering its name. A router nobody checks goes stale silently, which is exactly how the
 retired `toolbox` skill came to be missing 11 of the 24 it indexed.
@@ -101,6 +101,7 @@ Skills that carry real personal data are not versioned here. They live only in
 | [smells](smells/) | Reviews the current diff for the twelve Fowler code smells, named Fowler-style with concrete fixes |
 | [codebase-design](codebase-design/) | Shared vocabulary for designing deep modules: interfaces, seams, testability, AI-navigability |
 | [resolving-merge-conflicts](resolving-merge-conflicts/) | Working through an in-progress git merge or rebase conflict |
+| [modern-python](modern-python/) | Version-gated modern Python guidance backed by Ruff: before any Python edit, lists the modernization rules (Ruff's UP, FURB and friends) the project's target version allows, applies them, and at the verified level checks the edit with Ruff and applies the safe fixes. A five-question per-project interview writes `.claude/modern-python.md`, on first fire, on `/modern-python setup`, or from onboard-repo Phase 4b. Vendored from arwtyxouymz/modern-python-guidelines, itself after JetBrains/go-modern-guidelines; interview and onboarding hook-in written here |
 
 ## Specs, plans, and decisions
 
@@ -243,7 +244,11 @@ is itself based on Cocoon-AI/architecture-diagram-generator (MIT, v1.0). `no-ai-
 from [petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop) (MIT, v1.0.6, em-dash rule
 tightened to none). `hindsight` is vendored from
 [EfficientStreet/hindsight](https://github.com/EfficientStreet/hindsight) (MIT, commit d43d728,
-em dashes replaced). Everything else grew out of daily use.
+em dashes replaced). `modern-python` is vendored from
+[arwtyxouymz/modern-python-guidelines](https://github.com/arwtyxouymz/modern-python-guidelines)
+(MIT, commit 7501dd4, script edited as its frontmatter records; interview and onboarding hook-in
+written here), which is itself based on JetBrains/go-modern-guidelines (Apache-2.0). Everything
+else grew out of daily use.
 
 Third-party work is **copied in, never depended on as a plugin**: this machine installs plugins only
 from Anthropic's own repos or mine, so anything useful from elsewhere gets vendored under its licence

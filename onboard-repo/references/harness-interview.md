@@ -1,7 +1,8 @@
 # The interview
 
-Six sections, in this order. Each is one `AskUserQuestion` call. The order matters: autonomy sets
+Seven sections, in this order. Each is one `AskUserQuestion` call. The order matters: autonomy sets
 how strict everything downstream should be, and verification is the highest-value answer in the set.
+The seventh runs only on a Python repo with the `modern-python` skill installed.
 
 **Lead every section with a recommendation** computed from Phases 0 to 3, marked `(Recommended)`. The user
 should be able to accept in one word. **Skip any section Phases 0 to 3 already settled** and say you skipped
@@ -174,6 +175,40 @@ Two checks before installing any of these:
 If the repo has no accumulated knowledge yet, say so and recommend **General Knowledge only**. An
 empty wiki is a maintenance burden that returns nothing, and the registry line makes it look
 populated when it is not.
+
+---
+
+## Section 7: Language modernization
+
+Runs only when Phase 0 found Python as a main language (`pyproject.toml`, `requirements*.txt`, or
+`.py` files) **and** the `modern-python` skill is installed (`~/.claude/skills/modern-python/SKILL.md`,
+or the `code-quality` suite). Otherwise skip, and say which condition failed.
+
+> Should Claude apply the modern-python skill to this repo: version-gated modern idioms backed by
+> Ruff, checked after every Python edit?
+
+| Option | Installs | When |
+|---|---|---|
+| **Apply** | The skill's own interview, then `.claude/modern-python.md` | Python is a main language and the user wants edits held to the project's target version. Recommended |
+| **Not now** | Nothing; a row in "Not installed, and why" | Python is incidental, or the user wants to see the skill fire standalone first |
+
+On **Apply**, invoke the skill's interview as written in
+`~/.claude/skills/modern-python/references/interview.md`. Do not restate its questions here, so the
+two cannot drift. It does its own recon and writes `.claude/modern-python.md`. Then:
+
+- Record every answer verbatim. The `HARNESS.md` entry is `.claude/modern-python.md`, mechanism
+  "skill answers file, read by modern-python before every Python edit", justification the verbatim
+  answers.
+- If its enforcement answer is **enforced**, this section earns a hook: adapt
+  `library/hooks/run-after-edit.py` using its commented Python entry (modern-python's `check` on
+  the edited file, exit 1 when findings remain), give the hook its own `HARNESS.md` entry, and add a
+  fire case in `test-hooks.py`. Under **watched** autonomy say that verified is usually enough and
+  let the user confirm. Never install the hook when the Ruff-source answer was **denied**: the
+  check would fail on every edit.
+- Answers **advisory** or **verified** install nothing beyond the answers file.
+
+Under `onboard-light` this section is skipped with the rest of Phase 4b, and the skill's own
+first-fire interview covers it later.
 
 ---
 

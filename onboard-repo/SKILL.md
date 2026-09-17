@@ -182,8 +182,9 @@ real target is **config nobody can audit later**. Three rules close that hole, a
 
 If you cannot write the justification line, do not install the item.
 
-Run the six sections in `references/harness-interview.md` (autonomy, verification, danger zones,
-repeated corrections, repeated procedures, knowledge base), leading each with a recommendation drawn
+Run the seven sections in `references/harness-interview.md` (autonomy, verification, danger zones,
+repeated corrections, repeated procedures, knowledge base, and language modernization, the last
+gated on a Python repo with `modern-python` installed), leading each with a recommendation drawn
 from Phases 0 to 3 and **skipping any section onboarding already settled**. Then follow
 `references/harness-build.md` for the mechanism ranking, write order, adaptation and verification.
 

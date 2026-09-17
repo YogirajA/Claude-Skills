@@ -161,7 +161,7 @@
       "name": "code-quality",
       "source": "./",
       "displayName": "Code quality and review",
-      "description": "Review pressure aimed at over-engineering and code smells, plus the vocabulary for designing deep modules and a walkthrough for in-progress merge conflicts.",
+      "description": "Review pressure aimed at over-engineering and code smells, plus the vocabulary for designing deep modules, a walkthrough for in-progress merge conflicts, and version-gated modern Python idioms backed by Ruff, listed and checked against the project's target version before every Python edit. modern-python vendored from arwtyxouymz/modern-python-guidelines.",
       "version": "1.0.0",
       "author": {
         "name": "Yogiraj Aradhye"
@@ -178,6 +178,7 @@
       ],
       "skills": [
         "./codebase-design",
+        "./modern-python",
         "./ponytail",
         "./ponytail-audit",
         "./ponytail-review",

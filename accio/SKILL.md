@@ -89,6 +89,12 @@ arrivals. Tickets that `/to-tickets` produced are already agent-ready, so do not
   dependency).
 - **`/ponytail`**: forces the laziest solution that works. Reach for it on any coding task where
   over-engineering is the risk. Levels: lite, full, ultra.
+- **`/modern-python`**: before or while editing Python. Lists the modernization rules (Ruff's
+  UP, FURB and friends) the project's target Python version allows, reads them, applies them,
+  and at the verified level checks the edit with Ruff and applies the safe fixes. Fires on its
+  own on any Python edit; **`/modern-python setup`** runs the per-project interview (greenfield
+  or existing, enforcement level, target version, Ruff source, profile) that writes
+  `.claude/modern-python.md`.
 
 ## Reviewing
 
