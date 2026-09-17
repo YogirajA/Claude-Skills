@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Accio
 
-*Summoning Charm.* You do not remember 63 skills. Name the problem, not the skill.
+*Summoning Charm.* You do not remember 64 skills. Name the problem, not the skill.
 
 Fired bare, with nothing attached, ask what is being worked on. Reprinting this map back is a
 no-op: the reader is already looking at it. **Name the one or two that fit and say what to type.**
@@ -165,6 +165,9 @@ The tools that measure the setup rather than the code.
   self-contained interactive HTML file, authored as typed JSON and validated by its Node CLI. Over
   `/excalidraw` when the reader will open it in a browser rather than edit it.
 - **`/geo-content`**: content written for both classic SEO and AI answer engines.
+- **`/no-ai-slop`**: edit a draft into sharper, more human writing without losing the writer's
+  voice, or name the AI-slop patterns in it without rewriting. Also the honest answer to "does
+  this read as AI": named patterns, not a detector score.
 - **`/anthropic-doc-validator`**: check claims about Claude Code, the API or the SDKs against the
   official docs, with verbatim quotes. Reach for it before asserting anything version-specific.
 - **`/research`**: delegate reading legwork to a background agent; it returns a cited Markdown

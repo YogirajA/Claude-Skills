@@ -17,8 +17,8 @@ claude plugin install harness-audit@yogi-skills
 ```
 
 The nine suites below are separate plugins on purpose. Every skill's frontmatter description
-loads into **every session whether or not the skill fires**, so a single 62-skill plugin would
-put ~9,250 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~570.
+loads into **every session whether or not the skill fires**, so a single 63-skill plugin would
+put ~9,350 tokens of standing cost on every repo you open. Installing `kb-wiki` alone costs ~570.
 Run `claude plugin details <name>@yogi-skills` to see any suite's exact always-on cost before
 installing it.
 
@@ -31,9 +31,9 @@ installing it.
 | `engineering-suite` | 14 | ~850 |
 | `repo-onboarding` | 4 | ~980 |
 | `code-quality` | 6 | ~1,100 |
-| `authoring` | 10 | ~2,150 |
+| `authoring` | 11 | ~2,250 |
 | `thinking-and-specs` | 9 | ~2,180 |
-| **all nine** | **62** | **~9,250** |
+| **all nine** | **63** | **~9,350** |
 
 Always-on figures are `claude plugin details` for `harness-audit`, and raw `chars / 4` scaled by
 the 1.49 factor calibrated against it for the rest. On-invoke cost (the SKILL.md body) is paid
@@ -45,7 +45,7 @@ given skill documents. Do not do both for the same skill: a hand-copied skill an
 plugin both register, and you pay the description twice.
 
 **Visual catalog:** [skills-atlas.html](skills-atlas.html) is a single-file field guide to the
-whole collection: the three load tiers and their economics, all 62 skills by their four origins,
+whole collection: the three load tiers and their economics, all 63 skills by their four origins,
 how the nine suites are priced, and the imports that were refused with reasons. Open it locally in
 a browser, or via
 [githack](https://raw.githack.com/YogirajA/Claude-Skills/main/skills-atlas.html).
@@ -134,6 +134,7 @@ Skills that carry real personal data are not versioned here. They live only in
 | Skill | What it does |
 |---|---|
 | [geo-content](geo-content/) | Writes content optimized for both classic SEO and AI answer engines (GEO/AEO), with an "what I optimized and why" checklist |
+| [no-ai-slop](no-ai-slop/) | Edits a draft into sharper, more human writing while keeping the writer's voice, or audits it for named AI-slop patterns without rewriting. Vendored from petergyang/no-ai-slop with the em-dash rule tightened to none |
 | [anthropic-doc-validator](anthropic-doc-validator/) | Validates claims about Claude Code, the Anthropic API, or SDKs against the latest official docs, with verbatim quotes |
 | [excalidraw](excalidraw/) | Generates architecture diagrams as `.excalidraw` files from codebase analysis, with optional PNG/SVG export. Six reference files (JSON format, arrows, colors, validation, export, examples) load only on demand |
 | [archify](archify/) | Interactive system diagrams as one self-contained HTML file: architecture, workflow, sequence, data-flow and lifecycle, authored as typed JSON and validated by its Node CLI, with Mermaid import and a PR delta view. Vendored from tt-a1i/archify with the update checker removed |
@@ -232,8 +233,9 @@ adapted from [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) (
 surface). The harness measurement suite is adapted from
 [affaan-m/ECC](https://github.com/affaan-m/ECC) (MIT). `excalidraw` is vendored from
 [ooiyeefei/ccc](https://github.com/ooiyeefei/ccc) (MIT). `archify` is vendored from
-[tt-a1i/archify](https://github.com/tt-a1i/archify) (MIT, v2.17, update checker removed). Everything
-else grew out of daily use.
+[tt-a1i/archify](https://github.com/tt-a1i/archify) (MIT, v2.17, update checker removed).
+`no-ai-slop` is vendored from [petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop)
+(MIT, v1.0.6, em-dash rule tightened to none). Everything else grew out of daily use.
 
 Third-party work is **copied in, never depended on as a plugin**: this machine installs plugins only
 from Anthropic's own repos or mine, so anything useful from elsewhere gets vendored under its licence
