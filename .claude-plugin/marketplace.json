@@ -64,7 +64,7 @@
       "name": "harness-audit",
       "source": "./",
       "displayName": "Harness measurement and hygiene",
-      "description": "Measure the harness instead of trusting it: audit context consumption, garbage-collect the config, test whether skills and rules are actually obeyed, design agent loops that cannot run away, and search before writing a new skill. Adapted from affaan-m/ECC.",
+      "description": "Measure the harness instead of trusting it: audit context consumption, garbage-collect the config, test whether skills and rules are actually obeyed, design agent loops that cannot run away, search before writing a new skill, and run a session-end retrospective that writes the durable lessons into project memory. Adapted from affaan-m/ECC; hindsight vendored from EfficientStreet/hindsight.",
       "version": "1.0.0",
       "author": {
         "name": "Yogiraj Aradhye"
@@ -84,6 +84,7 @@
         "./config-gc",
         "./context-budget",
         "./gateguard",
+        "./hindsight",
         "./loop-design-check",
         "./skill-comply",
         "./skill-scout"

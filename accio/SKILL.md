@@ -133,6 +133,10 @@ The tools that measure the setup rather than the code.
 - **`/write-wiki`**: ingest a source, update pages, lint, or bootstrap a new wiki. **`/wiki`**
   (type it) is a backward-compatible alias.
 - **`/remember`** (plugin): session handoffs and durable memory across sessions.
+- **`/hindsight`**: at the end of a session, review how the work went, keep the lessons the
+  session proved apart from the ones it only suggested, and write the durable ones into the
+  project memory folder, updating an existing entry rather than adding a twin. Over `/remember`
+  when the question is what to do differently next time, not where the work left off.
 
 ## Token cost
 

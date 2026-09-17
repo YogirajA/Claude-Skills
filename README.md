@@ -17,7 +17,7 @@ claude plugin install harness-audit@yogi-skills
 ```
 
 The nine suites below are separate plugins on purpose. Every model-invocable skill's frontmatter
-description loads into **every session whether or not the skill fires**, so a single 63-skill
+description loads into **every session whether or not the skill fires**, so a single 64-skill
 plugin would put ~6,890 tokens of standing cost on every repo you open. Installing `kb-wiki`
 alone costs ~470. Run `claude plugin details <name>@yogi-skills` to see any suite's exact
 always-on cost before installing it.
@@ -27,17 +27,17 @@ always-on cost before installing it.
 | `meta` | 2 | 0 |
 | `token-economy` | 8 | ~540 |
 | `kb-wiki` | 3 | ~470 |
-| `harness-audit` | 6 | ~770 |
+| `harness-audit` | 7 | ~770 |
 | `engineering-suite` | 14 | ~320 |
 | `repo-onboarding` | 4 | ~900 |
 | `code-quality` | 6 | ~430 |
 | `authoring` | 11 | ~1,560 |
 | `thinking-and-specs` | 9 | ~1,900 |
-| **all nine** | **63** | **~6,890** |
+| **all nine** | **64** | **~6,890** |
 
 Always-on figures are `claude plugin details` for `harness-audit`, and raw `chars / 4` scaled by
 the 1.49 factor calibrated against it for the rest. User-only skills count zero
-(`disable-model-invocation: true`, 22 of the 63): their descriptions never load. On-invoke cost
+(`disable-model-invocation: true`, 23 of the 64): their descriptions never load. On-invoke cost
 (the SKILL.md body) is paid only when a skill actually fires and is not counted here.
 
 **Or copy by hand.** Each folder is a self-contained skill: drop one into `~/.claude/skills/`
@@ -46,7 +46,7 @@ given skill documents. Do not do both for the same skill: a hand-copied skill an
 plugin both register, and you pay the description twice.
 
 **Visual catalog:** [skills-atlas.html](skills-atlas.html) is a single-file field guide to the
-whole collection: the three load tiers and their economics, all 63 skills by their four origins,
+whole collection: the three load tiers and their economics, all 64 skills by their four origins,
 how the nine suites are priced, and the imports that were refused with reasons. Open it locally in
 a browser, or via
 [githack](https://raw.githack.com/YogirajA/Claude-Skills/main/skills-atlas.html).
@@ -208,7 +208,9 @@ Two of the six were edited before install, and each records its own change where
 `loop-design-check` had its description cut from 244 to 136 always-on tokens (noted in its
 frontmatter `metadata.adapted` field), and `gateguard` had its install section rewritten because
 upstream's hook implementation was not imported with it (noted in an "Adapted 2026-09-03" block
-at the top of that section).
+at the top of that section). The seventh row, `hindsight`, is not from ECC: it is vendored from
+EfficientStreet/hindsight and sits in the same suite because a session retrospective audits the
+setup rather than the code.
 
 | Skill | What it does |
 |---|---|
@@ -218,6 +220,7 @@ at the top of that section).
 | [config-gc](config-gc/) | Garbage collection over `~/.claude`: finds stale, orphaned, redundant and low-value items, then walks you through confirm-each deletion |
 | [gateguard](gateguard/) | Design for a three-stage fact-forcing gate: deny the first edit, force a named list of facts (importers, affected functions, real data schema, the instruction verbatim), allow the retry. Imported as a design, not a runnable hook |
 | [skill-scout](skill-scout/) | Searches local, marketplace, GitHub and web sources before you write a new skill |
+| [hindsight](hindsight/) | User-triggered session-end retrospective: reviews the whole session, keeps the lessons it proved apart from the ones it only suggested, and writes the durable ones into Claude Code's per-project memory folder (one file per fact plus the `MEMORY.md` index), updating an existing entry in place rather than duplicating it. Vendored from EfficientStreet/hindsight with its em dashes replaced |
 
 ## Personal and meta
 
@@ -238,7 +241,9 @@ surface). The harness measurement suite is adapted from
 [tt-a1i/archify](https://github.com/tt-a1i/archify) (MIT, v2.17, update checker removed), which
 is itself based on Cocoon-AI/architecture-diagram-generator (MIT, v1.0). `no-ai-slop` is vendored
 from [petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop) (MIT, v1.0.6, em-dash rule
-tightened to none). Everything else grew out of daily use.
+tightened to none). `hindsight` is vendored from
+[EfficientStreet/hindsight](https://github.com/EfficientStreet/hindsight) (MIT, commit d43d728,
+em dashes replaced). Everything else grew out of daily use.
 
 Third-party work is **copied in, never depended on as a plugin**: this machine installs plugins only
 from Anthropic's own repos or mine, so anything useful from elsewhere gets vendored under its licence
