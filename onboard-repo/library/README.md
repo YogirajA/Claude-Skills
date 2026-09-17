@@ -14,7 +14,7 @@ every edit, which teaches the user to ignore it.
 | `hooks/protect-paths.py` | `PreToolUse`, blocks | Section 3, danger zones | Zero unless it fires |
 | `hooks/block-destructive.py` | `PreToolUse`, blocks | Section 3, danger zones | Zero unless it fires |
 | `hooks/verify-on-stop.py` | `Stop`, blocks | Section 2, verification | One command run per changed turn |
-| `hooks/run-after-edit.py` | `PostToolUse`, reports | Section 2, verification | One command run per edit |
+| `hooks/run-after-edit.py` | `PostToolUse`, reports | Section 7, modern-python at enforced (or a repo linter the user asks for in section 2) | One command run per edit |
 | `test-hooks.py` | Test runner | Always, at Phase 4b verify | None |
 | `templates.md` | `HARNESS.md`, settings, rules, skills, agents | Varies by section | Varies |
 

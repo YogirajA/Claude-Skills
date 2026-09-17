@@ -27,7 +27,7 @@ Recommend from evidence: a repo with a green test suite and clean git history su
 **semi-autonomous**. A repo with no runnable tests cannot support **unattended**, whatever the user
 prefers, and you should say so rather than install a gate that cannot gate anything.
 
-**Sets:** how aggressively sections 2 and 3 propose. Under **watched**, propose only the deny rules.
+**Sets:** how aggressively sections 2, 3 and 7 propose. Under **watched**, propose only the deny rules.
 Under **unattended**, the Stop-hook verification gate is close to mandatory and you should say why.
 
 ---
@@ -180,9 +180,11 @@ populated when it is not.
 
 ## Section 7: Language modernization
 
-Runs only when Phase 0 found Python as a main language (`pyproject.toml`, `requirements*.txt`, or
-`.py` files) **and** the `modern-python` skill is installed (`~/.claude/skills/modern-python/SKILL.md`,
-or the `code-quality` suite). Otherwise skip, and say which condition failed.
+Runs only when Phase 0's recon put Python first among the repo's languages, or found a Python
+manifest at the root (`pyproject.toml`, `requirements*.txt`, `setup.py`), **and** the
+`modern-python` skill is installed somewhere Claude Code loads skills from (on this machine,
+`~/.claude/skills/modern-python/`). Call that folder `<skill-dir>` below. Otherwise skip, and say
+which condition failed.
 
 > Should Claude apply the modern-python skill to this repo: version-gated modern idioms backed by
 > Ruff, checked after every Python edit?
@@ -192,20 +194,40 @@ or the `code-quality` suite). Otherwise skip, and say which condition failed.
 | **Apply** | The skill's own interview, then `.claude/modern-python.md` | Python is a main language and the user wants edits held to the project's target version. Recommended |
 | **Not now** | Nothing; a row in "Not installed, and why" | Python is incidental, or the user wants to see the skill fire standalone first |
 
-On **Apply**, invoke the skill's interview as written in
-`~/.claude/skills/modern-python/references/interview.md`. Do not restate its questions here, so the
-two cannot drift. It does its own recon and writes `.claude/modern-python.md`. Then:
+On **Apply**, run the skill's interview as written in `<skill-dir>/references/interview.md`. Do
+not restate its questions here, so the two cannot drift. Two adjustments when it runs from here:
 
-- Record every answer verbatim. The `HARNESS.md` entry is `.claude/modern-python.md`, mechanism
-  "skill answers file, read by modern-python before every Python edit", justification the verbatim
-  answers.
-- If its enforcement answer is **enforced**, this section earns a hook: adapt
-  `library/hooks/run-after-edit.py` using its commented Python entry (modern-python's `check` on
-  the edited file, exit 1 when findings remain), give the hook its own `HARNESS.md` entry, and add a
-  fire case in `test-hooks.py`. Under **watched** autonomy say that verified is usually enough and
-  let the user confirm. Never install the hook when the Ruff-source answer was **denied**: the
-  check would fail on every edit.
-- Answers **advisory** or **verified** install nothing beyond the answers file.
+- Its recon table is answered from Phases 0 to 3, not re-derived: no new recon.
+- It collects answers only. `.claude/modern-python.md` is written in the build step (the write
+  order in `harness-build.md`), never during the interview, so nothing lands before the proposal.
+
+Its Q2 stores `enforcement: advisory | verified | enforced` and its Q4 stores
+`ruff-fallback: allowed | not-needed | denied`. Under **unattended** autonomy lead Q2 with
+**enforced** `(Recommended)`; under **watched** say that verified is usually enough and let the
+user confirm. Once Q4 is answered, run `probe` once
+(`python <skill-dir>/scripts/modern_python.py probe --file <a .py file>`) so the uvx fallback is
+cached before any hook depends on it.
+
+Manifest rows, in the template's form:
+
+| Item | Mechanism | Installed | Justification (from the interview) | Remove when |
+|---|---|---|---|---|
+| `modern-python.md` | Skill answers file, read by modern-python before every Python edit | <date> | "<the five answers, verbatim>" | Python stops being a main language |
+| `hooks/run-after-edit.py` | PostToolUse, reports | <date> | "enforced" | The check reports noise, or Ruff leaves the project |
+
+The second row exists only when `enforcement: enforced`. Then:
+
+- Adapt `library/hooks/run-after-edit.py` from its commented Python entry: `--profile` from the
+  answers file's `profile`; add `--target-version pyXY` only when `target-source: chosen`; keep
+  `--concise` and `findings_exit: 1`, so a tool error (exit 2) stays silent instead of reporting
+  on every edit.
+- Add the fire case from the commented example in `test-hooks.py`: a fixture
+  `.claude/hooks/fixtures/modern_python_finding.py` holding an old-style `List[int]` annotation
+  (rule UP006), payload `{"tool_name": "Edit", "tool_input": {"file_path": <fixture>}}`, expected
+  exit 0 with `additionalContext` on stdout.
+- Never install the hook when `ruff-fallback: denied`: the check would fail on every edit.
+
+Answers **advisory** or **verified** install nothing beyond the answers file.
 
 Under `onboard-light` this section is skipped with the rest of Phase 4b, and the skill's own
 first-fire interview covers it later.

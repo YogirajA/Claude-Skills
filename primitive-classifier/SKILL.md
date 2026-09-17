@@ -5,7 +5,7 @@ description: Audit a folder for Claude Code primitives (skills, MCP servers, sub
 
 # Primitive classifier, audit a folder against the six Anthropic primitives
 
-Produces an interactive HTML report classifying every skill, MCP tool, hook, subagent, settings entry and CLAUDE.md file in a target folder against the six Anthropic primitives, with provenance and migration recommendations.
+Produces an interactive HTML report classifying every skill, MCP tool, hook, subagent, settings entry and CLAUDE.md file in a target folder against the six Anthropic primitives, with provenance and migration recommendations. Its companion is `onboard-repo/references/mechanism-table.md`: that table settles enforcement versus advisory placement (hook or permission rule when an instruction must hold every time), while this skill settles which primitive a piece of context belongs in.
 
 ## When to use
 
@@ -212,4 +212,4 @@ Claude reads this skill, walks the five phases, and writes `primitives-categoriz
 - **Don't use "stub" as a user-visible label.** It is the internal status; the UI says "Reshape in place".
 - **Don't bake migration order into the framework.** Phase order is a recommendation, not Anthropic doctrine. Mark migration plans as `org-specific` provenance unless the user explicitly asks for an org-neutral output.
 - **Don't bloat the verdicts.** Four cards max on the overview tab; if a fifth point matters, it goes in the migration narrative.
-- **Don't fetch Anthropic docs blindly each run.** Cache the source quotes in the JSON. Re-fetch only when the user asks for a fresh check or the deck check script reports drift.
+- **Don't fetch Anthropic docs blindly each run.** Cache the source quotes in the JSON. Re-fetch only when the user asks for a fresh check.

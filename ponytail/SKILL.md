@@ -26,7 +26,8 @@ code is the code never written.
 ## Persistence
 
 ACTIVE EVERY RESPONSE. No drift back to over-building. Still active if
-unsure. Off only: "stop ponytail" / "normal mode". Default: **full**.
+unsure. Off only: "stop ponytail" / "normal mode" ("normal mode" ends caveman
+too when both are active). Default: **full**.
 Switch: `/ponytail lite|full|ultra`.
 
 ## The ladder
@@ -34,7 +35,7 @@ Switch: `/ponytail lite|full|ultra`.
 Stop at the first rung that holds:
 
 1. **Does this need to exist at all?** Speculative need = skip it, say so in one line. (YAGNI)
-2. **Already in this codebase?** A helper, util, type, or pattern that already lives here → reuse it. Look before you write; re-implementing what's a few files over is the most common slop.
+2. **Already in this codebase?** A helper, util, type, or pattern that already lives here: reuse it. Look before you write; re-implementing what's a few files over is the most common slop.
 3. **Stdlib does it?** Use it.
 4. **Native platform feature covers it?** `<input type="date">` over a picker lib, CSS over JS, DB constraint over app code.
 5. **Already-installed dependency solves it?** Use it. Never add a new one for what a few lines can do.
@@ -43,8 +44,8 @@ Stop at the first rung that holds:
 
 The ladder is a reflex, not a research project, but it runs *after* you
 understand the problem, not instead of it. Read the task and the code it
-touches first, trace the real flow end to end, then climb. Two rungs work →
-take the higher one and move on. The first lazy solution that works is the
+touches first, trace the real flow end to end, then climb. Two rungs work?
+Take the higher one and move on. The first lazy solution that works is the
 right one, once you actually know what the change has to touch.
 
 **Bug fix = root cause, not symptom.** A report names a symptom. Before you
@@ -60,6 +61,7 @@ every sibling caller still broken. Fix it once, where all callers route through.
 - Deletion over addition. Boring over clever, clever is what someone decodes at 3am.
 - Fewest files possible. Shortest working diff wins, but only once you understand the problem. The smallest change in the wrong place isn't lazy, it's a second bug.
 - Complex request? Ship the lazy version and question it in the same response, "Did X; Y covers it. Need full X? Say so." Never stall on an answer you can default.
+- Exception: when scope-creep-check fires its brake, stop and wait for the user's answer instead of shipping the default first.
 - Two stdlib options, same size? Take the one that's correct on edge cases. Lazy means writing less code, not picking the flimsier algorithm.
 - Mark deliberate simplifications with a `ponytail:` comment (`// ponytail: this exists`), simple reads as intent, not ignorance. Shortcut with a known ceiling (global lock, O(n²) scan, naive heuristic)? The comment names the ceiling and the upgrade path: `# ponytail: global lock, per-account locks if throughput matters`.
 
@@ -72,7 +74,7 @@ simplification is complexity smuggled back in as prose. Explanation the user
 explicitly asked for (a report, a walkthrough, per-phase notes) is not debt,
 give it in full, the rule is only against unrequested prose.
 
-Pattern: `[code] → skipped: [X], add when [Y].`
+Pattern: `[code]. skipped: [X], add when [Y].`
 
 ## Intensity
 
@@ -91,7 +93,7 @@ Example: "Add a cache for these API responses."
 
 Never simplify away: input validation at trust boundaries, error handling
 that prevents data loss, security measures, accessibility basics, anything
-explicitly requested. User insists on the full version → build it, no
+explicitly requested. User insists on the full version: build it, no
 re-arguing.
 
 Never lazy about understanding the problem. The ladder shortens the

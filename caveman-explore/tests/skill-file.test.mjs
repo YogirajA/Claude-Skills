@@ -17,7 +17,8 @@ test("frontmatter name matches directory and declares read-only cheap explorer",
   const fm = frontmatter(md);
   assert.match(fm, /^name:\s*caveman-explore\s*$/m, "name must be caveman-explore");
   assert.match(fm, /^model:\s*haiku\s*$/m, "explorer must run on cheap model");
-  assert.match(fm, /^tools:\s*Read,\s*Glob,\s*Grep\s*$/m, "tools must be exactly three read-only tools");
+  assert.match(fm, /^context:\s*fork\s*$/m, "explorer must fork so its reads stay out of main context");
+  assert.match(fm, /^allowed-tools:\s*Read,\s*Glob,\s*Grep\s*$/m, "allowed-tools must be exactly three read-only tools");
   assert.doesNotMatch(fm, /\b(Edit|Write|Bash|NotebookEdit)\b/, "explorer must not have write or execution tools");
   assert.match(fm, /^description:\s*.+/m, "description required for auto-delegation");
 });

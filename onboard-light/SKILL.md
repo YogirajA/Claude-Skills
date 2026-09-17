@@ -31,7 +31,10 @@ can never drift apart.
    commands only with approval, Phase 5 still runs cold.
 
 At the close, say in one line that the harness can be added any time by running `onboard-repo` and
-choosing to re-run phase 4b alone. Do not sell it harder than that.
+choosing to re-run phase 4b alone. Do not sell it harder than that. On a Python repo with the
+`modern-python` skill installed, add one more line: that skill offers its own interview on the
+first Python edit, and a `modern-python: off` line in the CLAUDE.md block keeps it advisory
+without writing anything under `.claude/`.
 
 ## Boundary
 

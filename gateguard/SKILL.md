@@ -1,6 +1,6 @@
 ---
 name: gateguard
-description: Fact-forcing gate that blocks Edit/Write/Bash (including MultiEdit) and demands concrete investigation (importers, data schemas, user instruction) before allowing the action. Measurably improves output quality by +2.25 points vs ungated agents.
+description: Design spec for a three-stage fact-forcing PreToolUse gate (deny the first edit, force named facts, allow on evidence). Not a runnable hook in this collection; use it to build one, or to review a gate someone built.
 metadata:
   origin: community
 ---
@@ -25,9 +25,9 @@ But asking "list every file that imports this module" forces the LLM to run Grep
 **Three-stage gate:**
 
 ```
-1. DENY  — block the first Edit/Write/Bash attempt
-2. FORCE — tell the model exactly which facts to gather
-3. ALLOW — permit retry after facts are presented
+1. DENY:  block the first Edit/Write/Bash attempt
+2. FORCE: tell the model exactly which facts to gather
+3. ALLOW: permit retry after facts are presented
 ```
 
 No competitor does all three. Most stop at deny.
@@ -53,7 +53,7 @@ MultiEdit is handled identically, each file in the batch is gated individually.
 ```
 Before editing {file_path}, present these facts:
 
-1. List ALL files that import/require this file (search the tree — Glob/Grep, or find/grep via Bash)
+1. List ALL files that import/require this file (search the tree: Glob/Grep, or find/grep via Bash)
 2. List the public functions/classes affected by this change
 3. If this file reads/writes data files, show field names, structure,
    and date format (use redacted or synthetic values, not raw production data)
@@ -66,7 +66,7 @@ Before editing {file_path}, present these facts:
 Before creating {file_path}, present these facts:
 
 1. Name the file(s) and line(s) that will call this new file
-2. Confirm no existing file serves the same purpose (search the tree — Glob/Grep, or find/grep via Bash)
+2. Confirm no existing file serves the same purpose (search the tree: Glob/Grep, or find/grep via Bash)
 3. If this file reads/writes data files, show field names, structure,
    and date format (use redacted or synthetic values, not raw production data)
 4. Quote the user's current instruction verbatim
@@ -189,8 +189,3 @@ This adds `.gateguard.yml` for per-project configuration (custom messages, ignor
 - Let the gate fire naturally. Don't try to pre-answer the gate questions, the investigation itself is what improves quality.
 - Customize gate messages for your domain. If your project has specific conventions, add them to the gate prompts.
 - Use `.gateguard.yml` to ignore paths like `.venv/`, `node_modules/`, `.git/`.
-
-## Related Skills
-
-- `safety-guard`: Runtime safety checks (complementary, not overlapping)
-- `code-reviewer`: Post-edit review (GateGuard is pre-edit investigation)

@@ -38,6 +38,7 @@ File order, ascending line numbers within file.
 - No big-refactor proposals.
 - Need more context → append `(see L<n> in <file>)`. Don't guess.
 - Formatting nits skipped unless they change meaning.
+- Over-engineering findings: not here, route to /ponytail-review.
 
 ## Tools
 

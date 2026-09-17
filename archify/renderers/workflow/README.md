@@ -104,7 +104,7 @@ backed by rendered nodes receive Semantic Legend controls.
 
 | Constant | Value |
 |----------|-------|
-| viewBox | default `[720, auto]` — auto height = 52 + lanes×104 + (lanes−1)×20 + 124 |
+| viewBox | default `[720, auto]`: auto height = 52 + lanes×104 + (lanes−1)×20 + 124 |
 | Lane frame | x 40, width 640, height 104, gap 20; first lane top at y 52 |
 | Lane title strip | top 30px of each lane; node boxes must stay below it |
 | Column centers (`col` 0–5) | x = 88, 220, 300, 430, 500, 625 |
@@ -164,8 +164,8 @@ a feasible side; an authored side restricts that endpoint to the named port.
   instead of deleting meaning.
 - Use labels for decisions, approvals, protocols, async traces, return paths,
   and any other relationship meaning not fully implied by its endpoints.
-- Prefer route presets — `drop` (bend between lanes; `bias` 0–1 picks where),
-  `outside-right`, `return-left`, `bottom-channel`, and `up-channel` — before
+- Prefer route presets: `drop` (bend between lanes; `bias` 0–1 picks where),
+  `outside-right`, `return-left`, `bottom-channel`, and `up-channel`, before
   using raw `via` points. `straight` and the default `auto` cover the rest.
 - Keep workflow examples compact enough to render well in narrow chat/browser
   previews.

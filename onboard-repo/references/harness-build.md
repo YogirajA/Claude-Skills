@@ -37,12 +37,13 @@ Hooks before the settings that reference them, so nothing ever points at a missi
    plus `library/test-hooks.py` alongside them
 2. `.claude/settings.json`, **merging** into any existing file. Never clobber keys you did not add
 3. `.claude/rules/*.md`, each with `paths:` frontmatter unless the user confirmed it is global
-4. `.claude/agents/*.md` and `.claude/skills/*/SKILL.md`, only if interview section 5 earned them
-5. The wiki, if section 6 opted in: **invoke `write-wiki`'s bootstrap operation.** Do not create
+4. `.claude/modern-python.md`, if section 7 earned it, from the answers the interview handed back
+5. `.claude/agents/*.md` and `.claude/skills/*/SKILL.md`, only if interview section 5 earned them
+6. The wiki, if section 6 opted in: **invoke `write-wiki`'s bootstrap operation.** Do not create
    `knowledgebase/`, `index.md` or the `~/.claude/CLAUDE.md` registry line yourself; write-wiki owns
    page layout and the federation registry
-6. `.claude/HARNESS.md` from the template in `library/templates.md`
-7. Append `.claude/settings.local.json` to `.gitignore` if absent
+7. `.claude/HARNESS.md` from the template in `library/templates.md`
+8. Append `.claude/settings.local.json` to `.gitignore` if absent
 
 The Phase 4 CLAUDE.md block and its 40-line cap stay untouched. Only ever append a pointer line to
 `.claude/HARNESS.md`, and only with consent.

@@ -2,7 +2,7 @@
 
 Source: [Prompting Claude Fable 5.1](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1).
 Snippets in `text` blocks are quoted from that page and meant to be pasted verbatim, so their
-punctuation is left exactly as published.
+punctuation is left as published, except em dashes, which this collection replaces with commas or colons.
 
 Existing Fable 5 prompts perform well without changes. Default effort is `high`. This is the longest
 of the model guides: start from the symptom you actually observe rather than applying everything.
@@ -56,14 +56,14 @@ block as a status line, or `"summarized"`. If you are not requesting them, they 
 users at all. Then audit the prompt for suppressors. Only then add:
 
 ```text
-Before you start, say in a line what you're about to do; brief updates while you work help the user follow along. Close with a short recap that stands on its own — what you found, what you did, and what's next — so a reader who only sees the last message has the full picture.
+Before you start, say in a line what you're about to do; brief updates while you work help the user follow along. Close with a short recap that stands on its own (what you found, what you did, and what's next) so a reader who only sees the last message has the full picture.
 ```
 
 If your UI collapses or hides tool output, say so, or it will run commands to "show" the user things
 your UI never displays. Deliver as a turn-scoped system message (`clear_at: "next_user_message"`):
 
 ```text
-Only you see that command's output — the user's terminal shows at most a few lines of it. If the user needs to read any of it, put it in your reply.
+Only you see that command's output; the user's terminal shows at most a few lines of it. If the user needs to read any of it, put it in your reply.
 ```
 
 ## Tool-call batching in agent loops
@@ -159,7 +159,7 @@ On open-ended features it may fix nearby code, extend unmentioned behaviour, or 
 files than the change warrants.
 
 ```text
-If, while working or testing, you find a pre-existing bug, a performance concern, or behavior the task doesn't mention, don't fix, optimize or extend it in this change unless the requested behavior cannot work without it; report it as a follow-up in your summary. Where the task is ambiguous, implement the reading its wording and the surrounding code most directly support, state that assumption in your summary, and don't build for the other readings as well. Verify your work however you like; scratch scripts and quick checks need not be kept. Commit tests only where the task asks for them or this repository already keeps tests for this kind of change, sized like the neighboring test files — roughly one focused test per stated behavior — and don't turn scratch checks into additional permanent test files. This is about extras only: implement every behavior the task asks for, completely.
+If, while working or testing, you find a pre-existing bug, a performance concern, or behavior the task doesn't mention, don't fix, optimize or extend it in this change unless the requested behavior cannot work without it; report it as a follow-up in your summary. Where the task is ambiguous, implement the reading its wording and the surrounding code most directly support, state that assumption in your summary, and don't build for the other readings as well. Verify your work however you like; scratch scripts and quick checks need not be kept. Commit tests only where the task asks for them or this repository already keeps tests for this kind of change, sized like the neighboring test files (roughly one focused test per stated behavior), and don't turn scratch checks into additional permanent test files. This is about extras only: implement every behavior the task asks for, completely.
 ```
 
 ## Search triggering at low effort
@@ -168,7 +168,7 @@ At `low` it calls search and retrieval tools less than Fable 5 and answers from 
 the simplest fix is raising effort for the affected turns only. Otherwise:
 
 ```text
-When a query centers on a name you do not confidently recognize, or recognize from a fast-moving area like AI models and developer tools where the landscape shifts within months, the name itself is the thing to verify: search before answering, and include the name as the user wrote it in at least one query alongside any reformulations. This holds even when you have some background on it — partial background is exactly what makes an out-of-date answer sound authoritative, so familiarity is not a reason to skip the search.
+When a query centers on a name you do not confidently recognize, or recognize from a fast-moving area like AI models and developer tools where the landscape shifts within months, the name itself is the thing to verify: search before answering, and include the name as the user wrote it in at least one query alongside any reformulations. This holds even when you have some background on it: partial background is exactly what makes an out-of-date answer sound authoritative, so familiarity is not a reason to skip the search.
 ```
 
 ## Safeguard false positives

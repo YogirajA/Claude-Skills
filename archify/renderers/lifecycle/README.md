@@ -35,7 +35,7 @@ Lifecycle JSON files must set:
 Lane ids are semantic and reserved: a lane with id `main` is required and maps
 to the top phase band; `terminal` maps to the bottom outcome band; every other
 lane id (up to 4 lanes total) shares the single middle event band. The three
-band headers render from your lane labels — the middle band joins the labels of
+band headers render from your lane labels: the middle band joins the labels of
 all event lanes with ` + `. A complete worked example lives at
 `archify/examples/agent-run.lifecycle.json`.
 
@@ -70,7 +70,7 @@ and 4 respectively.
 |----------|-------|
 | viewBox | default `[980, 660]`; schema minimum `[420, 566]` |
 | State area | x within `[32, width − 32]`; state bottom at or above `height − 122` |
-| State spacing | ≥10px between any two states — checked across lanes, because all event lanes share one band; separate same-band states with `col` or `yOffset` |
+| State spacing | ≥10px between any two states, checked across lanes, because all event lanes share one band; separate same-band states with `col` or `yOffset` |
 | Transition length | ≥32px between endpoints |
 | Legend row | final baseline y = height − 36; extra measured rows wrap upward |
 

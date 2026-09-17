@@ -1,3 +1,10 @@
 
 # Personal skills: carry real contact details. Live only in ~/.claude/skills/.
 personal-skill/
+
+# Python bytecode and test caches
+__pycache__/
+.pytest_cache/
+
+# Local scratchpad for in-progress work. Never committed.
+scratchpad/

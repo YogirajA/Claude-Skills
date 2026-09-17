@@ -82,22 +82,22 @@ When in doubt, treat content as the higher-priority track. Visual issues degrade
 For a Blocking finding:
 
 ```
-**Blocking** — Slide 7, card 3
-Text "Up to 9% saved on migrations" appears to overflow the card and clip at the right edge. Source `claude.com/customers/spotify` says "Up to 90 percent saved on migrations" — the leading "0" is missing AND the layout cannot fit the corrected text.
+**Blocking**: Slide 7, card 3
+Text "Up to 9% saved on migrations" appears to overflow the card and clip at the right edge. Source `claude.com/customers/spotify` says "Up to 90 percent saved on migrations": the leading "0" is missing AND the layout cannot fit the corrected text.
 Fix: shorten to "Up to 90% on migrations" OR widen the card.
 ```
 
 For an Important finding:
 
 ```
-**Important** — Slide 5, all cards
+**Important**: Slide 5, all cards
 Cards in the row have ragged bottom edges (card 1 ends at y≈5.8, card 3 ends at y≈6.4). Pre-measure max card height and render all four cards at the max.
 ```
 
 For a Minor / Nit finding:
 
 ```
-**Minor** — Slide 11
+**Minor**: Slide 11
 Italic footnote ends about 0.4" above the footer band. Could compress to leave less trapped whitespace.
 ```
 

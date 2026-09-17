@@ -1,6 +1,9 @@
 ---
 name: modern-python
-description: Version-gated modern Python guidance backed by Ruff. Use before writing, editing, fixing or refactoring any Python file: list the rules the project's target version allows, apply them, verify. /modern-python setup runs the per-project interview.
+description: >-
+  Version-gated modern Python guidance backed by Ruff. Use before writing, editing, fixing or
+  refactoring any Python file: list the rules the project's target version allows, apply them,
+  verify. /modern-python setup runs the per-project interview.
 license: MIT
 metadata:
   version: "7501dd4"
@@ -30,6 +33,8 @@ Read `.claude/modern-python.md` at the repo root. It holds the interview answers
 - Absent: run the interview in [`references/interview.md`](references/interview.md) once, write
   the file, continue. If the user declines the interview, proceed with `enforcement: advisory`,
   `convention: preserve`, no target override, say so once, and do not ask again this session.
+- The repo's `CLAUDE.md` carries `modern-python: off`: proceed as declined without asking. That
+  is the line for a repo whose `.claude/` is not yours to write (onboard-light territory).
 - `/modern-python setup` re-runs the interview and rewrites the file.
 
 ## Before editing Python
@@ -63,8 +68,10 @@ Read `.claude/modern-python.md` at the repo root. It holds the interview answers
 
 5. Apply the convention the answers file sets:
    - `convention: override`: follow a returned rule even when nearby code or repository
-     convention uses the older pattern. Three exits only: it would not run on the target, it
-     would change behaviour, or it clearly does not match the edited code.
+     convention uses the older pattern. Four exits only: it would not run on the target, it
+     would change behaviour, it clearly does not match the edited code, or a fix-scoped skill is
+     active (surgical-patch, a cavecrew builder), in which case rules apply only to the lines the
+     fix already touches.
    - `convention: preserve`: inside existing files, match the surrounding pattern. Use the modern
      idiom in new files and new functions, and everywhere when the task is a modernization pass.
 
@@ -78,16 +85,19 @@ Read `.claude/modern-python.md` at the repo root. It holds the interview answers
 
 `enforcement: verified` or `enforced`:
 
-1. Check the files you touched (exit 1 means findings remain):
+1. Check the files you touched (exit 1 means findings remain). Add `--target-version <target>`
+   when the answers file says `target-source: chosen`, since Ruff otherwise checks at its own
+   default; `--concise` prints one line per finding instead of JSON:
 
    ```sh
-   python <skill-dir>/scripts/modern_python.py check path/to/file.py
+   python <skill-dir>/scripts/modern_python.py check --concise path/to/file.py
    ```
 
-2. `explain` each finding you do not already understand. Fix by hand, or apply Ruff's safe fixes:
+2. `explain` each finding you do not already understand. Fix by hand, or apply Ruff's safe fixes
+   with the same flags:
 
    ```sh
-   python <skill-dir>/scripts/modern_python.py fix path/to/file.py
+   python <skill-dir>/scripts/modern_python.py fix --concise path/to/file.py
    ```
 
 3. `check` again until it exits 0, or name the remaining findings and the documented caveat that

@@ -3,7 +3,7 @@ name: skill-comply
 description: Visualize whether skills, rules, and agent definitions are actually followed, auto-generates scenarios at 3 prompt strictness levels, runs agents, classifies behavioral sequences, and reports compliance rates with full tool call timelines. Use when checking whether agents actually follow the skills, rules, and definitions they were given, rather than assuming they do.
 metadata:
   origin: ECC
-tools: Read, Bash
+allowed-tools: Read, Bash
 ---
 
 # skill-comply: Automated Compliance Measurement
@@ -18,7 +18,7 @@ Measures whether coding agents actually follow skills, rules, or agent definitio
 
 ## Supported Targets
 
-- **Skills** (`skills/*/SKILL.md`): Workflow skills like search-first, TDD guides
+- **Skills** (`skills/*/SKILL.md`): Workflow skills like read-wiki, TDD guides
 - **Rules** (`rules/common/*.md`): Mandatory rules like testing.md, security.md, git-workflow.md
 - **Agent definitions** (`agents/*.md`): Whether an agent gets invoked when expected (internal workflow verification not yet supported)
 
@@ -33,10 +33,10 @@ Measures whether coding agents actually follow skills, rules, or agent definitio
 
 ```bash
 # Full run
-uv run python -m scripts.run ~/.claude/rules/common/testing.md
+uv run python -m scripts.run .claude/rules/testing.md
 
 # Dry run (no cost, spec + scenarios only)
-uv run python -m scripts.run --dry-run ~/.claude/skills/search-first/SKILL.md
+uv run python -m scripts.run --dry-run ~/.claude/skills/read-wiki/SKILL.md
 
 # Custom models
 uv run python -m scripts.run --gen-model haiku --model sonnet <path>

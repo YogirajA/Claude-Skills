@@ -18,22 +18,31 @@ claude plugin install harness-audit@yogi-skills
 
 The nine suites below are separate plugins on purpose. Every model-invocable skill's frontmatter
 description loads into **every session whether or not the skill fires**, so a single 65-skill
-plugin would put ~6,980 tokens of standing cost on every repo you open. Installing `kb-wiki`
+plugin would put ~6,960 tokens of standing cost on every repo you open. Installing `kb-wiki`
 alone costs ~470. Run `claude plugin details <name>@yogi-skills` to see any suite's exact
 always-on cost before installing it.
+
+Claude Code also caps the whole skill listing. By default the cap is 1% of the context window
+(8,000 characters at 200k, about 2,000 tokens; 40,000 at 1M), and each description is cut at
+1,536 characters. Past the cap a skill is listed by name only and cannot fire on its own. The
+42 model-invocable descriptions here total about 18,700 characters, so in a 200k session they
+overflow the default cap by themselves, before any other plugin. Either install only the suites
+you use, or raise the cap: `"skillListingBudgetFraction": 0.05` in `~/.claude/settings.json`
+(the `SLASH_COMMAND_TOOL_CHAR_BUDGET` environment variable sets an absolute character count).
+The per-description cut is `skillListingMaxDescChars`.
 
 | Suite | Skills | Always-on |
 |---|---:|---:|
 | `meta` | 2 | 0 |
 | `token-economy` | 8 | ~540 |
 | `kb-wiki` | 3 | ~470 |
-| `harness-audit` | 7 | ~770 |
+| `harness-audit` | 7 | ~760 |
 | `engineering-suite` | 14 | ~320 |
 | `repo-onboarding` | 4 | ~900 |
-| `code-quality` | 7 | ~520 |
+| `code-quality` | 7 | ~510 |
 | `authoring` | 11 | ~1,560 |
 | `thinking-and-specs` | 9 | ~1,900 |
-| **all nine** | **65** | **~6,980** |
+| **all nine** | **65** | **~6,960** |
 
 Always-on figures are `claude plugin details` for `harness-audit`, and raw `chars / 4` scaled by
 the 1.49 factor calibrated against it for the rest. User-only skills count zero
@@ -190,7 +199,7 @@ to `~/.claude/agents/` for the cavecrew skill to route to them.
 |---|---|
 | [caveman](caveman/) | Ultra-compressed output mode (lite, full, ultra): fluff dies, technical substance stays. Token-aware: no fake abbreviations, no arrow glyphs, grammar kept where mangling saves nothing |
 | [caveman-compress](caveman-compress/) | Compresses a CLAUDE.md, todo list, or memory file into caveman format with a readable backup |
-| [cavecrew](cavecrew/) | When to delegate to the compressed subagent presets (investigator, builder, reviewer) instead of vanilla Explore: same findings in a third of the main-context tokens |
+| [cavecrew](cavecrew/) | When to delegate to the compressed subagent presets (investigator, builder, reviewer) instead of vanilla Explore: same findings in a fraction of the main-context tokens |
 | [caveman-explore](caveman-explore/) | Haiku-powered read-only explorer returning path:line citations only; for cold-start orientation and broad localization |
 | [safe-refactor](safe-refactor/) | Restructure while preserving behavior: verification brackets every structural edit |
 | [surgical-patch](surgical-patch/) | Fix at the narrowest responsible layer, with regression proof and preserved surrounding behavior |

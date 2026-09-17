@@ -106,7 +106,7 @@ def backup_dir_for(filepath: Path) -> Path:
     return _state_base_dir("backups") / filepath.parent.name
 
 
-LOCK_WAIT_SECONDS = 900  # must outlast a legitimate holder's worst-case run (up to MAX_RETRIES+1 Claude calls against the 500KB size cap) or a healthy wait misreads as a stuck lock
+LOCK_WAIT_SECONDS = 900  # must outlast a legitimate holder's worst-case run (one compression call plus one targeted fix against the 500KB size cap) or a healthy wait misreads as a stuck lock
 LOCK_POLL_INTERVAL = 1.0
 
 
@@ -364,7 +364,8 @@ MAX_RETRIES = 2
 
 # Bounds each individual Claude call so a stalled CLI (dropped network, an
 # auth prompt with no TTY to answer it) can't hang past what LOCK_WAIT_SECONDS
-# assumes for the whole run's worst case (MAX_RETRIES+1 calls).
+# assumes for the whole run's worst case: one compression call plus one
+# targeted fix, then give up and report (MAX_RETRIES+1 leaves one call of headroom).
 CLAUDE_CALL_TIMEOUT_SECONDS = LOCK_WAIT_SECONDS // (MAX_RETRIES + 1)
 
 

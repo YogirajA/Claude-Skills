@@ -83,7 +83,9 @@ Keep timestamps where useful. Deep-link form: `https://youtu.be/<id>?t=<seconds>
 > "<quote>" [mm:ss]
 ```
 
-Offer to save the output to a markdown file if it's long or the user wants to keep it.
+Offer to save the output to a markdown file if it's long or the user wants to keep it. In a repo
+with a `knowledgebase/` wiki, save the capture under `knowledgebase/raw/` and offer to hand it to
+write-wiki for ingest.
 
 ## Step 4 - Honesty guardrail
 

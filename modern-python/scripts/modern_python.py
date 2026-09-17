@@ -17,6 +17,7 @@
 #  9. The pipx runner candidate is dropped; the uvx fallback stays.
 # 10. `check` and `fix` exit 1 when diagnostics remain, 0 when none, 2 on a tool error, so a hook can key on the exit code.
 # 11. No wrapper scripts: run as `python modern_python.py ...` on Windows and POSIX.
+# 12. `check` and `fix` accept `--target-version` (passed through to Ruff, for a project that declares no target) and `--concise` (one `CODE path:row:col message` line per finding instead of JSON, for hooks).
 
 from __future__ import annotations
 
@@ -909,6 +910,7 @@ def check_arguments(
     *,
     fix: bool,
     ignored_codes: Sequence[str] = (),
+    target_version: str | None = None,
 ) -> list[str]:
     paths = [str(intended_path(path)) for path in args.paths]
     command = [
@@ -921,6 +923,8 @@ def check_arguments(
         "--exit-zero",
         "--no-cache",
     ]
+    if target_version is not None:
+        command.extend(("--target-version", target_version))
     if ignored_codes:
         command.extend(("--ignore", ",".join(ignored_codes)))
     if args.preview:
@@ -938,6 +942,25 @@ def remaining_diagnostics(output: str) -> bool:
     if not isinstance(diagnostics, list):
         raise ToolError("Ruff returned an unsupported diagnostic schema")
     return bool(diagnostics)
+
+
+def concise_diagnostics(output: str) -> str:
+    """One `CODE path:row:col message` line per Ruff diagnostic, for hooks and terse reports."""
+    lines: list[str] = []
+    for item in json.loads(output):
+        if not isinstance(item, dict):
+            continue
+        location = item.get("location") if isinstance(item.get("location"), dict) else {}
+        lines.append(
+            "{} {}:{}:{} {}".format(
+                item.get("code") or "?",
+                item.get("filename") or "?",
+                location.get("row", "?"),
+                location.get("column", "?"),
+                item.get("message") or "",
+            ).rstrip()
+        )
+    return "\n".join(lines)
 
 
 def command_probe(args: argparse.Namespace, runner: Runner) -> None:
@@ -961,7 +984,9 @@ def command_probe(args: argparse.Namespace, runner: Runner) -> None:
 
 def command_check(args: argparse.Namespace, runner: Runner, *, fix: bool) -> int:
     selectors = selected_rules(args)
-    settings, settings_text = resolve_settings(runner, args.paths[0])
+    settings, settings_text = resolve_settings(
+        runner, args.paths[0], target_override=args.target_version
+    )
     preview = settings.preview or args.preview
     try:
         clean_selection = selection_settings(
@@ -977,11 +1002,17 @@ def command_check(args: argparse.Namespace, runner: Runner, *, fix: bool) -> int
         ) from exc
     result = invoke_ruff(
         runner,
-        check_arguments(args, fix=fix, ignored_codes=ignored_codes),
+        check_arguments(
+            args, fix=fix, ignored_codes=ignored_codes, target_version=args.target_version
+        ),
     )
     output = result.stdout.strip() or "[]"
     remaining = remaining_diagnostics(output)
-    print(output)
+    if args.concise:
+        if remaining:
+            print(concise_diagnostics(output))
+    else:
+        print(output)
     return 1 if remaining else 0
 
 
@@ -1202,6 +1233,15 @@ def add_rule_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--profile", choices=sorted(PROFILES), default=DEFAULT_PROFILE)
     parser.add_argument("--rules", help="Comma-separated Ruff rule prefixes; overrides --profile")
     parser.add_argument("--preview", action="store_true", help="Include Ruff preview diagnostics")
+    parser.add_argument(
+        "--target-version",
+        help="Explicit Ruff target such as py312, passed through to Ruff; for a project that declares none",
+    )
+    parser.add_argument(
+        "--concise",
+        action="store_true",
+        help="Print one 'CODE path:row:col message' line per finding instead of JSON",
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:

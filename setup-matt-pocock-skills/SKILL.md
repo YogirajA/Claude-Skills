@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Scaffold the per-repo configuration that the engineering skills assume:
 
-- **Issue tracker**: where issues live (GitHub by default; local markdown is also supported out of the box)
+- **Issue tracker**: where issues live (GitHub by default; GitLab and local markdown are also supported out of the box)
 - **Triage labels**: the strings used for the five canonical triage roles
 - **Domain docs**: where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
 
@@ -26,18 +26,18 @@ Look at the current repo to understand its starting state. Read whatever exists;
 - `docs/adr/` and any `src/*/docs/adr/` directories
 - `docs/agents/`: does this skill's prior output already exist?
 - `.scratch/`: sign that a local-markdown issue tracker convention is already in use
-- Is the `triage` skill installed? (a `triage` skill folder alongside this one, or `triage` in your available skills.) This decides whether Section B runs at all.
+- Is any of the `triage`, `to-spec` or `to-tickets` skills installed? (a skill folder alongside this one, or the name in your available skills.) All three apply triage labels, so this decides whether Section B runs at all.
 - Monorepo signals, a `pnpm-workspace.yaml`, a `workspaces` field in `package.json`, or a populated `packages/*` with its own `src/`. Present only in a genuinely large multi-package repo; their absence means single-context, which is almost every repo.
 
 ### 2. Present findings and ask
 
 Summarise what's present and what's missing. Then take the sections in order, one section, one answer, then the next.
 
-Lead each section with the recommended answer so the user can accept it in a word. Give a one-line explainer only when the choice genuinely branches; skip the section entirely when exploration already settled it (Section B when `triage` isn't installed, Section C when there's no monorepo).
+Lead each section with the recommended answer so the user can accept it in a word. Give a one-line explainer only when the choice genuinely branches; skip the section entirely when exploration already settled it (Section B when none of `triage`, `to-spec` or `to-tickets` is installed, Section C when there's no monorepo).
 
 **Section A, Issue tracker.**
 
-> Explainer: The "issue tracker" is where issues live for this repo. Skills like `to-tickets`, `triage`, `to-spec`, and `qa` read from and write to it: they need to know whether to call `gh issue create`, write a markdown file under `.scratch/`, or follow some other workflow you describe. Pick the place you actually track work for this repo.
+> Explainer: The "issue tracker" is where issues live for this repo. Skills like `to-tickets`, `triage`, `to-spec`, and `wayfinder` read from and write to it: they need to know whether to call `gh issue create`, write a markdown file under `.scratch/`, or follow some other workflow you describe. Pick the place you actually track work for this repo.
 
 Default posture: these skills were designed for GitHub. If a `git remote` points at GitHub, propose that. If a `git remote` points at GitLab (`gitlab.com` or a self-hosted host), propose GitLab. Otherwise (or if the user prefers), offer:
 
@@ -48,9 +48,9 @@ Default posture: these skills were designed for GitHub. If a `git remote` points
 
 Record the choice in `docs/agents/issue-tracker.md`. The GitHub and GitLab templates carry a "PRs as a request surface" flag, defaulted **off**: leave it off and don't raise it; a user who wants external PRs in the triage queue can flip the flag in the file later.
 
-**Section B, Triage label vocabulary.** Skip this section entirely if the `triage` skill isn't installed (exploration told you), an uninstalled skill needs no labels.
+**Section B, Triage label vocabulary.** Skip this section entirely if none of `triage`, `to-spec` or `to-tickets` is installed (exploration told you): `to-spec` and `to-tickets` apply the `ready-for-agent` label just as `triage` does, and send the user here when the vocabulary is missing.
 
-If it is installed, ask exactly one question:
+If any of them is installed, ask exactly one question:
 
 > Do you want to keep the default triage labels? (recommended: **yes**)
 
@@ -65,7 +65,7 @@ Offer **multi-context**: a root `CONTEXT-MAP.md` pointing to per-context `CONTEX
 Show the user a draft of:
 
 - The `## Agent skills` block to add to whichever of `CLAUDE.md` / `AGENTS.md` is being edited (see step 4 for selection rules)
-- The contents of `docs/agents/issue-tracker.md`, `docs/agents/domain.md`, and `docs/agents/triage-labels.md` (the last only when `triage` is installed)
+- The contents of `docs/agents/issue-tracker.md`, `docs/agents/domain.md`, and `docs/agents/triage-labels.md` (the last only when Section B ran)
 
 Let them edit before writing.
 
@@ -96,20 +96,20 @@ The block:
 
 ### Domain docs
 
-[one-line summary of layout — "single-context" or "multi-context"]. See `docs/agents/domain.md`.
+[one-line summary of layout, "single-context" or "multi-context"]. See `docs/agents/domain.md`.
 ```
 
-Include the `### Triage labels` sub-block, and write `docs/agents/triage-labels.md`, only when `triage` is installed and Section B ran. When it isn't, both are omitted.
+Include the `### Triage labels` sub-block, and write `docs/agents/triage-labels.md`, only when any of `triage`, `to-spec` or `to-tickets` is installed and Section B ran. When none is, both are omitted.
 
 Then write the docs files using the seed templates in this skill folder as a starting point:
 
 - [issue-tracker-github.md](./issue-tracker-github.md), GitHub issue tracker
 - [issue-tracker-gitlab.md](./issue-tracker-gitlab.md), GitLab issue tracker
 - [issue-tracker-local.md](./issue-tracker-local.md), local-markdown issue tracker
-- [triage-labels.md](./triage-labels.md), label mapping (only if `triage` is installed)
+- [triage-labels.md](./triage-labels.md), label mapping (only if Section B ran)
 - [domain.md](./domain.md), domain doc consumer rules + layout
 
-For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch using the user's description.
+For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch using the user's description. It must also carry a "Wayfinding operations" section shaped like the one in [issue-tracker-github.md](./issue-tracker-github.md), one bullet per operation `/wayfinder` needs, each mapped to the user's tracker: **Map** (create the map issue), **Child ticket** (create a child ticket), **Blocking** (mark a ticket blocked by another), **Frontier query** (list the open, unblocked, unclaimed tickets), **Claim** (assign a ticket), and **Resolve** (answer and close a ticket).
 
 ### 5. Done
 

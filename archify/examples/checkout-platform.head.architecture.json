@@ -2,7 +2,7 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "Checkout Platform — Fraud Gate",
+    "title": "Checkout Platform: Fraud Gate",
     "visual_preset": "signal-flow"
   },
   "components": [

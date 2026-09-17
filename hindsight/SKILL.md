@@ -8,7 +8,7 @@ metadata:
   version: "d43d728"
   author: EfficientStreet
   origin: EfficientStreet/hindsight
-  imported: "2026-09-17: copied from https://github.com/EfficientStreet/hindsight at d43d728 (HEAD of main, MIT; upstream carries no version number, so the commit stands in), two files only: SKILL.md and LICENSE. Left out: GUIDE.md (a walkthrough for humans that nothing in SKILL.md reads), README.md and .gitignore. One modification: the 22 em dashes upstream used in the description and the body are replaced with a comma, a colon, parentheses or a split sentence, so the file agrees with the global writing rule here; wording and structure are otherwise the author's, verbatim. Vendored rather than installed as a plugin, because third-party plugin sources are out of policy here. User-only (disable-model-invocation: true), so it costs nothing always-on and is reachable only through its accio route; its only writes are to Claude Code's per-project memory folder and that folder's MEMORY.md index. No scripts, no network calls."
+  imported: "2026-09-17: copied from https://github.com/EfficientStreet/hindsight at d43d728 (HEAD of main, MIT; upstream carries no version number, so the commit stands in), two files only: SKILL.md and LICENSE. Left out: GUIDE.md (a walkthrough for humans that nothing in SKILL.md reads), README.md and .gitignore. One modification: the 22 em dashes upstream used in the description and the body are replaced with a comma, a colon, parentheses or a split sentence, so the file agrees with the global writing rule here; wording and structure are otherwise the author's, verbatim. Vendored rather than installed as a plugin, because third-party plugin sources are out of policy here. User-only (disable-model-invocation: true), so it costs nothing always-on and is reachable only through its accio route; its only writes are to Claude Code's per-project memory folder and that folder's MEMORY.md index. No scripts, no network calls, and a routing paragraph added pointing to onboard-repo and write-wiki for lessons that are not memory."
 ---
 
 # Hindsight
@@ -117,6 +117,10 @@ distinctly from ordinary project files:
   `metadata.type` frontmatter. `type: feedback` fits nearly every hindsight
   lesson: it's guidance on how to work, with a why. That same folder's
   `MEMORY.md` is the index loaded into every session.
+- **Not every lesson is a memory fact.** A correction that must hold every
+  time is a hook or rule, installed through onboard-repo Phase 4b. A durable
+  fact about the repo itself is a wiki page, through write-wiki. A lesson
+  about how to work with this user or project is memory, here.
 - **Whatever the mechanism, the same rule applies:** read the index or
   browse existing entries first, to find one that already covers the
   lesson's topic. Existing topic → edit that file (append a dated addendum

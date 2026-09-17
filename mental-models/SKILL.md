@@ -1,6 +1,16 @@
 ---
 name: mental-models
-description: Pressure-test a real decision by running it through a curated library of mental models (inversion, second-order thinking, opportunity cost, expected value, base rates / outside view, regret minimization, reversible vs irreversible decisions, margin of safety, incentives, and more), then synthesize a decisive recommendation and the one thing that would change it. Use this whenever the user is weighing a real choice and wants rigorous thinking: "help me decide", "should I do X or Y", "I'm trying to figure out whether to...", "think this through with me", "apply mental models / first principles to this", "what's the smart way to look at this decision", or is stuck between options with real stakes. Complements the-llm-council (which stages a multi-persona debate); this skill instead applies named thinking frameworks. Trigger on genuine decisions even when the user never says "mental models" by name.
+description: >-
+  Pressure-test a real decision by running it through a curated library of mental models
+  (inversion, second-order thinking, opportunity cost, expected value, base rates / outside view,
+  regret minimization, reversible vs irreversible decisions, margin of safety, incentives, and
+  more), then synthesize a decisive recommendation and the one thing that would change it. Use
+  this whenever the user is weighing a real choice and wants rigorous thinking: "help me decide",
+  "should I do X or Y", "I'm trying to figure out whether to...", "think this through with me",
+  "apply mental models / first principles to this", "what's the smart way to look at this
+  decision", or is stuck between options with real stakes. Complements the-llm-council (which
+  stages a multi-persona debate); this skill instead applies named thinking frameworks. Trigger on
+  genuine decisions even when the user never says "mental models" by name.
 ---
 
 # Mental models for decisions

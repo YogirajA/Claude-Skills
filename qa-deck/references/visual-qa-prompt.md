@@ -12,7 +12,7 @@ The point of a subagent is fresh eyes. Do not summarize the slides for it. Do no
 You are doing a visual QA pass on a PowerPoint deck. Assume there are issues. Your job is to find them, not confirm the slides are fine.
 
 Deck: <deck name and short description>
-Visual style notes: <brand details — e.g., "Accenture brand, Graphik font, A100FF purple accent, F7F7F5 cards, slide is 13.33 x 7.5 inches">
+Visual style notes: <brand details, e.g., "Accenture brand, Graphik font, A100FF purple accent, F7F7F5 cards, slide is 13.33 x 7.5 inches">
 
 Look for every defect in this catalog and any others you spot. Severity matters: report Blocking and Important issues prominently, Minor issues briefly, Nits only if you see them clearly.
 
@@ -20,17 +20,17 @@ Look for every defect in this catalog and any others you spot. Severity matters:
 
 For each slide, report findings in this format:
 
-### Slide N — <inferred title>
+### Slide N: <inferred title>
 - **Blocking**: <issue> (rough location, e.g., "card 2, bottom-right")
 - **Important**: <issue>
 - **Minor**: <issue>
 - **Nit**: <issue>
 
-If a slide is clean, say "Clean for client delivery." Do not skip clean slides — explicit "clean" calls help us trust the pass.
+If a slide is clean, say "Clean for client delivery." Do not skip clean slides: explicit "clean" calls help us trust the pass.
 
 Slides to inspect:
-1. <path-to-slide-01.jpg> — <one-line expected content>
-2. <path-to-slide-02.jpg> — <one-line expected content>
+1. <path-to-slide-01.jpg>: <one-line expected content>
+2. <path-to-slide-02.jpg>: <one-line expected content>
 ...
 
 Keep total response tight. Aim for under <N×75> words where N is the slide count. Lead with Blocking and Important; do not pad with minor items.

@@ -47,6 +47,14 @@ Scan all component directories and estimate token consumption:
 - Count tokens per file in the CLAUDE.md chain
 - Flag: combined total >300 lines
 
+**Auto-memory** (`~/.claude/projects/<slug>/memory/MEMORY.md`)
+- Count tokens in the index; it is loaded every session, so count it as always-on
+- Flag: entries for topics no longer worked on, files the index does not point to
+
+**SessionStart-injected context** (hook output configured in `~/.claude/settings.json`, e.g. the wiki index hook)
+- Run each SessionStart hook and count the tokens it emits; injected every session, so count it as always-on
+- Flag: an injected index that has outgrown a screen
+
 ### Phase 2: Classify
 
 Sort every component into a bucket:

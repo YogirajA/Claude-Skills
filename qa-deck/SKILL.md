@@ -106,7 +106,7 @@ Deliver findings as a single report with this structure:
 - Verdict: <Ready / Fix before ship / Major rework>
 
 ## Visual findings
-### Slide N — <title>
+### Slide N: <title>
 - **Blocking**: <issue> (location)
 - **Important**: <issue> (location)
 - ...

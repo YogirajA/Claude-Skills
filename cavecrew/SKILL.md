@@ -17,14 +17,14 @@ Cavecrew = three subagent presets that emit caveman output. Same job as Anthropi
 | Surgical edit, ≤2 files, scope obvious | `cavecrew-builder` |
 | New feature / 3+ files / cross-cutting refactor | Main thread or `feature-dev:code-architect` |
 | Review diff, branch, or file for bugs | `cavecrew-reviewer` |
-| Deep code review with rationale + alternatives | `Code Reviewer` (vanilla) |
+| Deep code review with rationale + alternatives | `feature-dev:code-reviewer` (vanilla) |
 | One-line answer you already know | Main thread, no subagent |
 
-Rule of thumb: **if you'd want the subagent's output in 1/3 the tokens, pick cavecrew. If you'd want prose, pick vanilla.**
+Rule of thumb: **if you'd want the subagent's output in a fraction of the main-context tokens, pick cavecrew. If you'd want prose, pick vanilla.**
 
 ## Why this exists (the real win)
 
-Subagent tool results get injected into main context verbatim. A vanilla `Explore` that returns 2k tokens of prose costs 2k tokens of main-context budget every time. The same finding from `cavecrew-investigator` returns ~700 tokens. Across 20 delegations in one session that's the difference between context exhaustion and finishing the task.
+Subagent tool results get injected into main context verbatim. A vanilla `Explore` that returns 2k tokens of prose costs 2k tokens of main-context budget every time. The same finding from `cavecrew-investigator` costs a fraction of the main-context tokens. Across 20 delegations in one session that's the difference between context exhaustion and finishing the task.
 
 ## Output contracts
 
@@ -33,17 +33,17 @@ What main thread can rely on per agent:
 **`cavecrew-investigator`**
 ```
 <Header>:
-- path:line — `symbol` — short note
+- path:line, `symbol`, short note
 totals: <counts>.
 ```
 Or `No match.` Always file-path-first, line-number-attached, backticked symbols. Safe to grep with `path:\d+`.
 
 **`cavecrew-builder`**
 ```
-<path:line-range> — <change ≤10 words>.
+<path:line-range>, <change ≤10 words>.
 verified: <re-read OK | mismatch @ path:line>.
 ```
-Or one of: `too-big.` / `needs-confirm.` / `ambiguous.` / `regressed.` (terminal first token).
+Or one of: `too-big.` / `needs-confirm.` / `ambiguous.` (terminal first token).
 
 **`cavecrew-reviewer`**
 ```
@@ -69,7 +69,7 @@ Skip investigator. Hand exact path:line to `cavecrew-builder` directly.
 
 - Don't use `cavecrew-builder` when you don't already know the file. Spawn investigator first or main thread will eat tokens passing context.
 - Don't chain `cavecrew-investigator → cavecrew-builder` for a 5-file refactor. Builder will return `too-big.` and you'll have wasted a turn.
-- Don't ask `cavecrew-reviewer` for "general feedback": it returns findings only, no architecture opinions. Use `Code Reviewer` for that.
+- Don't ask `cavecrew-reviewer` for "general feedback": it returns findings only, no architecture opinions. Use `feature-dev:code-reviewer` for that.
 - Don't expect prose. Cavecrew output is structured, sometimes terse to the point of cryptic. If a human will read it directly, paraphrase.
 
 ## Auto-clarity (inherited)

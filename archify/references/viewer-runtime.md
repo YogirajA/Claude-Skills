@@ -26,7 +26,7 @@ Story transitions classify only the exact relationship between adjacent authored
 
 ## Canonical exports
 
-The export menu can copy/download full-diagram PNG, download JPEG/WebP, download a dual-theme SVG, and record a trace-enabled WebM. Viewer state—Guide, Lens, finder, focus, route, story, camera, radar, presentation, motion ownership, and temporary overlays—must be removed from canonical export.
+The export menu can copy/download full-diagram PNG, download JPEG/WebP, download a dual-theme SVG, and record a trace-enabled WebM. Viewer state (Guide, Lens, finder, focus, route, story, camera, radar, presentation, motion ownership, and temporary overlays) must be removed from canonical export.
 
 ### Share Card
 
@@ -38,7 +38,7 @@ After a real directed Route Probe resolves, the reader may use **Export → Rout
 
 ### Reach Share Card
 
-After a non-empty authored reachability query, the reader may use **Export → Reach Share Card**. It consumes the already resolved upstream/downstream node and edge set without rerunning traversal: `format=share-card`, `variant=reach`. The isolated clone may use only static `data-share-reach-*` decoration. It is download-only. Call it authored reachability—not impact, blast radius, breakage, or runtime causality.
+After a non-empty authored reachability query, the reader may use **Export → Reach Share Card**. It consumes the already resolved upstream/downstream node and edge set without rerunning traversal: `format=share-card`, `variant=reach`. The isolated clone may use only static `data-share-reach-*` decoration. It is download-only. Call it authored reachability: not impact, blast radius, breakage, or runtime causality.
 
 ## Truth boundary
 

@@ -17,7 +17,7 @@ Three subagents:
 | `cavecrew-builder` | Surgical edit, 1-2 files | Scope is obvious, ≤2 files. Refuses 3+ file scope. |
 | `cavecrew-reviewer` | Diff/file review | One-line findings with severity emoji |
 
-Use vanilla `Explore` or `Code Reviewer` when you want prose, architecture commentary, or rationale. Use main thread directly for one-line answers and 3+ file refactors.
+Use vanilla `Explore` or `feature-dev:code-reviewer` when you want prose, architecture commentary, or rationale. Use main thread directly for one-line answers and 3+ file refactors.
 
 This skill is a decision guide, not a slash command. It activates when the conversation mentions delegation.
 
@@ -37,31 +37,12 @@ Parallel scout: spawn 2-3 `cavecrew-investigator` calls in one message with diff
 
 ## Model overrides
 
-By default, `cavecrew-reviewer` and `cavecrew-investigator` pin `model: haiku` in their frontmatter; `cavecrew-builder` has no `model:` line (uses the API session default). Set env vars in your shell before launching Claude Code to override per-agent:
-
-| Env var | Agent |
-|---|---|
-| `CAVECREW_REVIEWER_MODEL` | `cavecrew-reviewer` |
-| `CAVECREW_BUILDER_MODEL` | `cavecrew-builder` |
-| `CAVECREW_INVESTIGATOR_MODEL` | `cavecrew-investigator` |
-
-Example: run reviewer on sonnet and keep others on default.
-
-```sh
-export CAVECREW_REVIEWER_MODEL=sonnet
-```
-
-Use the same model name strings you'd use in any Claude Code agent frontmatter (e.g. `haiku`, `sonnet`, `opus`).
-
-Overrides patch only `model:` line in installed agent frontmatter; prompt body
-stays untouched and continues receiving upstream updates. Only plugin installs
-have local agent files to patch. Empty variables do nothing. Patch persists until
-plugin update or reinstall.
+By default, `cavecrew-reviewer` and `cavecrew-investigator` pin `model: haiku` in their frontmatter; `cavecrew-builder` has no `model:` line (uses the session default). To change a preset's model, edit the `model:` line in `~/.claude/agents/cavecrew-*.md`.
 
 ## See also
 
 - [`SKILL.md`](./SKILL.md): full decision matrix and output contracts
-- [`agents/cavecrew-investigator.md`](../../agents/cavecrew-investigator.md)
-- [`agents/cavecrew-builder.md`](../../agents/cavecrew-builder.md)
-- [`agents/cavecrew-reviewer.md`](../../agents/cavecrew-reviewer.md)
-- [Caveman README](../../README.md): repo overview
+- [`agents/cavecrew-investigator.md`](agents/cavecrew-investigator.md)
+- [`agents/cavecrew-builder.md`](agents/cavecrew-builder.md)
+- [`agents/cavecrew-reviewer.md`](agents/cavecrew-reviewer.md)
+- [Caveman README](../README.md): repo overview

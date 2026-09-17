@@ -47,7 +47,7 @@ Infer from context; don't ask unless truly unclear.
 
 A new source arrives (URL, file, paste, meeting notes, runbook, design doc).
 
-1. **Save to raw/.** Fetch the URL with WebFetch if needed. Save as `raw/<slug>.md` with a header block:
+1. **Save to raw/.** Fetch the URL with WebFetch if needed; a YouTube URL goes through the `watch` skill for its transcript first. Save as `raw/<slug>.md` with a header block:
    ```
    title: <title>
    source: <url or "direct input">
@@ -94,9 +94,11 @@ Fix safe issues directly. Propose wholesale rewrites before acting. Append lint 
 
 ### Option 1: General Knowledge (path from the Wikis registry in `~/.claude/CLAUDE.md`)
 
-The GK wiki already exists. Add to the `## Wikis` section in `~/.claude/CLAUDE.md` if not present:
+The GK wiki already exists. Its entry in the `## Wikis` section of `~/.claude/CLAUDE.md` must name
+the wiki's actual `index.md` path. If the registry has no General Knowledge entry yet, ask the user
+for that path once, then add:
 ```
-- General Knowledge: the `index.md` of the GK wiki in the Wikis registry in `~/.claude/CLAUDE.md` - reusable patterns across engagements
+- General Knowledge: `<absolute path to the GK wiki>\index.md` - reusable patterns across engagements
 ```
 Then proceed with the ingest/update operation.
 
@@ -115,7 +117,10 @@ Then proceed with the ingest/update operation.
 2. Seed `knowledgebase/CLAUDE.md` with project name, owner, focus, and section headers.
    Default sections: Concepts, Entities, Topics, Sources, Implementation.
 
-3. Update the **project root** `CLAUDE.md` (create it if missing) with:
+3. Make sure a fresh session reads the index. First check `~/.claude/settings.json` for a
+   `SessionStart` hook that injects wiki indexes; if one is present, skip this step (harness-interview
+   says not to duplicate it). Otherwise update the **project root** `CLAUDE.md` (create it if
+   missing) with:
    ```
    At session start, read ./knowledgebase/index.md for this project's accumulated knowledge.
    ```

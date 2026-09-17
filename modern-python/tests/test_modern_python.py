@@ -257,6 +257,33 @@ class ModernPythonToolTests(unittest.TestCase):
         self.assertEqual(fixed.returncode, 1, fixed.stderr)
         self.assertEqual([item["code"] for item in json.loads(fixed.stdout)], ["UP006"])
 
+    def test_check_passes_an_explicit_target_version_to_ruff(self) -> None:
+        result = self.run_tool("check", "--target-version", "py311", "example.py")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        arguments = self.check_invocation()
+        self.assertIn("--target-version", arguments)
+        self.assertEqual(arguments[arguments.index("--target-version") + 1], "py311")
+        plain = self.run_tool("check", "example.py")
+        self.assertEqual(plain.returncode, 0, plain.stderr)
+        self.assertNotIn("--target-version", self.check_invocation())
+
+    def test_check_rejects_a_malformed_target_version(self) -> None:
+        result = self.run_tool("check", "--target-version", "3.11", "example.py")
+        self.assertEqual(result.returncode, 2, result.stdout)
+        self.assertIn("--target-version must look like py310 or py312", result.stderr)
+
+    def test_check_concise_prints_one_line_per_finding(self) -> None:
+        clean = self.run_tool("check", "--concise", "example.py")
+        self.assertEqual(clean.returncode, 0, clean.stderr)
+        self.assertEqual(clean.stdout.strip(), "")
+        with mock.patch.dict(os.environ, {"FAKE_CHECK_DIAGNOSTICS": "1"}):
+            findings = self.run_tool("check", "--concise", "example.py")
+        self.assertEqual(findings.returncode, 1, findings.stderr)
+        lines = findings.stdout.strip().splitlines()
+        self.assertEqual(len(lines), 1, lines)
+        self.assertTrue(lines[0].startswith("UP006 "), lines[0])
+        self.assertIn("example.py:1:4 Use `list` instead of `List`", lines[0])
+
     def test_list_returns_guidance_before_editing(self) -> None:
         result = self.run_tool("list", "--file", "example.py", "--format", "json")
         self.assertEqual(result.returncode, 0, result.stderr)

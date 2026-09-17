@@ -1,7 +1,11 @@
 # Which mechanism, and why
 
-Decision criteria for the six places an instruction can live. Sourced from Anthropic's docs, with
+Decision criteria for the eight places an instruction can live. Sourced from Anthropic's docs, with
 the provenance kept so the claims stay checkable when the docs move.
+
+This table covers instruction sites, enforcement versus advisory. Its companion,
+`primitive-classifier`, covers which of the six Anthropic primitives (claudemd, subagents, skills,
+hooks, settings, mcp) a piece of context belongs in.
 
 ## The one-question test
 
@@ -28,6 +32,8 @@ action regardless of what Claude decides, use a PreToolUse hook instead."
 | **Unscoped rule** | Every session | Every request | No | Cross-cutting conventions, same priority as `.claude/CLAUDE.md` |
 | **CLAUDE.md** | Every session | Every request | No | Build commands, layout, always-on facts |
 | **Skill** | On invocation or relevance | Description every session, body on use | No | Procedures, reference material |
+| **Auto-memory** (`MEMORY.md` + per-fact files) | Every session | Index every request, fact files on read | No | How Claude should work with this user or project. Written by `hindsight`; advisory |
+| **Project wiki** (`knowledgebase/`) | On demand, or its index at session start via the hook | Index only, pages on read | No | Durable facts about the repo itself. Written by `write-wiki`; advisory |
 
 ## Rules of thumb worth keeping
 

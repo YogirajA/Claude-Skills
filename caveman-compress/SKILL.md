@@ -9,7 +9,7 @@ description: >
 
 ## Purpose
 
-Compress natural language files (CLAUDE.md, todos, preferences) into caveman-speak to reduce input tokens. Compressed version overwrites original. Human-readable backup saved as `<filename>.original.md`, but NOT beside the source file: it lives in an out-of-tree data dir (`$XDG_DATA_HOME/caveman-compress/backups/<parent-dir-name>/`, or `%LOCALAPPDATA%\caveman-compress\backups\<parent-dir-name>\` on Windows) so skill auto-loaders don't re-ingest it as a live file.
+Compress natural language files (CLAUDE.md, todos, preferences) into caveman-speak to reduce input tokens. Compressed version overwrites original. Human-readable backup saved as `<stem>.original.md` (`notes.txt` becomes `notes.original.md`; if that backup already exists the run aborts), but NOT beside the source file: it lives in an out-of-tree data dir (`$XDG_DATA_HOME/caveman-compress/backups/<parent-dir-name>/`, or `%LOCALAPPDATA%\caveman-compress\backups\<parent-dir-name>\` on Windows) so skill auto-loaders don't re-ingest it as a live file.
 
 ## Trigger
 
@@ -21,15 +21,15 @@ Compress natural language files (CLAUDE.md, todos, preferences) into caveman-spe
 
 2. From the directory containing this SKILL.md, run:
 
-python3 -m scripts <absolute_filepath>
+python -m scripts <absolute_filepath>
 
 3. The CLI will:
 - detect file type (no tokens)
 - call Claude to compress
 - validate output (no tokens)
 - if errors: cherry-pick fix with Claude (targeted fixes only, no recompression)
-- retry up to 2 times
-- if still failing after 2 retries: report error to user, leave original file untouched
+- one targeted fix, then give up and report
+- if still failing after that one fix: report error to user, leave original file untouched
 
 4. Return result to user
 
@@ -101,9 +101,9 @@ Compressed:
 
 ## Boundaries
 
-- ONLY compress natural language files (.md, .txt, .typ, .typst, .tex, extensionless)
+- ONLY compress natural language files (.md, .txt, .markdown, .rst, .typ, .typst, .tex, extensionless)
 - NEVER modify: .py, .js, .ts, .json, .yaml, .yml, .toml, .env, .lock, .css, .html, .xml, .sql, .sh
 - If file has mixed content (prose + code), compress ONLY the prose sections
 - If unsure whether something is code or prose, leave it unchanged
-- Original file is backed up as FILE.original.md before overwriting, in the out-of-tree backup data dir (see Purpose), not beside the source file
-- Never compress FILE.original.md (skip it)
+- Original file is backed up as STEM.original.md before overwriting, in the out-of-tree backup data dir (see Purpose), not beside the source file
+- Never compress STEM.original.md (skip it)

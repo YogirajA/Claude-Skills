@@ -62,7 +62,7 @@ preserved exactly.
 </td>
 <td width="50%">
 
-### <img src="../../docs/assets/dancing-rock.svg" width="20" height="20" alt="rock"/> Caveman (285 tokens)
+### Caveman (285 tokens)
 
 > "Prefer TypeScript strict mode always. No `any` unless unavoidable; comment why if used. Proper types catch bugs early."
 
@@ -86,7 +86,7 @@ Compress is built in with the `caveman` plugin. Install `caveman` once, then use
 If you need local files, the compress skill lives at:
 
 ```bash
-skills/caveman-compress/
+caveman-compress/
 ```
 
 Requires Python 3.10 or newer.
@@ -132,7 +132,7 @@ validate output         (no tokens)
 if errors: Claude fixes cherry-picked issues only   (tokens: targeted fix)
   does NOT recompress; only patches broken parts
         ↓
-retry up to 2 times
+one targeted fix, then give up and report
         ↓
 write compressed → CLAUDE.md
 write original   → CLAUDE.original.md

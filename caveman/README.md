@@ -16,7 +16,7 @@ Six intensity levels:
 |-------|-------------|
 | `lite` | Drop filler/hedging. Sentences stay full. Professional but tight. |
 | `full` | Default. Drop articles, fragments OK, short synonyms. |
-| `ultra` | Bare fragments. Abbreviations (DB, auth, fn). Arrows for causality. |
+| `ultra` | Bare fragments. Standard acronyms only (DB, API), no invented abbreviations, no arrows. |
 | `wenyan-lite` | Classical Chinese register, light compression. |
 | `wenyan-full` | Maximum 文言文 compression. |
 | `wenyan-ultra` | Extreme classical compression. |
@@ -29,7 +29,7 @@ Auto-clarity rule: caveman drops to normal prose for security warnings, irrevers
 /caveman              # full mode (default)
 /caveman lite         # lighter compression
 /caveman ultra        # extreme compression
-/caveman wenyan       # classical Chinese
+/caveman wenyan-full  # classical Chinese
 stop caveman          # back to normal prose
 ```
 
@@ -44,9 +44,9 @@ Caveman (full):
 > New object ref each render. Inline object prop = new ref = re-render. Wrap in `useMemo`.
 
 Caveman (ultra):
-> Inline obj prop → new ref → re-render. `useMemo`.
+> Inline obj prop, new ref, re-render. `useMemo`.
 
 ## See also
 
 - [`SKILL.md`](./SKILL.md): full LLM-facing instructions
-- [Caveman README](../../README.md): repo overview, install, benchmarks
+- [Caveman README](../README.md): repo overview, install, benchmarks

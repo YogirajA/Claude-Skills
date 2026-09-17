@@ -21,7 +21,9 @@ import sys
 HOOK_DIR = os.path.join(".claude", "hooks")
 
 # --- add one entry per protection installed ------------------------------
-# (label, hook filename, stdin payload, expected exit code)
+# (label, hook filename, stdin payload, expected exit code[, text expected on stdout])
+# The fifth element is for reporting hooks, which always exit 0: without it a PostToolUse
+# hook that never fires is indistinguishable from one that fired and found nothing.
 FIRE_CASES = [
     ("blocks .env write", "protect-paths.py",
      {"tool_name": "Write", "tool_input": {"file_path": ".env"}}, 2),
@@ -34,6 +36,13 @@ FIRE_CASES = [
     # A gate's fire case has to be a real run. With the verifier passing this exits 0;
     # break something first and it should exit 2:
     # ("verify gate passes when green", "verify-on-stop.py", {}, 0),
+    # A reporting hook needs a fixture with a known finding and asserts on stdout. For the
+    # modern-python entry, write .claude/hooks/fixtures/modern_python_finding.py holding
+    # `from typing import List` and a function annotated `List[int]` (rule UP006):
+    # ("reports a modern-python finding", "run-after-edit.py",
+    #  {"tool_name": "Edit",
+    #   "tool_input": {"file_path": ".claude/hooks/fixtures/modern_python_finding.py"}},
+    #  0, "additionalContext"),
 ]
 
 # Hooks that legitimately block on well-formed input, because blocking IS their job.
@@ -55,9 +64,9 @@ def run(script, payload):
     text = payload if isinstance(payload, str) else json.dumps(payload)
     proc = subprocess.run(
         [sys.executable, os.path.join(HOOK_DIR, script)],
-        input=text, capture_output=True, text=True, timeout=60,
+        input=text, capture_output=True, text=True, timeout=240,
     )
-    return proc.returncode, (proc.stderr or "").strip()
+    return proc.returncode, (proc.stdout or "").strip(), (proc.stderr or "").strip()
 
 
 def main():
@@ -82,7 +91,7 @@ def main():
         bad = []
         for payload in payloads:
             try:
-                code, _ = run(hook, payload)
+                code, _, _ = run(hook, payload)
             except Exception as exc:
                 bad.append("{!r} raised {}".format(payload, exc))
                 continue
@@ -97,18 +106,23 @@ def main():
 
     print("\nFire cases ({})".format(len(FIRE_CASES)))
     covered = set()
-    for label, hook, payload, want in FIRE_CASES:
+    for case in FIRE_CASES:
+        label, hook, payload, want = case[:4]
+        want_out = case[4] if len(case) > 4 else None
         covered.add(hook)
         if not os.path.exists(os.path.join(HOOK_DIR, hook)):
             failures.append("{}: {} is not installed".format(label, hook))
             print("  FAIL  {} (hook missing)".format(label))
             continue
-        code, err = run(hook, payload)
-        if code == want:
-            print("  ok    {} (exit {})".format(label, code))
-        else:
+        code, out, err = run(hook, payload)
+        if code != want:
             failures.append("{}: exit {}, wanted {}".format(label, code, want))
             print("  FAIL  {} (exit {}, wanted {})".format(label, code, want))
+        elif want_out is not None and want_out not in out:
+            failures.append("{}: stdout lacks {!r}".format(label, want_out))
+            print("  FAIL  {} (exit {}, stdout lacks {!r})".format(label, code, want_out))
+        else:
+            print("  ok    {} (exit {})".format(label, code))
 
     untested = [h for h in hooks if h not in covered]
     if untested:

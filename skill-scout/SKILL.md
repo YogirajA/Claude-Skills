@@ -136,6 +136,5 @@ release-note variant, or create a fresh skill.
 
 ## Related
 
-- `search-first` - General search-before-building workflow.
-- `skill-stocktake` - Audit installed skills for health, duplicates, and gaps.
-- `agent-sort` - Categorize and organize existing agents and skills.
+- `skill-comply` - Measures whether a skill is actually followed once written.
+- `writing-great-skills` - The authoring vocabulary and principles.

@@ -92,9 +92,9 @@ A manual browser record is supplementary to the automated status. Reproducing th
 
 Report exactly one truthful status:
 
-- `visual_review: passed` — only after inspecting the rendered artifact.
-- `visual_review: skipped (image reader unavailable)` — when no capable visual surface exists.
-- `visual_review: failed` — with the concrete visible defect.
+- `visual_review: passed`: only after inspecting the rendered artifact.
+- `visual_review: skipped (image reader unavailable)`: when no capable visual surface exists.
+- `visual_review: failed`: with the concrete visible defect.
 
 Use `correction_rounds: 0`, `correction_rounds: 1`, or `correction_rounds: 2`; never exceed a maximum of two focused correction rounds. Never report `visual_review: passed` without inspecting the artifact.
 

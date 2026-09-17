@@ -19,7 +19,7 @@ Two markers below:
 
 > Every route on this page was verified against disk. If you add a skill, add it here; if you
 > remove one, remove it here. A router that names something that does not exist is worse than no
-> router, because it is confidently wrong. `/skill-comply` on this file measures whether that has
+> router, because it is confidently wrong. `scripts/check-routes.py` measures whether that has
 > rotted.
 
 ## Arriving somewhere new
@@ -42,9 +42,12 @@ The route most work travels.
    **`/grill-me`** (type it) is the same interview with no repo under it. Both run **`/grilling`**,
    which you reach directly only when you want the interview with no wrapper.
    - Lighter alternative: **`/spec-interview`** (type it) when the shape is roughly known and you
-     just want it pinned down fast, one question at a time.
+     just want it pinned down fast, one question at a time. It hands off to `writing-plans`
+     (plugin, superpowers), not to `/to-spec` or `/to-tickets`.
    - `brainstorming` (plugin, superpowers) covers the same ground from the other direction and
      fires on its own. If it has already run, do not re-interview from scratch.
+   - **`/domain-modeling`**: fires on its own when codebase terminology comes up. Writes and
+     maintains `CONTEXT.md` and the ADRs the interview leaves behind.
 2. **Question needs a runnable answer?** Detour through **`/prototype`**: throwaway code that
    settles one design question (does this state model feel right, what should this UI look like).
    The prototype is kept as a primary source, not destroyed.
@@ -132,6 +135,8 @@ The tools that measure the setup rather than the code.
   context actually belongs in.
 - **`/loop-design-check`**: before building an agent loop, and for reviewing one you suspect will
   spin, cheat, or run a wrong answer to completion.
+- **`/gateguard`**: the design of a three-stage fact-forcing `PreToolUse` gate (deny, force facts,
+  allow). A spec to build a hook from, not a runnable hook.
 
 ## Knowledge
 
@@ -186,7 +191,7 @@ The tools that measure the setup rather than the code.
 ## Building a new skill
 
 1. **`/skill-scout`** first: search local, marketplace, GitHub and web before writing anything.
-   The collection has absorbed four upstream repos; the odds of duplicating are real.
+   The collection has absorbed several upstream repos; the odds of duplicating are real.
 2. **`/writing-great-skills`** (type it) for the vocabulary and principles. `writing-skills`
    (plugin, superpowers) covers similar ground.
 3. **`/skill-comply`** afterwards, to find out whether the thing you wrote is actually followed.
@@ -197,8 +202,8 @@ The tools that measure the setup rather than the code.
   the send, then writes them a questionnaire.
 - **`/wizard`**: steps only a human can take (provisioning, credentials, a third-party dashboard).
   Generates an interactive bash script so the procedure stops being re-explained every time.
-- **`/wait-what`** (type it): that last message did not land. Re-pitches it with the missing
-  context, in plain English.
+- **`/wait-what`** (type it): that last message did not land. Re-pitches it in Simplified
+  Technical English using the repo's CONTEXT.md vocabulary.
 - **`/teach`** (type it): learn a concept over multiple sessions, using the current directory as a
   stateful workspace.
 

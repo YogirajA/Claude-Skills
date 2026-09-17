@@ -13,6 +13,10 @@ disable-model-invocation: true
 
 # Spec Interview
 
+**Depends on:** the `superpowers` plugin. This skill escalates to
+`superpowers:brainstorming`, hands off to `superpowers:writing-plans`, and writes
+to `docs/superpowers/specs/`.
+
 ## Overview
 
 A spec is you handing your understanding to the agent in a form it can act on.
@@ -116,7 +120,8 @@ once, in the spec, and reuse them.
    invoke any build skill until it is written and the user has approved it, no
    matter how simple the task looks.
 4. **Hand off:** offer **superpowers:writing-plans** to turn the approved spec
-   into an implementation plan.
+   into an implementation plan. That is the only hand-off: this spec is not a
+   `to-tickets` input (`/to-spec` produces that).
 
 ## Complements, does not replace
 

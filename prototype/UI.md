@@ -58,7 +58,7 @@ Variants must be **structurally different**: different layout, different informa
 Create a single switcher component on the route:
 
 ```tsx
-// pseudo-code — adapt to the project's framework
+// pseudo-code, adapt to the project's framework
 const variant = searchParams.get('variant') ?? 'A';
 return (
   <>

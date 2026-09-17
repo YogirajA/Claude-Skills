@@ -37,7 +37,7 @@ Do NOT activate for: cleaning project source code (that's refactoring), clearing
 | 4 | Permissions | `permissions.allow` in `settings.json` / `settings.local.json` | Duplicate entries; specific entries already covered by a wildcard (e.g. `Bash(git push)` when `Bash(*)` is allowed); one-off grants from past experiments |
 | 5 | MCP servers | `~/.claude.json` or project `.mcp.json` | Servers that fail to connect; functional duplicates; long-unused |
 | 6 | Scheduled reminders / jobs | wherever the user keeps them | Fired one-shots older than 30 days; jobs whose target scripts no longer exist |
-| 7 | Project history | `~/.claude/projects/*/` | Stale handoff snapshots; session records superseded by newer state |
+| 7 | Project history | `~/.claude/projects/*/` | Stale handoff snapshots; session records superseded by newer state. The `remember` plugin keeps its handoffs in the repo's `.remember/` folder and owns their retention, so config-gc does not audit those |
 | 8 | Runtime caches | `cache/`, `file-history/`, `logs/`, `shell-snapshots/` | Sort by size and mtime; propose items >30 days old and large |
 
 ## Workflow
@@ -102,7 +102,7 @@ jq '.permissions.allow -= ["Bash(git push)"]' ~/.claude/settings.local.json.bak 
 - **Hard-deleting on first pass.** If there's no `_gc_trash/` copy or `.disabled` rename, you did it wrong.
 - **Treating "old" as "dead".** A skill untouched for 60 days may be seasonal (tax season, quarterly reviews). Age is a signal, not a verdict: that's why a human confirms.
 - **Cleaning memory by truncation.** Merging two contradicting memory files requires reading both and keeping the newer truth, not deleting the longer one.
-- **Touching anything outside `~/.claude`** (or the project's `.claude/`). Config GC never wanders into source trees.
+- **Touching anything outside `~/.claude`** (or the project's `.claude/`). Config GC never wanders into source trees. That includes the `remember` plugin's `.remember/` folder in the repo: it owns its own retention, so config-gc does not audit it.
 
 ## Best Practices
 
@@ -113,8 +113,5 @@ jq '.permissions.allow -= ["Bash(git push)"]' ~/.claude/settings.local.json.bak 
 
 ## Related Skills
 
-- `skill-stocktake`: audits skill *quality*; config-gc audits skill *existence*. Run stocktake on what survives GC.
-- `workspace-surface-audit`: the additive counterpart: recommends what to install. config-gc is the subtractive half of the same lifecycle.
-- `configure-ecc`: after installing skills with it, run config-gc to reconcile overlaps with your pre-existing setup.
-- `continuous-learning`: produces the memory files this skill later audits.
+- `hindsight`: produces the memory files this skill later audits.
 - `security-review`: pairs well with the permissions channel.

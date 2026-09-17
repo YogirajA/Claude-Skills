@@ -48,3 +48,4 @@ Format: answer first, citations at the end as a compact list. Keep it tight.
 
 Do not offer to update anything. Do not append to log.md. Do not create new pages.
 If the answer would be worth saving, say: "Want me to save this to the wiki? Run /write-wiki."
+If the wiki has no answer at all, say so, and point at `/research` as the way to go get one.

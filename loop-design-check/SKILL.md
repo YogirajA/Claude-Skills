@@ -3,7 +3,7 @@ name: loop-design-check
 description: "Design a goal-oriented agent loop, or review one for the ways loops go wrong: spinning and burning tokens, Goodhart-gaming the verifier, or running a wrong answer to completion. WRITE mode gates whether to build the loop at all, then defines a machine-decidable goal, loop type, and skeleton. REVIEW mode runs an existing loop past five failure modes plus judge independence and the keep-judgment-with-the-human red lines. Use when designing an autonomous agent loop, or when you have one and worry it will spin, cheat, or finish a wrong answer."
 metadata:
   origin: ECC
-  adapted: "2026-09-03: description trimmed from ~244 to ~136 always-on tokens (Chinese and English trigger lists removed as redundant with the prose). Body unchanged. Body cross-references two ECC skills (autonomous-loops, continuous-agent-loop) that are NOT installed here; treat those pointers as the mechanism layer this skill deliberately does not cover."
+  adapted: "2026-09-03: description trimmed from ~244 to ~136 always-on tokens (Chinese and English trigger lists removed as redundant with the prose). Body unchanged then. 2026-09-17: the body's pointers to two ECC skills not installed here (autonomous-loops, continuous-agent-loop) were removed; the mechanism layer stays out of this skill's scope."
 ---
 
 
@@ -21,7 +21,7 @@ metadata:
 **Don't use it for:**
 - A one-off task → just do it; don't wrap a loop around it.
 - A plain timer / poll → use `/loop`; no design needed.
-- *How to wire the loop architecture* (pipelines → DAGs, long-run recovery) → that's the mechanism layer; see `autonomous-loops` / `continuous-agent-loop`. **This skill only covers "is the goal right, and will it run away": it does not re-explain mechanism.**
+- *How to wire the loop architecture* (pipelines → DAGs, long-run recovery) → that's the mechanism layer. **This skill only covers "is the goal right, and will it run away": it does not re-explain mechanism.**
 
 ## Red-line premise: two levels of feedback
 
@@ -143,4 +143,4 @@ The naive loop and the reviewed loop differ by four lines of constraint, and tha
 ---
 
 > Lineage: Wiener's two-level feedback (*The Human Use of Human Beings*, 1950) for the judgment/execution split and red lines; the plan/build/judge pattern from Anatoli's *Loops explained* and Addy's *Loop Engineering*.
-> Mechanism layer (how to wire the loop architecture): see `autonomous-loops` / `continuous-agent-loop`. This skill does not re-implement mechanism; it covers goal definition and runaway prevention only.
+> Mechanism layer (how to wire the loop architecture): this skill does not re-implement it; it covers goal definition and runaway prevention only.

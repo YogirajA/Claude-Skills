@@ -49,7 +49,7 @@ def generate_report(
         step_names = ", ".join(promote_steps)
         lines.append(f"| Recommendation | **Promote {step_names} to hooks** |")
     else:
-        lines.append(f"| Recommendation | All steps above threshold — no hook promotion needed |")
+        lines.append(f"| Recommendation | All steps above threshold, no hook promotion needed |")
     lines.append("")
 
     # Expected Behavioral Sequence
@@ -70,7 +70,7 @@ def generate_report(
     for level_name, result, _obs in results:
         failed = [s.step_id for s in result.steps if not s.detected
                   and any(sp.id == s.step_id and sp.required for sp in spec.steps)]
-        failed_str = ", ".join(failed) if failed else "—"
+        failed_str = ", ".join(failed) if failed else "none"
         lines.append(f"| {level_name} | {result.compliance_rate:.0%} | {failed_str} |")
     lines.append("")
 
@@ -110,7 +110,7 @@ def generate_report(
                 sp.id == sr.step_id and sp.required for sp in spec.steps
             ) else "No"
             det = "YES" if sr.detected else "NO"
-            reason = sr.failure_reason or "—"
+            reason = sr.failure_reason or "-"
             lines.append(f"| {sr.step_id} | {req} | {det} | {reason} |")
         lines.append("")
 
@@ -127,7 +127,7 @@ def generate_report(
             lines.append("| # | Tool | Input | Output | Classified As |")
             lines.append("|---|------|-------|--------|------|")
             for i, obs in enumerate(observations):
-                step_label = index_to_step.get(i, "—")
+                step_label = index_to_step.get(i, "-")
                 input_summary = obs.input[:100].replace("|", "\\|").replace("\n", " ")
                 output_summary = obs.output[:50].replace("|", "\\|").replace("\n", " ")
                 lines.append(

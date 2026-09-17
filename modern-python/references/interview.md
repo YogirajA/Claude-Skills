@@ -16,6 +16,8 @@ Reads only. Execute nothing from the project.
 | Age and size | `git log --reverse --format=%ad --date=short` first line, commit count, number of `.py` files outside `.venv`, `node_modules` and `__pycache__` | Q1 |
 | Existing modernization | `[tool.ruff.lint] select` naming `UP` or `FURB`, `pyupgrade` in pre-commit | Q5 |
 
+Under onboard-repo Phase 4b every row is answered from its Phases 0 to 3: run no new recon.
+
 `probe` reports the resolved runner and target without editing anything:
 `python <skill-dir>/scripts/modern_python.py probe --file <a .py file>`. It can fetch Ruff through
 uvx when the project has none, so run it only after Q4 is answered.
@@ -34,11 +36,11 @@ uvx when the project has none, so run it only after Q4 is answered.
 
 > When Claude edits Python here, how hard is the modern-idiom check applied?
 
-| Answer | Means |
-|---|---|
-| **Advisory** | List before editing. No post-edit check |
-| **Verified** `(Recommended)` | Post-edit `check`, safe `fix`, `check` again |
-| **Enforced** | Verified plus a PostToolUse hook that runs the check on every edited `.py` |
+| Answer | Stores | Means |
+|---|---|---|
+| **Advisory** | `enforcement: advisory` | List before editing. No post-edit check |
+| **Verified** `(Recommended)` | `enforcement: verified` | Post-edit `check`, safe `fix`, `check` again |
+| **Enforced** | `enforcement: enforced` | Verified plus a PostToolUse hook that runs the check on every edited `.py` |
 
 Enforced is offered only when this interview runs from onboard-repo Phase 4b, which installs the
 hook with its manifest entry and fire case. Standalone, answer that enforced needs Phase 4b, and
@@ -78,10 +80,10 @@ Absent:
 
 > How wide should the modernization guidance be?
 
-| Answer | Prefixes | Recommend when |
-|---|---|---|
-| **modern** `(Recommended)` | `UP, FURB, SIM, C4, PIE, PTH, FLY, PERF, F401` | Default |
-| **core** | `UP, FURB, F401` | The project already runs a broad Ruff selection of its own, to avoid double reporting |
+| Answer | Stores | Prefixes | Recommend when |
+|---|---|---|---|
+| **modern** `(Recommended)` | `profile: modern` | `UP, FURB, SIM, C4, PIE, PTH, FLY, PERF, F401` | Default |
+| **core** | `profile: core` | `UP, FURB, F401` | The project already runs a broad Ruff selection of its own, to avoid double reporting |
 
 ## Write the file
 
@@ -103,5 +105,6 @@ profile: modern
 ```
 
 Create `.claude/` when absent. Show the diff before rewriting an existing file. When run from
-onboard-repo Phase 4b, hand the verbatim answers back to it for the `HARNESS.md` entry and let it
-install the hook; never write `settings.json` from here.
+onboard-repo Phase 4b, write nothing here: hand the verbatim answers back, and Phase 4b writes
+this file in its build step, the `HARNESS.md` rows, and the hook. Never write `settings.json`
+from here.

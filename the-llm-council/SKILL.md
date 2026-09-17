@@ -23,7 +23,7 @@ Do not convene for:
 
 - Pure factual lookups ("what's the capital of Bolivia").
 - Coding tasks, debugging, or implementation work.
-- Open-ended brainstorms with no decision at stake (use product brainstorming or similar).
+- Open-ended brainstorms with no decision at stake (use the superpowers `brainstorming` plugin skill or similar).
 - Validation requests where the user already has the answer and just wants applause. In that case, gently push back and ask whether they want a real council (which may disagree with them) or just a sanity check.
 
 ## The flow
